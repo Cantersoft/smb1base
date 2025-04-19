@@ -372,6 +372,7 @@ RESERVE FireworksCounter, 2
 RESERVE MultiLoopCorrectCntr, 1
 RESERVE MultiLoopPassCntr, 1
 RESERVE JumpspringForce, 1
+RESERVE JumpspringFrozen, 0 ;-Cantersoft
 RESERVE MaxRangeFromOrigin, 1
 RESERVE BitMFilter, 1
 RESERVE ChangeAreaTimer, 2

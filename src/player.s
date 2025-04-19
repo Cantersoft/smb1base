@@ -1470,6 +1470,7 @@ ExPlyrAt:
 ;$02 - used for maximum vertical speed
 
 MovePlayerVertically:
+  jmp NoJSChk
   ldx #$00                ;set X for player offset
   lda TimerControl
   bne NoJSChk             ;if master timer control set, branch ahead

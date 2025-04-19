@@ -133,7 +133,13 @@ GameCoreRoutine:
   ldx CurrentPlayer          ;get which player is on the screen
   lda SavedJoypadBits,x      ;use appropriate player's controller bits
   sta SavedJoypadBits        ;as the master controller bits
-  
+  ; Keep TimerControl on during invincibility. I think the TimerControl is getting removed from RAM every frame or something. -Cantersoft  
+  lda StarInvincibleTimer
+  beq SkipTimerControl
+    lda #$01
+    sta TimerControl
+	
+SkipTimerControl:    	 
   farcall GameRoutines           ;execute one of many possible subs
 
   ; lda #0
@@ -148,6 +154,7 @@ GameCoreRoutine:
 GameEngine:
   far OBJECT
     jsr ProcFireball_Bubble    ;process fireballs and air bubbles
+	jsr InvincibleTest			;Cantersoft	
     ldx #$00
 ProcELoop:
       stx ObjectOffset           ;put incremented offset in X as enemy object offset
@@ -374,6 +381,8 @@ RunGameTimer:
   bcc ExGTimer               ;branch to leave
   cmp #$0b                   ;if running death routine,
   beq ExGTimer               ;branch to leave
+  lda StarInvincibleTimer    ; check for invincibility -Cantersoft
+  bne ExGTimer               ; if invincible, skip timer logic  
   lda Player_Y_HighPos
   cmp #$02                   ;if player below the screen,
   bcs ExGTimer               ;branch to leave regardless of level type
@@ -572,6 +581,8 @@ ColorRotation:
               lda FrameCounter         ;get frame counter
               and #$07                 ;mask out all but three LSB
               bne ExitColorRot         ;branch if not set to zero to do this every eighth frame
+			  lda StarInvincibleTimer   ; if Mario is invincible	-Cantersoft
+              bne ExitColorRot          ; skip color rotation entirely			  
               ldx VRAM_Buffer1_Offset  ;check vram buffer offset
               cpx #$31
               bcs ExitColorRot         ;if offset over 48 bytes, branch to leave
@@ -872,7 +883,7 @@ ChkSelect:
   bcs ResetTitle              ;if carry flag set, demo over, thus branch
   jmp RunDemo                 ;otherwise, run game engine for demo
 ChkWorldSel:
-  ldx WorldSelectEnableFlag   ;check to see if world selection has been enabled
+  ldx #01 ;WorldSelectEnableFlag   ;check to see if world selection has been enabled ;just enable it without enabling hard mode -Cantersoft
   beq NullJoypad
   cmp #B_Button               ;if so, check to see if the B button was pressed
   bne NullJoypad

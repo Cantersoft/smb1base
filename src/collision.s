@@ -669,8 +669,8 @@ ExTA:  rts                      ;leave!!!
 ;$00 - counter for bounding boxes
 
 SmallPlatformCollision:
-      lda TimerControl             ;if master timer control set,
-      bne ExSPC                    ;branch to leave
+      ;lda TimerControl             ;if master timer control set, ;Disabling collision disabling with platforms to prevent timestop from removing floor -Cantersoft
+      ;bne ExSPC                    ;branch to leave
       sta PlatformCollisionFlag,x  ;otherwise initialize collision flag
       jsr CheckPlayerVertical      ;do a sub to see if player is below a certain point
       bcs ExSPC                    ;or entirely offscreen, and branch to leave if true
