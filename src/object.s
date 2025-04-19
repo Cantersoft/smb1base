@@ -1511,6 +1511,18 @@ BPGet:
 ;$02 - used to store maximum vertical speed in FireballObjCore
 ;$07 - used to store pseudorandom bit in BubbleCheck
 
+.proc InvincibleTest ;-Cantersoft
+    lda SavedJoypadBits
+    and #Select_Button
+    beq Exit                ; <— Only run effect if Select is pressed
+    lda #$1a
+    sta StarInvincibleTimer
+    lda #StarPowerMusic
+    sta AreaMusicQueue
+Exit:
+    rts
+.endproc
+
 .proc ProcFireball_Bubble
   lda PlayerStatus           ;check player's status
   cmp #$02
@@ -2292,8 +2304,8 @@ StarFlagExit2:
 
 JumpspringHandler:
   jsr GetEnemyOffscreenBits   ;get offscreen information
-  lda TimerControl            ;check master timer control
-  bne DrawJSpr                ;branch to last section if set
+  lda StarInvincibleTimer     ;check master timer control
+  bne CompressJumpSpringBranch                ;branch to last section if set
   lda JumpspringAnimCtrl      ;check jumpspring frame control
   beq DrawJSpr                ;branch to last section if not set
     tay
@@ -2340,14 +2352,41 @@ DrawJSpr:
   inc JumpspringAnimCtrl      ;increment frame control to animate jumpspring
 ExJSpring:
   rts                         ;leave
-
+CompressJumpSpringBranch:
+	lda JumpspringAnimCtrl
+	beq ExJSpring
+	
+	lda Jumpspring_FixedYPos,x
+	ldy #01
+	clc
+    adc Jumpspring_Y_PosData,y  ;add value using frame control as offset
+	sta Enemy_Y_Position,x      ;store as new vertical position
+	jsr CompressJumpSpring
+	jmp ExJSpring
+	
 Jumpspring_Y_PosData:
-  .byte $08, $10, $08, $00
-
+      .byte $08, $10, $08, $00	
+	
+.proc CompressJumpSpring
+	ldy #02
+	lda JumpspringFrameOffsets,y
+	sta EnemyMetasprite,x 
+	lda #$00
+    sta JumpspringAnimCtrl      ;initialize jumpspring frame control
+	rts
+	
+JumpspringFrameOffsets:
+  .byte METASPRITE_JUMPSPRING_FRAME_1
+  .byte METASPRITE_JUMPSPRING_FRAME_2
+  .byte METASPRITE_JUMPSPRING_FRAME_3
+  .byte METASPRITE_JUMPSPRING_FRAME_2
+  .byte METASPRITE_JUMPSPRING_FRAME_1
+.endproc	
+	
 .proc DrawJumpSpring
   ldy JumpspringAnimCtrl
   lda JumpspringFrameOffsets,y
-  sta EnemyMetasprite,x
+  sta EnemyMetasprite,x 
   rts
 
 JumpspringFrameOffsets:
@@ -2356,7 +2395,8 @@ JumpspringFrameOffsets:
   .byte METASPRITE_JUMPSPRING_FRAME_3
   .byte METASPRITE_JUMPSPRING_FRAME_2
   .byte METASPRITE_JUMPSPRING_FRAME_1
-.endproc
+.endproc  
+
 
 ;--------------------------------
 ;$00 - used to store horizontal difference between player and piranha plant
@@ -2451,8 +2491,8 @@ SkipPT: jsr RelativeEnemyPosition
 LargePlatformCollision:
        lda #$ff                     ;save value here
        sta PlatformCollisionFlag,x
-       lda TimerControl             ;check master timer control
-       bne ExLPC                    ;if set, branch to leave
+       ;lda TimerControl             ;check master timer control ;Disable -Cantersoft
+       ;bne ExLPC                    ;if set, branch to leave
        lda Enemy_State,x            ;if d7 set in object state,
        bmi ExLPC                    ;branch to leave
        lda Enemy_ID,x
@@ -4013,3 +4053,6 @@ FSLoop:
 FlmEx:
   rts                     ;and then leave
 .endproc
+
+;--------------------------------
+
