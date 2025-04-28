@@ -44,28 +44,51 @@ RotPRandomBit:
   lda GamePauseStatus       ;if in pause mode, do not perform operation mode stuff
   lsr
   bcs PauseSkip
-
+  
+  
+TimerControlLabel:
     ; Move the timers ahead by a frame as well
+	
     lda TimerControl          ;if master timer control not set, decrement
     beq DecTimers             ;all frame and interval timers
-      dec TimerControl
+	
+	;lda StarInvincibleTimer
+	;beq SetTimerControl
+	;bne SetTimerControlFrozen
+	;SetTimerControl:
+    dec TimerControl
+	;SetTimerControlFrozen:
+	;lda #$ff
+	;sta TimerControl
+	
+	;lda TimerControl 
     bne NoDecTimers
+	
     DecTimers:
-      ldx #FRAME_TIMER_COUNT    ;load end offset for end of frame timers
-      dec IntervalTimerControl  ;decrement interval timer control,
-      bpl DecTimersLoop         ;if not expired, only frame timers will decrement
-      lda #$14
-      sta IntervalTimerControl  ;if control for interval timers expired,
-      ldx #ALL_TIMER_COUNT      ;interval timers will decrement along with frame timers
+    ldx #FRAME_TIMER_COUNT    ;load end offset for end of frame timers
+	lda StarInvincibleTimer
+	beq SET_FRAME_TIMER_COUNT_NO_FREEZE
+	ldx #FRAME_TIMER_COUNT_FREEZE
+	SET_FRAME_TIMER_COUNT_NO_FREEZE:
+    dec IntervalTimerControl  ;decrement interval timer control,
+    bpl DecTimersLoop         ;if not expired, only frame timers will decrement
+
+    lda #$14
+    sta IntervalTimerControl  ;if control for interval timers expired,
+    ldx #ALL_TIMER_COUNT      ;interval timers will decrement along with frame timers
+	lda StarInvincibleTimer
+	beq SET_ALL_TIMER_COUNT_NO_FREEZE
+	ldx #ALL_TIMER_COUNT_FREEZE
+	SET_ALL_TIMER_COUNT_NO_FREEZE:
     DecTimersLoop:
-        lda Timers,x              ;check current timer
+        lda Timers,x              ;check current timer	
         beq SkipExpTimer          ;if current timer expired, branch to skip,
           dec Timers,x              ;otherwise decrement the current timer
       SkipExpTimer:
         dex                       ;move onto next timer
-        bpl DecTimersLoop         ;do this until all timers are dealt with
+        bpl DecTimersLoop         ;do this until all timers are dealt with    
 NoDecTimers:
-    inc FrameCounter          ;increment frame counter
+    inc FrameCounter          ;increment frame counter	
 
 .if ::DEBUG_DISPLAY_VISUAL_FRAMETIME
     lda Mirror_PPUMASK
@@ -133,13 +156,8 @@ GameCoreRoutine:
   ldx CurrentPlayer          ;get which player is on the screen
   lda SavedJoypadBits,x      ;use appropriate player's controller bits
   sta SavedJoypadBits        ;as the master controller bits
-  ; Keep TimerControl on during invincibility. I think the TimerControl is getting removed from RAM every frame or something. -Cantersoft  
-  lda StarInvincibleTimer
-  beq SkipTimerControl
-    lda #$01
-    sta TimerControl
 	
-SkipTimerControl:    	 
+   	 
   farcall GameRoutines           ;execute one of many possible subs
 
   ; lda #0
@@ -157,6 +175,7 @@ GameEngine:
 	jsr InvincibleTest			;Cantersoft	
     ldx #$00
 ProcELoop:
+	;jsr FreezeTime
       stx ObjectOffset           ;put incremented offset in X as enemy object offset
       jsr EnemiesAndLoopsCore    ;process enemy objects
       jsr FloateyNumbersCore     ;process floatey numbers
@@ -381,7 +400,7 @@ RunGameTimer:
   bcc ExGTimer               ;branch to leave
   cmp #$0b                   ;if running death routine,
   beq ExGTimer               ;branch to leave
-  lda StarInvincibleTimer    ; check for invincibility -Cantersoft
+  lda FreezeTimer   		 ; check for time frozen -Cantersoft
   bne ExGTimer               ; if invincible, skip timer logic  
   lda Player_Y_HighPos
   cmp #$02                   ;if player below the screen,
@@ -1356,3 +1375,4 @@ StatusBarOffset:
   .byte Player2CoinDisplay + PlayerCoinLastIndex - DisplayDigits + 1
   .byte GameTimerDisplay + GameTimerLastIndex - DisplayDigits + 1
 .endproc
+

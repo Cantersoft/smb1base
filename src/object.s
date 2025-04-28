@@ -288,7 +288,8 @@ RunNormalEnemies:
           jsr EnemyToBGCollisionDet
           jsr EnemiesCollision
           jsr PlayerEnemyCollision
-          ldy TimerControl          ;if master timer control set, skip to last routine
+		  lda TimerControl
+          ora FreezeTimer          ;if master timer control set, skip to last routine
           bne SkipMove
           jsr EnemyMovementSubs
 SkipMove: jmp OffscreenBoundsCheck
@@ -1517,6 +1518,7 @@ BPGet:
     beq Exit                ; <— Only run effect if Select is pressed
     lda #$1a
     sta StarInvincibleTimer
+	sta FreezeTimer
     lda #StarPowerMusic
     sta AreaMusicQueue
 Exit:
@@ -2355,13 +2357,13 @@ ExJSpring:
 CompressJumpSpringBranch:
 	lda JumpspringAnimCtrl
 	beq ExJSpring
-	
+
+	jsr CompressJumpSpring
 	lda Jumpspring_FixedYPos,x
 	ldy #01
 	clc
     adc Jumpspring_Y_PosData,y  ;add value using frame control as offset
 	sta Enemy_Y_Position,x      ;store as new vertical position
-	jsr CompressJumpSpring
 	jmp ExJSpring
 	
 Jumpspring_Y_PosData:
@@ -2467,7 +2469,10 @@ RunSmallPlatform:
       jsr SmallPlatformCollision
       jsr RelativeEnemyPosition
       jsr DrawSmallPlatform
+	  lda FreezeTimer
+	  bne SkipMoveSmallPlatform
       jsr MoveSmallPlatform
+	  SkipMoveSmallPlatform:
       jmp OffscreenBoundsCheck
 
 
@@ -2479,6 +2484,7 @@ RunLargePlatform:
         jsr LargePlatformBoundBox
         jsr LargePlatformCollision
         lda TimerControl             ;if master timer control set,
+		ora FreezeTimer
         bne SkipPT                   ;skip subroutine tree
         jsr LargePlatformSubroutines
 SkipPT: jsr RelativeEnemyPosition
@@ -2983,7 +2989,8 @@ PowerUpObjHandler:
          beq ExitPUp                ;if not set, branch to leave
          asl                        ;shift to check if d7 was set in object state
          bcc GrowThePowerUp         ;if not set, branch ahead to skip this part
-         lda TimerControl           ;if master timer control set,
+		 lda TimerControl
+         ora FreezeTimer            ;if master timer control set,
          bne RunPUSubs              ;branch ahead to enemy object routines
          lda PowerUpType,x          ;check power-up type
          beq ShroomM                ;if normal mushroom, branch ahead to move it
@@ -2991,9 +2998,9 @@ PowerUpObjHandler:
          beq ShroomM                ;if 1-up mushroom, branch ahead to move it
          cmp #$02
          bne RunPUSubs              ;if not star, branch elsewhere to skip movement
-         jsr MoveJumpingEnemy       ;otherwise impose gravity on star power-up and make it jump
-         jsr EnemyJump              ;note that green paratroopa shares the same code here 
-         jmp RunPUSubs              ;then jump to other power-up subroutines
+         jsr MoveJumpingPowerup       ;otherwise impose gravity on star power-up and make it jump
+         jsr EnemyJump              ;note that green paratroopa shares the same code here
+		 jmp RunPUSubs              ;run the other subroutines
 ShroomM: jsr MoveNormalEnemy        ;do sub to make mushrooms move
          jsr EnemyToBGCollisionDet  ;deal with collisions
          jmp RunPUSubs              ;run the other subroutines
@@ -3024,7 +3031,10 @@ RunPUSubs: jsr RelativeEnemyPosition  ;get coordinates relative to screen
            jsr DrawPowerUp            ;draw the power-up object
            jsr PlayerEnemyCollision   ;check for collision with player
            jmp OffscreenBoundsCheck   ;check to see if it went offscreen
-ExitPUp:   rts ; TODO check this RTS can be removed                        ;and we're done
+ExitPUp:   
+		;lda #00
+		;sta powerup_jumped ;Cantersoft
+		rts ; TODO check this RTS can be removed                        ;and we're done
 
 
 ;-------------------------------------------------------------------------------------

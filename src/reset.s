@@ -406,16 +406,16 @@ WaterPaletteData:
   .byte $00
 
 GroundPaletteData:
-  .byte $3f, $00, $20
-  .byte $0f, $29, $1a, $0f
-  .byte $0f, $36, $17, $0f
-  .byte $0f, $30, $21, $0f
-  .byte $0f, $27, $17, $0f
-  .byte $0f, $16, $27, $18
-  .byte $0f, $1a, $30, $27
-  .byte $0f, $16, $30, $27
-  .byte $0f, $0f, $36, $17
-  .byte $00
+    .byte $3f, $00, $20
+    .byte $0f, $29, $1a, $0f	; background elements, pipe colors
+    .byte $0f, $36, $17, $0f	; floor tile, breakable brick
+    .byte $0f, $30, $21, $0f	; clouds and text
+    .byte $0f, $10, $00, $0f	; ??? -boxes (no animation)
+    .byte $0f, $16, $27, $18
+    .byte $0f, $26, $30, $16	; piranha plant (florie) colors + koopa
+    .byte $0f, $37, $07, $27	; mushroom/ fireflower
+    .byte $0f, $26, $30, $0f	; goomba colors
+    .byte $00
 
 UndergroundPaletteData:
   .byte $3f, $00, $20

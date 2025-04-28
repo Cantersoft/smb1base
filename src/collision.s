@@ -374,12 +374,12 @@ SetPRout: sta GameEngineSubroutine  ;load new value to run subroutine on next fr
           ldy #$ff
           sty TimerControl          ;set master timer control flag to halt timers
           iny
-          sty ScrollAmount          ;initialize scroll speed
-
+          sty ScrollAmount          ;initialize scroll speed	
+		
 ExInjColRoutines:
       ldx ObjectOffset              ;get enemy offset and leave
       rts
-
+	
 KillPlayer:
       stx Player_X_Speed   ;halt player's horizontal movement by initializing speed
       inx
@@ -893,6 +893,7 @@ HandlePowerUpCollision:
       beq SetFor1Up           ;if 1-up mushroom, branch
       lda #$23                ;otherwise set star mario invincibility
       sta StarInvincibleTimer ;timer, and load the star mario music
+	  sta FreezeTimer
       lda #StarPowerMusic     ;into the area music queue, then leave
       sta AreaMusicQueue
 NearbyRTS:
@@ -1869,6 +1870,7 @@ EnemyLanding:
       and #%11110000          ;save high nybble of vertical coordinate, and
       ora #%00001000          ;set d3, then store, probably used to set enemy object
       sta Enemy_Y_Position,x  ;neatly on whatever it's landing on
+      ;jmp RunPUSubs              ;then jump to other power-up subroutines
       rts
 
 SubtEnemyYPos:
@@ -1929,7 +1931,10 @@ ChkUnderEnemy:
       ldy #$15                  ;set Y to check the bottom middle (8,18) of enemy object
       inx ; jroweboy(inlined BlockBufferChk_Enemy)
       jmp BBChk_E  ;hop to it!
-
+	  ;bcc AfterChkUnderEnemy ;Cantersoft
+	  ;lda #01
+	  ;sta powerup_jumped
+	  ;AfterChkUnderEnemy:
 
 ;-------------------------------------------------------------------------------------
 ;$00 - used to hold one of bitmasks, or offset
@@ -2104,3 +2109,11 @@ NoOfs2: ldx ObjectOffset           ;get object offset and leave
 MoveJumpingEnemy:
       jsr MoveJ_EnemyVertically  ;do a sub to impose gravity on green paratroopa
       jmp MoveEnemyHorizontally  ;jump to move enemy horizontally
+
+MoveJumpingPowerup: 
+	lda powerup_jumped
+	bne SkipVertical
+	jsr MoveEnemyUltraSlowVert  ;do a sub to impose gravity on green paratroopa 
+	SkipVertical: 
+	jmp MoveEnemyHorizontally  ;jump to move enemy horizontally
+    ;rts
