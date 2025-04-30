@@ -288,8 +288,7 @@ RunNormalEnemies:
           jsr EnemyToBGCollisionDet
           jsr EnemiesCollision
           jsr PlayerEnemyCollision
-		  lda TimerControl
-          ora FreezeTimer          ;if master timer control set, skip to last routine
+          ldy TimerControl          ;if master timer control set, skip to last routine
           bne SkipMove
           jsr EnemyMovementSubs
 SkipMove: jmp OffscreenBoundsCheck
@@ -1512,19 +1511,6 @@ BPGet:
 ;$02 - used to store maximum vertical speed in FireballObjCore
 ;$07 - used to store pseudorandom bit in BubbleCheck
 
-.proc InvincibleTest ;-Cantersoft
-    lda SavedJoypadBits
-    and #Select_Button
-    beq Exit                ; <— Only run effect if Select is pressed
-    lda #$1a
-    sta StarInvincibleTimer
-	sta FreezeTimer
-    lda #StarPowerMusic
-    sta AreaMusicQueue
-Exit:
-    rts
-.endproc
-
 .proc ProcFireball_Bubble
   lda PlayerStatus           ;check player's status
   cmp #$02
@@ -2306,8 +2292,8 @@ StarFlagExit2:
 
 JumpspringHandler:
   jsr GetEnemyOffscreenBits   ;get offscreen information
-  lda StarInvincibleTimer     ;check master timer control
-  bne CompressJumpSpringBranch                ;branch to last section if set
+  lda TimerControl            ;check master timer control
+  bne DrawJSpr                ;branch to last section if set
   lda JumpspringAnimCtrl      ;check jumpspring frame control
   beq DrawJSpr                ;branch to last section if not set
     tay
@@ -2354,41 +2340,14 @@ DrawJSpr:
   inc JumpspringAnimCtrl      ;increment frame control to animate jumpspring
 ExJSpring:
   rts                         ;leave
-CompressJumpSpringBranch:
-	lda JumpspringAnimCtrl
-	beq ExJSpring
 
-	jsr CompressJumpSpring
-	lda Jumpspring_FixedYPos,x
-	ldy #01
-	clc
-    adc Jumpspring_Y_PosData,y  ;add value using frame control as offset
-	sta Enemy_Y_Position,x      ;store as new vertical position
-	jmp ExJSpring
-	
 Jumpspring_Y_PosData:
-      .byte $08, $10, $08, $00	
-	
-.proc CompressJumpSpring
-	ldy #02
-	lda JumpspringFrameOffsets,y
-	sta EnemyMetasprite,x 
-	lda #$00
-    sta JumpspringAnimCtrl      ;initialize jumpspring frame control
-	rts
-	
-JumpspringFrameOffsets:
-  .byte METASPRITE_JUMPSPRING_FRAME_1
-  .byte METASPRITE_JUMPSPRING_FRAME_2
-  .byte METASPRITE_JUMPSPRING_FRAME_3
-  .byte METASPRITE_JUMPSPRING_FRAME_2
-  .byte METASPRITE_JUMPSPRING_FRAME_1
-.endproc	
-	
+  .byte $08, $10, $08, $00
+
 .proc DrawJumpSpring
   ldy JumpspringAnimCtrl
   lda JumpspringFrameOffsets,y
-  sta EnemyMetasprite,x 
+  sta EnemyMetasprite,x
   rts
 
 JumpspringFrameOffsets:
@@ -2397,8 +2356,7 @@ JumpspringFrameOffsets:
   .byte METASPRITE_JUMPSPRING_FRAME_3
   .byte METASPRITE_JUMPSPRING_FRAME_2
   .byte METASPRITE_JUMPSPRING_FRAME_1
-.endproc  
-
+.endproc
 
 ;--------------------------------
 ;$00 - used to store horizontal difference between player and piranha plant
@@ -2469,10 +2427,7 @@ RunSmallPlatform:
       jsr SmallPlatformCollision
       jsr RelativeEnemyPosition
       jsr DrawSmallPlatform
-	  lda FreezeTimer
-	  bne SkipMoveSmallPlatform
       jsr MoveSmallPlatform
-	  SkipMoveSmallPlatform:
       jmp OffscreenBoundsCheck
 
 
@@ -2484,7 +2439,6 @@ RunLargePlatform:
         jsr LargePlatformBoundBox
         jsr LargePlatformCollision
         lda TimerControl             ;if master timer control set,
-		ora FreezeTimer
         bne SkipPT                   ;skip subroutine tree
         jsr LargePlatformSubroutines
 SkipPT: jsr RelativeEnemyPosition
@@ -2497,8 +2451,8 @@ SkipPT: jsr RelativeEnemyPosition
 LargePlatformCollision:
        lda #$ff                     ;save value here
        sta PlatformCollisionFlag,x
-       ;lda TimerControl             ;check master timer control ;Disable -Cantersoft
-       ;bne ExLPC                    ;if set, branch to leave
+       lda TimerControl             ;check master timer control
+       bne ExLPC                    ;if set, branch to leave
        lda Enemy_State,x            ;if d7 set in object state,
        bmi ExLPC                    ;branch to leave
        lda Enemy_ID,x
@@ -2989,8 +2943,7 @@ PowerUpObjHandler:
          beq ExitPUp                ;if not set, branch to leave
          asl                        ;shift to check if d7 was set in object state
          bcc GrowThePowerUp         ;if not set, branch ahead to skip this part
-		 lda TimerControl
-         ora FreezeTimer            ;if master timer control set,
+         lda TimerControl           ;if master timer control set,
          bne RunPUSubs              ;branch ahead to enemy object routines
          lda PowerUpType,x          ;check power-up type
          beq ShroomM                ;if normal mushroom, branch ahead to move it
@@ -2998,9 +2951,9 @@ PowerUpObjHandler:
          beq ShroomM                ;if 1-up mushroom, branch ahead to move it
          cmp #$02
          bne RunPUSubs              ;if not star, branch elsewhere to skip movement
-         jsr MoveJumpingPowerup       ;otherwise impose gravity on star power-up and make it jump
-         jsr EnemyJump              ;note that green paratroopa shares the same code here
-		 jmp RunPUSubs              ;run the other subroutines
+         jsr MoveJumpingEnemy       ;otherwise impose gravity on star power-up and make it jump
+         jsr EnemyJump              ;note that green paratroopa shares the same code here 
+         jmp RunPUSubs              ;then jump to other power-up subroutines
 ShroomM: jsr MoveNormalEnemy        ;do sub to make mushrooms move
          jsr EnemyToBGCollisionDet  ;deal with collisions
          jmp RunPUSubs              ;run the other subroutines
@@ -3031,10 +2984,7 @@ RunPUSubs: jsr RelativeEnemyPosition  ;get coordinates relative to screen
            jsr DrawPowerUp            ;draw the power-up object
            jsr PlayerEnemyCollision   ;check for collision with player
            jmp OffscreenBoundsCheck   ;check to see if it went offscreen
-ExitPUp:   
-		;lda #00
-		;sta powerup_jumped ;Cantersoft
-		rts ; TODO check this RTS can be removed                        ;and we're done
+ExitPUp:   rts ; TODO check this RTS can be removed                        ;and we're done
 
 
 ;-------------------------------------------------------------------------------------
@@ -4063,6 +4013,3 @@ FSLoop:
 FlmEx:
   rts                     ;and then leave
 .endproc
-
-;--------------------------------
-

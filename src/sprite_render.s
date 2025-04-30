@@ -105,8 +105,7 @@ Exit:
   lda #1
   sta Enemy_MovingDir + (Misc_SprAttrib - Enemy_SprAttrib),x
   ldy #METASPRITE_HAMMER_FRAME_1
-  lda TimerControl      
-  ora FreezeTimer
+  lda TimerControl
   bne ForceHPose
     lda Misc_State,x            ;otherwise get hammer's state
     and #%01111111              ;mask out d7
@@ -291,7 +290,6 @@ Noop:
   lda #%00100000              ;set background priority bit in sprite
   sta Enemy_SprAttrib,x       ;attributes to give illusion of being inside pipe
   lda TimerControl
-  ora FreezeTimer 
   bne Exit                    ; Just use the previous metasprite and leave if we aren't moving
     lda PiranhaPlant_Y_Speed,x
     bmi DrawPiranha           ;if piranha plant moving upwards, branch
@@ -328,8 +326,7 @@ Exit:
     bne Exit
 GmbaAnim:
   and #%00100000        ;check for d5 set in enemy object state
-  ora TimerControl
-  ora FreezeTimer      ;or timer disable flag set
+  ora TimerControl      ;or timer disable flag set
   bne Exit              ;if either condition true, do not animate goomba
     lda FrameCounter
     and #%00001000        ;check for every eighth frame
@@ -384,7 +381,6 @@ NormalKoopaAnimation:
   ; for d7 or d5, or check for timers stopped
   and #%10100000
   ora TimerControl
-  ora FreezeTimer
   bne WriteMetasprite
     ; Check if the timer is in the last 5 frame rules
     lda EnemyIntervalTimer,x
@@ -422,7 +418,6 @@ ProcessJumpingParatrooperInner:
   ; for d7 or d5, or check for timers stopped
   and #%10100000
   ora TimerControl
-  ora FreezeTimer
   bne @WriteMetasprite
     ; and run the animation every 8 frames
     lda FrameCounter
@@ -502,7 +497,6 @@ NormalBuzzyAnimation:
   ; for d7 or d5, or check for timers stopped
   and #%10100000
   ora TimerControl      ;or timer disable flag set
-  ora FreezeTimer
   bne WriteMetasprite   ;if either condition true, do not animate goomba
     lda FrameCounter
     and #%00001000        ;check for every eighth frame
@@ -526,7 +520,6 @@ ProcessSwimmingCheepCheep:
   ; check for the animation bits
   and #%10100000
   ora TimerControl      ;or timer disable flag set
-  ora FreezeTimer
   bne CheckDefeated   ;if either condition true, do not animate goomba
     lda FrameCounter
     and #%00001000        ;check for every eighth frame
@@ -557,8 +550,7 @@ WriteMetasprite:
       ; Check if the timers are running
       lda Enemy_State,x        ;check saved enemy state
       and #%10100000      ;for d7 or d5, or check for timers stopped
-      ora TimerControl      ;or timer disable flag set
-		ora FreezeTimer
+      ora TimerControl
       bne CheckDefeated   ;if either condition true, branch
         ldy #METASPRITE_BLOOPER_SWIM_2
 CheckDefeated:
@@ -589,8 +581,7 @@ CheckToAnimateEnemy:
   bne CheckDefeatedState
       lda Local_ed                 ;check saved enemy state
       and #%10100000          ;for d7 or d5, or check for timers stopped
-		ora TimerControl      ;or timer disable flag set
-		ora FreezeTimer
+      ora TimerControl
       bne CheckDefeatedState  ;if either condition true, branch
         iny ; use the next frame of whatever action is selected
 CheckDefeatedState:
@@ -645,8 +636,7 @@ CheckToAnimateEnemy:
   bne CheckDefeatedState
       lda Local_ed                 ;check saved enemy state
       and #%10100000          ;for d7 or d5, or check for timers stopped
-		ora TimerControl      ;or timer disable flag set
-		ora FreezeTimer
+      ora TimerControl
       bne CheckDefeatedState  ;if either condition true, branch
         iny ; use the next frame of whatever action is selected
 

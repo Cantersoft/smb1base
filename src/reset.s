@@ -379,7 +379,8 @@ OnCooldown:
       PrincessSaved2, \
       WorldSelectMessage1, \
       WorldSelectMessage2, \
-      TitleScreenData
+      TitleScreenData, \
+	  TestPaletteData		;-Cantersoft
 
 clabel VRAM_AddrTable_Low
 clabel VRAM_AddrTable_High
@@ -406,16 +407,16 @@ WaterPaletteData:
   .byte $00
 
 GroundPaletteData:
-    .byte $3f, $00, $20
-    .byte $0f, $29, $1a, $0f	; background elements, pipe colors
-    .byte $0f, $36, $17, $0f	; floor tile, breakable brick
-    .byte $0f, $30, $21, $0f	; clouds and text
-    .byte $0f, $10, $00, $0f	; ??? -boxes (no animation)
-    .byte $0f, $16, $27, $18
-    .byte $0f, $26, $30, $16	; piranha plant (florie) colors + koopa
-    .byte $0f, $37, $07, $27	; mushroom/ fireflower
-    .byte $0f, $26, $30, $0f	; goomba colors
-    .byte $00
+  .byte $3f, $00, $20
+  .byte $0f, $29, $1a, $0f
+  .byte $0f, $36, $17, $0f
+  .byte $0f, $30, $21, $0f
+  .byte $0f, $27, $17, $0f
+  .byte $0f, $16, $27, $18
+  .byte $0f, $1a, $30, $27
+  .byte $0f, $16, $30, $27
+  .byte $0f, $0f, $36, $17
+  .byte $00
 
 UndergroundPaletteData:
   .byte $3f, $00, $20
@@ -496,6 +497,18 @@ WorldSelectMessage1:
 WorldSelectMessage2:
   .byte $26, $88, $11
   .byte "TO SELECT A WORLD"
+  .byte $00
+  
+TestPaletteData:			;Copy of underground data -Cantersoft
+  .byte $3f, $00, $20
+  .byte $0f, $29, $1a, $09
+  .byte $0f, $3c, $1c, $0f
+  .byte $0f, $30, $21, $1c
+  .byte $0f, $27, $17, $1c
+  .byte $0f, $16, $27, $18
+  .byte $0f, $1c, $36, $17
+  .byte $0f, $16, $30, $27
+  .byte $0f, $0c, $3c, $1c
   .byte $00
 
 ;-------------------------------------------------------------------------------------
