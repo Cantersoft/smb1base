@@ -44,28 +44,39 @@ RotPRandomBit:
   lda GamePauseStatus       ;if in pause mode, do not perform operation mode stuff
   lsr
   bcs PauseSkip
-
+  
     ; Move the timers ahead by a frame as well
+	
     lda TimerControl          ;if master timer control not set, decrement
     beq DecTimers             ;all frame and interval timers
-      dec TimerControl
+    dec TimerControl
     bne NoDecTimers
+	
     DecTimers:
-      ldx #FRAME_TIMER_COUNT    ;load end offset for end of frame timers
-      dec IntervalTimerControl  ;decrement interval timer control,
-      bpl DecTimersLoop         ;if not expired, only frame timers will decrement
-      lda #$14
-      sta IntervalTimerControl  ;if control for interval timers expired,
-      ldx #ALL_TIMER_COUNT      ;interval timers will decrement along with frame timers
+    ldx #FRAME_TIMER_COUNT    ;load end offset for end of frame timers
+	lda FreezeTimer
+	beq SET_FRAME_TIMER_COUNT_NO_FREEZE
+	ldx #FRAME_TIMER_COUNT_FREEZE
+	SET_FRAME_TIMER_COUNT_NO_FREEZE:
+    dec IntervalTimerControl  ;decrement interval timer control,
+    bpl DecTimersLoop         ;if not expired, only frame timers will decrement
+
+    lda #$14
+    sta IntervalTimerControl  ;if control for interval timers expired,
+    ldx #ALL_TIMER_COUNT      ;interval timers will decrement along with frame timers
+	lda FreezeTimer
+	beq SET_ALL_TIMER_COUNT_NO_FREEZE
+	ldx #ALL_TIMER_COUNT_FREEZE
+	SET_ALL_TIMER_COUNT_NO_FREEZE:
     DecTimersLoop:
-        lda Timers,x              ;check current timer
+        lda Timers,x              ;check current timer	
         beq SkipExpTimer          ;if current timer expired, branch to skip,
           dec Timers,x              ;otherwise decrement the current timer
       SkipExpTimer:
         dex                       ;move onto next timer
-        bpl DecTimersLoop         ;do this until all timers are dealt with
+        bpl DecTimersLoop         ;do this until all timers are dealt with    
 NoDecTimers:
-    inc FrameCounter          ;increment frame counter
+    inc FrameCounter          ;increment frame counter	
 
 .if ::DEBUG_DISPLAY_VISUAL_FRAMETIME
     lda Mirror_PPUMASK
@@ -133,7 +144,8 @@ GameCoreRoutine:
   ldx CurrentPlayer          ;get which player is on the screen
   lda SavedJoypadBits,x      ;use appropriate player's controller bits
   sta SavedJoypadBits        ;as the master controller bits
-  
+	
+   	 
   farcall GameRoutines           ;execute one of many possible subs
 
   ; lda #0
@@ -148,6 +160,7 @@ GameCoreRoutine:
 GameEngine:
   far OBJECT
     jsr ProcFireball_Bubble    ;process fireballs and air bubbles
+	jsr InvincibleTest			;Cantersoft	
     ldx #$00
 ProcELoop:
       stx ObjectOffset           ;put incremented offset in X as enemy object offset
@@ -210,6 +223,8 @@ DoneDrawing:
       bne NoChgMus               ;if not yet at a certain point, continue
         lda IntervalTimerControl   ;if interval timer not yet expired,
         bne NoChgMus               ;branch ahead, don't bother with the music
+		  farcall GetAreaPalette	;also, reset the world palette back to whatever it should be -Cantersoft
+		  farcall GetBackgroundColor
           jsr GetAreaMusic       ;to re-attain appropriate level music
 NoChgMus:
   ldy StarInvincibleTimer    ;get invincibility timer
@@ -374,6 +389,8 @@ RunGameTimer:
   bcc ExGTimer               ;branch to leave
   cmp #$0b                   ;if running death routine,
   beq ExGTimer               ;branch to leave
+  lda FreezeTimer   		 ; check for time frozen -Cantersoft
+  bne ExGTimer               ; if invincible, skip timer logic  
   lda Player_Y_HighPos
   cmp #$02                   ;if player below the screen,
   bcs ExGTimer               ;branch to leave regardless of level type
@@ -572,6 +589,8 @@ ColorRotation:
               lda FrameCounter         ;get frame counter
               and #$07                 ;mask out all but three LSB
               bne ExitColorRot         ;branch if not set to zero to do this every eighth frame
+			  lda FreezeTimer   		; if time is stopped	-Cantersoft
+              bne ExitColorRot          ; skip color rotation entirely			  
               ldx VRAM_Buffer1_Offset  ;check vram buffer offset
               cpx #$31
               bcs ExitColorRot         ;if offset over 48 bytes, branch to leave
@@ -872,7 +891,7 @@ ChkSelect:
   bcs ResetTitle              ;if carry flag set, demo over, thus branch
   jmp RunDemo                 ;otherwise, run game engine for demo
 ChkWorldSel:
-  ldx WorldSelectEnableFlag   ;check to see if world selection has been enabled
+  ldx #01 ;WorldSelectEnableFlag   ;check to see if world selection has been enabled ;just enable it without enabling hard mode -Cantersoft
   beq NullJoypad
   cmp #B_Button               ;if so, check to see if the B button was pressed
   bne NullJoypad

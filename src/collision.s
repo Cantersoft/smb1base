@@ -374,12 +374,12 @@ SetPRout: sta GameEngineSubroutine  ;load new value to run subroutine on next fr
           ldy #$ff
           sty TimerControl          ;set master timer control flag to halt timers
           iny
-          sty ScrollAmount          ;initialize scroll speed
-
+          sty ScrollAmount          ;initialize scroll speed	
+		
 ExInjColRoutines:
       ldx ObjectOffset              ;get enemy offset and leave
       rts
-
+	
 KillPlayer:
       stx Player_X_Speed   ;halt player's horizontal movement by initializing speed
       inx
@@ -669,8 +669,8 @@ ExTA:  rts                      ;leave!!!
 ;$00 - counter for bounding boxes
 
 SmallPlatformCollision:
-      lda TimerControl             ;if master timer control set,
-      bne ExSPC                    ;branch to leave
+      ;lda TimerControl             ;if master timer control set, ;Disabling collision disabling with platforms to prevent timestop from removing floor -Cantersoft
+      ;bne ExSPC                    ;branch to leave
       sta PlatformCollisionFlag,x  ;otherwise initialize collision flag
       jsr CheckPlayerVertical      ;do a sub to see if player is below a certain point
       bcs ExSPC                    ;or entirely offscreen, and branch to leave if true
@@ -881,8 +881,6 @@ ExHCF: rts                      ;and now let's leave
 ;-------------------------------------------------------------------------------------
 
 HandlePowerUpCollision:
-	  lda #$20				  ;Change to an area type value such as #$03 to see that this method works normally
-      sta VRAM_Buffer_AddrCtrl;as a test, change the world palette when a powerup is touched -Cantersoft
       jsr EraseEnemyObject    ;erase the power-up object
       lda #$06
       jsr SetupFloateyNumber  ;award 1000 points to player by default
@@ -895,6 +893,9 @@ HandlePowerUpCollision:
       beq SetFor1Up           ;if 1-up mushroom, branch
       lda #$23                ;otherwise set star mario invincibility
       sta StarInvincibleTimer ;timer, and load the star mario music
+	  sta FreezeTimer
+	  lda #ZaWarudoPaletteDataOffset	;Change world palette
+	  sta VRAM_Buffer_AddrCtrl
       lda #StarPowerMusic     ;into the area music queue, then leave
       sta AreaMusicQueue
 NearbyRTS:
@@ -1871,6 +1872,7 @@ EnemyLanding:
       and #%11110000          ;save high nybble of vertical coordinate, and
       ora #%00001000          ;set d3, then store, probably used to set enemy object
       sta Enemy_Y_Position,x  ;neatly on whatever it's landing on
+      ;jmp RunPUSubs              ;then jump to other power-up subroutines
       rts
 
 SubtEnemyYPos:
@@ -1931,7 +1933,10 @@ ChkUnderEnemy:
       ldy #$15                  ;set Y to check the bottom middle (8,18) of enemy object
       inx ; jroweboy(inlined BlockBufferChk_Enemy)
       jmp BBChk_E  ;hop to it!
-
+	  ;bcc AfterChkUnderEnemy ;Cantersoft
+	  ;lda #01
+	  ;sta powerup_jumped
+	  ;AfterChkUnderEnemy:
 
 ;-------------------------------------------------------------------------------------
 ;$00 - used to hold one of bitmasks, or offset
@@ -2106,3 +2111,11 @@ NoOfs2: ldx ObjectOffset           ;get object offset and leave
 MoveJumpingEnemy:
       jsr MoveJ_EnemyVertically  ;do a sub to impose gravity on green paratroopa
       jmp MoveEnemyHorizontally  ;jump to move enemy horizontally
+
+MoveJumpingPowerup: 
+	lda powerup_jumped
+	bne SkipVertical
+	jsr MoveEnemyUltraSlowVert  ;do a sub to impose gravity on green paratroopa 
+	SkipVertical: 
+	jmp MoveEnemyHorizontally  ;jump to move enemy horizontally
+    ;rts

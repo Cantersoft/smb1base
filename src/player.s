@@ -567,6 +567,8 @@ GrowAnimation = * - PlayerGfxTblOffsets
   .byte METASPRITE_SMALL_MARIO_GROW_STANDING
 
 HandleChangeSize:
+;lda StarInvincibleTimer
+;bne PlayerChangeSizeFlagSkip	;Cantersoft
   ldy PlayerAnimCtrl           ;get animation frame control
   lda FrameCounter
   and #%00000011               ;get frame counter and execute this code every
@@ -574,6 +576,7 @@ HandleChangeSize:
     iny                          ;increment frame control
     cpy #$0a                     ;check for preset upper extent
     bcc CSzNext                  ;if not there yet, skip ahead to use
+;PlayerChangeSizeFlagSkip:	
       ldy #$00                     ;otherwise initialize both grow/shrink flag
       sty PlayerChangeSizeFlag     ;and animation frame control
 CSzNext:
@@ -612,16 +615,19 @@ ShrPlF:
 ;-------------------------------------------------------------------------------------
 
 PlayerChangeSize:
-  lda TimerControl    ;check master timer control
-  cmp #$f8            ;for specific moment in time
-  bne EndChgSize      ;branch if before or after that point
-  jmp InitChangeSize  ;otherwise run code to get growing/shrinking going
+
+lda TimerControl    ;check master timer control
+cmp #$f8            ;for specific moment in time
+bne EndChgSize      ;branch if before or after that point
+jmp InitChangeSize  ;otherwise run code to get growing/shrinking going
+
 EndChgSize:
-  cmp #$c4            ;check again for another specific moment
-  bne ExitChgSize     ;and branch to leave if before or after that point
-  jmp DonePlayerTask  ;otherwise do sub to init timer control and set routine
+cmp #$c4            ;check again for another specific moment
+bne ExitChgSize     ;and branch to leave if before or after that point
+jmp DonePlayerTask  ;otherwise do sub to init timer control and set routine
+
 ExitChgSize:
-  rts ; TODO check this RTS can be removed                 ;and then leave
+rts ; TODO check this RTS can be removed                 ;and then leave
 
 ;-------------------------------------------------------------------------------------
 
@@ -794,6 +800,7 @@ SetCrouch:
 ProcMove:
   jsr PlayerPhysicsSub      ;run sub related to jumping and swimming
   lda PlayerChangeSizeFlag  ;if growing/shrinking flag set,
+  ;ora StarInvincibleTimer	;and if not invincible -Cantersoft
   bne NoMoveSub             ;branch to leave
   lda Player_State
   cmp #$03                  ;get player state
@@ -1470,6 +1477,7 @@ ExPlyrAt:
 ;$02 - used for maximum vertical speed
 
 MovePlayerVertically:
+  jmp NoJSChk			 
   ldx #$00                ;set X for player offset
   lda TimerControl
   bne NoJSChk             ;if master timer control set, branch ahead

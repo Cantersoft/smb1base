@@ -516,6 +516,11 @@ MoveEnemySlowVert:
           ldy #$0f         ;set movement amount for bowser/other objects
 SetMdMax: lda #$02         ;set maximum speed in A
           bne SetXMoveAmt  ;unconditional branch
+		  
+MoveEnemyUltraSlowVert:		;-Cantersoft
+          ldy #$20         ;set movement amount for bowser/other objects
+          lda #$01         ;set maximum speed in A
+          bne SetXMoveAmt  ;unconditional branch		  
 
 ;--------------------------------
 

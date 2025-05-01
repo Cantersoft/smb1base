@@ -380,7 +380,7 @@ OnCooldown:
       WorldSelectMessage1, \
       WorldSelectMessage2, \
       TitleScreenData, \
-	  TestPaletteData		;-Cantersoft
+	  ZaWarudoPaletteData
 
 clabel VRAM_AddrTable_Low
 clabel VRAM_AddrTable_High
@@ -498,19 +498,19 @@ WorldSelectMessage2:
   .byte $26, $88, $11
   .byte "TO SELECT A WORLD"
   .byte $00
-  
-TestPaletteData:			;Copy of underground data -Cantersoft
-  .byte $3f, $00, $20
-  .byte $0f, $29, $1a, $09
-  .byte $0f, $3c, $1c, $0f
-  .byte $0f, $30, $21, $1c
-  .byte $0f, $27, $17, $1c
-  .byte $0f, $16, $27, $18
-  .byte $0f, $1c, $36, $17
-  .byte $0f, $16, $30, $27
-  .byte $0f, $0c, $3c, $1c
-  .byte $00
 
+ZaWarudoPaletteData:
+  .byte $3f, $00, $20
+  .byte $0f, $24, $04, $0f	; background elements, pipe colors
+  .byte $0f, $39, $19, $0f	; floor tile, breakable brick?
+  .byte $0f, $31, $04, $0f	; clouds and text
+  .byte $0f, $39, $19, $0f	; ??? -boxes (no animation)
+  .byte $0f, $31, $24, $04	; player
+  .byte $0f, $1c, $31, $21	; piranha plant colors + koopa
+  .byte $0f, $1a, $31, $2a	; mushroom/ fireflower
+  .byte $0f, $0f, $31, $12	; goomba colors
+  .byte $00
+  
 ;-------------------------------------------------------------------------------------
 .segment "FIXED"
 ;$06 - RAM address low

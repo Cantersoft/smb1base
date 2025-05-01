@@ -198,7 +198,7 @@ FIREFLOWER_BOX_METATILE = $c1
   WorldSelectMessage1Offset
   WorldSelectMessage2Offset
   TitleScreenDataOffset
-  TestPaletteDataOffset		;Not totally sure what this does but adding for consistency's sake -Cantersoft
+  ZaWarudoPaletteDataOffset
 .endenum
 
 .enum
