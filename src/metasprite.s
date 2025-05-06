@@ -465,7 +465,6 @@ VINE_TILE_2 = MetaspriteVramOffset {$2a}, {SPRITE_BANK_3}
 FIREBALL_TILE1 = MetaspriteVramOffset {$3c}, {SPRITE_BANK_0}
 FIREBALL_TILE2 = MetaspriteVramOffset {$3e}, {SPRITE_BANK_0}
 
-
 ;;;;;;;;;;;
 ; NULL Metasprite needs to be reserved in slot 0 to allow disabling drawing a sprite before its deleted
 
@@ -594,5 +593,5 @@ TOTAL_MARIO_SPRITE_BANK = * - PlayerBankTableReal
 .assert TOTAL_MARIO_SPRITE_BANK = TOTAL_MARIO_METASPRITES, error, .sprintf("Total number of Mario Metasprites (%d) does not match the mario bank table (%d)! Update the bank table to match ", TOTAL_MARIO_METASPRITES, TOTAL_MARIO_SPRITE_BANK)
 
 
-
+BUBBLE_TILE = MetaspriteVramOffset {$1c}, {SPRITE_BANK_1} ;-Cantersoft
 

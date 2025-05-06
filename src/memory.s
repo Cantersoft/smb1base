@@ -412,6 +412,9 @@ RESERVE PlayerAnimDirection, 1
 RESERVE PlayerAnimTimerSet, 1
 RESERVE PlayerAnimCtrl, 1
 RESERVE JumpspringAnimCtrl, 1
+RESERVE DrawBubbleOnPlayerAnimCtrl, 1 ;-Cantersoft
+RESERVE Bubble_Y_Offset_Prev, 1
+RESERVE Bubble_X_Offset_Prev, 1
 RESERVE FlagpoleCollisionYPos, 1
 RESERVE PlayerEntranceCtrl, 1
 RESERVE FireballThrowingTimer, 1

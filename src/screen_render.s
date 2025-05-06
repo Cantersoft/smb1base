@@ -318,7 +318,7 @@ SetBGColor:
   lda #$3f                 ;set for sprite palette address
   sta VRAM_Buffer1,x       ;save to buffer
   lda #$10
-  sta VRAM_Buffer1+1,x
+  sta VRAM_Buffer1+1,x		;Set color of background elements? (bushes/hills)
   lda #$04                 ;write length byte to buffer
   sta VRAM_Buffer1+2,x
   lda #$00                 ;now the null terminator
@@ -336,6 +336,9 @@ BGColorCtrl_Addr:
 BackgroundColors:
       .byte $22, $22, $0f, $0f ;used by area type if bg color ctrl not set
       .byte $0f, $22, $0f, $0f ;used by background color control if set
+		
+		;x, world bg, intermediate color, x
+		;x, x, x, x
 
 PlayerColors:
       .byte $22, $16, $27, $18 ;mario's colors

@@ -1516,11 +1516,13 @@ BPGet:
     lda SavedJoypadBits
     and #Select_Button
     beq Exit                ; <— Only run effect if Select is pressed
-    lda #$1a
+    lda #$08
     sta StarInvincibleTimer
 	sta FreezeTimer
     lda #StarPowerMusic
     sta AreaMusicQueue
+	lda #ZaWarudoPaletteDataOffset	;Change world palette
+	sta VRAM_Buffer_AddrCtrl
 Exit:
     rts
 .endproc
@@ -4065,4 +4067,3 @@ FlmEx:
 .endproc
 
 ;--------------------------------
-

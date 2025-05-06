@@ -214,6 +214,8 @@ DoneDrawing:
   farcall SimulateWind           ;otherwise, simulate wind where needed
 .endif
 
+farcall DrawBubbleOnPlayer
+
   lda Player_Y_HighPos
   cmp #$02                   ;if player is below the screen, don't bother with the music
   bpl NoChgMus
@@ -223,9 +225,25 @@ DoneDrawing:
       bne NoChgMus               ;if not yet at a certain point, continue
         lda IntervalTimerControl   ;if interval timer not yet expired,
         bne NoChgMus               ;branch ahead, don't bother with the music
-		  farcall GetAreaPalette	;also, reset the world palette back to whatever it should be -Cantersoft
-		  farcall GetBackgroundColor
+		
+		  ;farcall GetAreaPalette	;also, reset the world palette back to whatever it should be -Cantersoft
+		  ;ldy #5
+		  ;farcall SetBGColor
+		  ;lda #22
+		  ;sta PPUDATA
+		  ;farcall AlterAreaAttributes
+				;lda $00
+				;sta BackgroundColorCtrl
+				;ldy BackgroundColorCtrl   ;check background color control
+				;lda #0  ;put appropriate palette into vram
+				;sta VRAM_Buffer_AddrCtrl  ;note that if set to 5-7, $0301 will not be read
+		;labelfortest:
+		  ;ldy AreaType
+		  ;ldx AreaPalette, y
+		  ;stx VRAM_Buffer_AddrCtrl
+		  
           jsr GetAreaMusic       ;to re-attain appropriate level music
+		  
 NoChgMus:
   ldy StarInvincibleTimer    ;get invincibility timer
   lda FrameCounter           ;get frame counter

@@ -894,7 +894,7 @@ HandlePowerUpCollision:
       lda #$23                ;otherwise set star mario invincibility
       sta StarInvincibleTimer ;timer, and load the star mario music
 	  sta FreezeTimer
-	  lda #ZaWarudoPaletteDataOffset	;Change world palette
+	  lda #ZaWarudoPaletteDataOffset	;Change world palette	-Cantersoft
 	  sta VRAM_Buffer_AddrCtrl
       lda #StarPowerMusic     ;into the area music queue, then leave
       sta AreaMusicQueue
@@ -2112,6 +2112,9 @@ MoveJumpingEnemy:
       jsr MoveJ_EnemyVertically  ;do a sub to impose gravity on green paratroopa
       jmp MoveEnemyHorizontally  ;jump to move enemy horizontally
 
+.segment "FIXED"
+
+;-------------------------------------------------------------------------------------
 MoveJumpingPowerup: 
 	lda powerup_jumped
 	bne SkipVertical
