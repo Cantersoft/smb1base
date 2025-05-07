@@ -976,17 +976,26 @@ ExitDumpSpr:
   rts
 
 DrawBubbleOnPlayer:
+	;Unless the timer for this routine is set, exit.
+	lda BubblesVFXTimer
+	beq DrawBubbleOnPlayerExit
+	
 	;Allocate space in OAM and prepare the bubble tile for insertion
 	AllocSpr 6
+	iny
 	lda #BUBBLE_TILE
-	sta Sprite_Tilenumber,y
+	;sta Sprite_Tilenumber,y
+	jsr DumpSixSpr
 		
 	;Use moot/florie palette (goomba palette in vanilla SMB1)
+	iny
 	lda #%00000011             
-    sta Sprite_Attributes,y 
-	
-	;Drop data into other bubbles (not working?)
+    ;sta Sprite_Attributes,y 
 	jsr DumpSixSpr
+	
+	dey
+	dey
+	
 
 	;Control reset points for animation
 	lda DrawBubbleOnPlayerAnimCtrl
@@ -1018,7 +1027,7 @@ DrawBubbleOnPlayer:
 		
 		jmp DrawBubbleOnPlayerHold
 	DrawBubbleOnPlayerExit:
-		rts	
+		rts
 
 	;Place the bubble in the same position as it was on the previous frame plus the offset value
 	DrawBubbleOnPlayerHold:

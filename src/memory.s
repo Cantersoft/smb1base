@@ -547,8 +547,9 @@ RESERVE JumpSwimTimer, 1
 RESERVE RunningTimer, 1
 RESERVE SideCollisionTimer, 1
 RESERVE ClimbSideTimer, 1
+RESERVE BubblesVFXTimer, 1	;-Cantersoft
 RESERVE BlockBounceTimer, 1
-RESERVE FreezeTimer, 1
+RESERVE FreezeTimer, 1	;-Cantersoft
 RESERVE JumpspringTimer, 1
 RESERVE GameTimerCtrlTimer, 2
 RESERVE EnemyFrameTimer, 5

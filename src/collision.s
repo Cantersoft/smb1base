@@ -891,8 +891,12 @@ HandlePowerUpCollision:
       bcc Shroom_Flower_PUp   ;if mushroom or fire flower, branch
       cmp #$03
       beq SetFor1Up           ;if 1-up mushroom, branch
+	  lda #04
+	  sta BubblesVFXTimer
+	  lda #$0c
+	  jsr UpToFiery     ;set values to stop certain things in motion
       lda #$23                ;otherwise set star mario invincibility
-      sta StarInvincibleTimer ;timer, and load the star mario music
+      sta StarInvincibleTimer ;timer, and load the star mario music  
 	  sta FreezeTimer
 	  lda #ZaWarudoPaletteDataOffset	;Change world palette	-Cantersoft
 	  sta VRAM_Buffer_AddrCtrl

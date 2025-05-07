@@ -214,6 +214,7 @@ DoneDrawing:
   farcall SimulateWind           ;otherwise, simulate wind where needed
 .endif
 
+;New checks here? -Cantersoft
 farcall DrawBubbleOnPlayer
 
   lda Player_Y_HighPos
