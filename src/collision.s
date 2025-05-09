@@ -891,7 +891,7 @@ HandlePowerUpCollision:
       bcc Shroom_Flower_PUp   ;if mushroom or fire flower, branch
       cmp #$03
       beq SetFor1Up           ;if 1-up mushroom, branch
-	  lda #04
+	  lda #20
 	  sta BubblesVFXTimer
 	  lda #$0c
 	  jsr UpToFiery     ;set values to stop certain things in motion

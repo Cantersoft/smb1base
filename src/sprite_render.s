@@ -979,6 +979,9 @@ DrawBubbleOnPlayer:
 	;Unless the timer for this routine is set, exit.
 	lda BubblesVFXTimer
 	beq DrawBubbleOnPlayerExit
+
+	lda #01
+	sta BubblesVFXFlag
 	
 	;Allocate space in OAM and prepare the bubble tile for insertion
 	AllocSpr 6
@@ -1027,6 +1030,13 @@ DrawBubbleOnPlayer:
 		
 		jmp DrawBubbleOnPlayerHold
 	DrawBubbleOnPlayerExit:
+		lda BubblesVFXFlag
+		beq DrawBubbleOnPlayerExit2
+		lda #00
+		sta BubblesVFXFlag
+		;Clear the bubbles, or else they get stuck on the screen for some reason
+		jsr MoveSixSpritesOffscreen
+	DrawBubbleOnPlayerExit2:
 		rts
 
 	;Place the bubble in the same position as it was on the previous frame plus the offset value
@@ -1096,18 +1106,18 @@ DrawBubbleOnPlayer:
 
 	;Reset the bubble to the original position
 	DrawBubbleOnPlayerInit:
-		clc
-		lda Player_Rel_XPos
-		adc #04
-		sta Sprite_X_Position,y
+		;clc
+		;lda Player_Rel_XPos
+		;adc #04
+		;sta Sprite_X_Position,y
 		
 		lda #04
 		sta Bubble_X_Offset_Prev
 			
-		clc
-		lda Player_Rel_YPos
-		adc #00
-		sta Sprite_Y_Position,y
+		;clc
+		;lda Player_Rel_YPos
+		;adc #00
+		;sta Sprite_Y_Position,y
 		
 		lda #00
 		sta Bubble_Y_Offset_Prev

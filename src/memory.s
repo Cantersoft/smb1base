@@ -358,6 +358,7 @@ RESERVE HammerEnemyOffset, 9
 RESERVE JumpCoinMiscOffset, 5
 RESERVE BrickCoinTimerFlag, 2
 RESERVE Misc_Collision_Flag, 13
+RESERVE BubblesVFXFlag, 1	;Cantersoft
 RESERVE EnemyFrenzyBuffer, 1
 RESERVE SecondaryHardMode, 1
 RESERVE EnemyFrenzyQueue, 1
