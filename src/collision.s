@@ -900,6 +900,8 @@ HandlePowerUpCollision:
 	  sta FreezeTimer
 	  lda #ZaWarudoPaletteDataOffset	;Change world palette	-Cantersoft
 	  sta VRAM_Buffer_AddrCtrl
+	  lda #01
+	  sta AreaPaletteResetFlag	;Set the flag to allow the palette to reset back to normal later	-Cantersoft
       lda #StarPowerMusic     ;into the area music queue, then leave
       sta AreaMusicQueue
 NearbyRTS:

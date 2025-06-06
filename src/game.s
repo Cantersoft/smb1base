@@ -225,30 +225,13 @@ farcall DrawBubbleOnPlayer
   cmp #$02                   ;if player is below the screen, don't bother with the music
   bpl NoChgMus
     lda StarInvincibleTimer    ;if star mario invincibility timer at zero,
-    beq ClrPlrPal              ;skip this part
+    beq ClrPlrPal              ;skip this part		
       cmp #$04
       bne NoChgMus               ;if not yet at a certain point, continue
         lda IntervalTimerControl   ;if interval timer not yet expired,
         bne NoChgMus               ;branch ahead, don't bother with the music
-		
-		  ;farcall GetAreaPalette	;also, reset the world palette back to whatever it should be -Cantersoft
-		  ;ldy #5
-		  ;farcall SetBGColor
-		  ;lda #22
-		  ;sta PPUDATA
-		  ;farcall AlterAreaAttributes
-				;lda $00
-				;sta BackgroundColorCtrl
-				;ldy BackgroundColorCtrl   ;check background color control
-				;lda #0  ;put appropriate palette into vram
-				;sta VRAM_Buffer_AddrCtrl  ;note that if set to 5-7, $0301 will not be read
-		;labelfortest:
-		  ;ldy AreaType
-		  ;ldx AreaPalette, y
-		  ;stx VRAM_Buffer_AddrCtrl
-		  
           jsr GetAreaMusic       ;to re-attain appropriate level music
-		  
+		  	  
 NoChgMus:
   ldy StarInvincibleTimer    ;get invincibility timer
   lda FrameCounter           ;get frame counter
@@ -262,7 +245,29 @@ CycleTwo:
   farcall CyclePlayerPalettePreload     ;do sub to cycle the palette (note: shares fire flower code)
   jmp SaveAB                 ;then skip this sub to finish up the game engine
 ClrPlrPal:
-  farcall ResetPalStar           ;do sub to clear player's palette bits in attributes
+  farcall ResetPalStar           ;do sub to clear player's palette bits in attributes 
+  
+  lda AreaPaletteResetFlag	;Flag needed to prevent this from conflicting with preparing the background color from being set. -Cantersoft
+  beq AreaPaletteResetExit
+  cmp #01
+  beq AreaPaletteReset
+  cmp #02
+  beq AreaPaletteBGReset
+  cmp #03
+  beq AreaPaletteResetExit
+  
+  AreaPaletteReset:
+  farcall GetAreaPalette
+  lda #02
+  sta AreaPaletteResetFlag ;Set the flag so the area palette only changes once, and next time we update the background color instead.
+  jmp AreaPaletteResetExit
+  
+  AreaPaletteBGReset:
+  farcall SetBGColor2 		;Update the background color.
+  lda #03
+  sta AreaPaletteResetFlag	;And set the flag so that we skip this entire function until we need it again later
+  
+  AreaPaletteResetExit: 
 SaveAB:
   lda A_B_Buttons            ;save current A and B button
   sta PreviousA_B_Buttons    ;into temp variable to be used on next frame

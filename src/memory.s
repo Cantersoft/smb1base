@@ -358,7 +358,6 @@ RESERVE HammerEnemyOffset, 9
 RESERVE JumpCoinMiscOffset, 5
 RESERVE BrickCoinTimerFlag, 2
 RESERVE Misc_Collision_Flag, 13
-RESERVE BubblesVFXFlag, 1	;Cantersoft
 RESERVE EnemyFrenzyBuffer, 1
 RESERVE SecondaryHardMode, 1
 RESERVE EnemyFrenzyQueue, 1
@@ -378,6 +377,7 @@ RESERVE BitMFilter, 1
 RESERVE ChangeAreaTimer, 2
 RESERVE TimeResumed, 1		;-Cantersoft
 RESERVE ChangeSizeTimerTimeFrozen, 1	;-Cantersoft
+RESERVE AreaPaletteResetFlag, 1		;-Cantersoft
 
 ; RESERVE PlayerOAMOffset, 1
 RESERVE CurrentOAMOffset, 1

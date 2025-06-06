@@ -308,6 +308,7 @@ ClrGetLoop:
   inx
   dec R0 
   bpl ClrGetLoop
+SetBGColor2:  
   ldx VRAM_Buffer1_Offset  ;load original offset from before
   ldy BackgroundColorCtrl  ;if this value is four or greater, it will be set
   bne SetBGColor           ;therefore use it as offset to background color

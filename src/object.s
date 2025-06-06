@@ -1523,6 +1523,9 @@ BPGet:
     sta AreaMusicQueue
 	lda #ZaWarudoPaletteDataOffset	;Change world palette
 	sta VRAM_Buffer_AddrCtrl
+	  lda #01
+	  sta AreaPaletteResetFlag	;Set the flag to allow the palette to reset back to normal later	-Cantersoft	
+	
 Exit:
     rts
 .endproc

@@ -508,7 +508,7 @@ ZaWarudoPaletteData:
   .byte $0f, $31, $24, $04	; world background/ player
   .byte $0f, $1c, $31, $21	; piranha plant colors + koopa
   .byte $0f, $1a, $31, $2a	; mushroom/ fireflower
-  .byte $0f, $0f, $31, $12	; goomba colors
+  .byte $0f, $0f, $31, $12	; goomba colors/ bumped brick
   .byte $00
   
 ;-------------------------------------------------------------------------------------
