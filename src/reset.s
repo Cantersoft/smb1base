@@ -407,16 +407,16 @@ WaterPaletteData:
   .byte $00
 
 GroundPaletteData:
-  .byte $3f, $00, $20
-  .byte $0f, $29, $1a, $0f
-  .byte $0f, $36, $17, $0f
-  .byte $0f, $30, $21, $0f
-  .byte $0f, $27, $17, $0f
-  .byte $0f, $16, $27, $18
-  .byte $0f, $1a, $30, $27
-  .byte $0f, $16, $30, $27
-  .byte $0f, $0f, $36, $17
-  .byte $00
+	.byte $3f, $00, $20
+	.byte $0f, $30, $36, $38	;houses
+	.byte $0f, $37, $17, $07	;ground, hay, bricks, pipes, wood
+	.byte $0f, $30, $22, $31	;clouds, mountains
+	.byte $0f, $27, $17, $0f
+	.byte $0f, $0f, $29, $19	;player
+	.byte $0f, $05, $30, $26	;moot, florie, soyjack
+	.byte $0f, $0f, $1a, $3a	;4chan flower, Pepe
+	.byte $0f, $07, $37, $17	;spurdo (goomba), muffin (mushroom)
+	.byte $00	
 
 UndergroundPaletteData:
   .byte $3f, $00, $20

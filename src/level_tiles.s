@@ -173,12 +173,15 @@ BackSceneryMetatiles:
   .byte $80, $83, $00 ;cloud left
   .byte $81, $84, $00 ;cloud middle
   .byte $82, $85, $00 ;cloud right
-  .byte $02, $00, $00 ;bush left
-  .byte $03, $00, $00 ;bush middle
-  .byte $04, $00, $00 ;bush right
-  .byte $00, $05, $06 ;mountain left
-  .byte $07, $06, $0a ;mountain middle
-  .byte $00, $08, $09 ;mountain right
+  .byte $27, $02, $00 ;bush left
+  .byte $28, $03, $00 ;bush middle
+  .byte $00, $04, $00 ;bush right
+  ; .byte $00, $05, $06 ;mountain left
+  ; .byte $07, $0a, $0a ;mountain middle
+  ; .byte $00, $08, $09 ;mountain right
+  .byte $00, $8a, $8b ;mountain left
+  .byte $8c, $8f, $8f ;mountain middle
+  .byte $00, $8d, $8e ;mountain right
   .byte $4d, $00, $00 ;fence
   .byte $0d, $0f, $4e ;tall tree
   .byte $0e, $4e, $4e ;short tree
@@ -1329,6 +1332,7 @@ E_GroundArea5:
 
 ;level 1-1
 E_GroundArea6:
+<<<<<<< Updated upstream
 	.byte $0e, $2d, $09, $0b, $37, $4a, $ae, $57, $b9, $9b
 	.byte $00, $e5, $02, $1b, $81, $8b, $04, $ab, $03, $57
 	.byte $85, $9b, $3b, $c6, $08, $4a, $90, $8a, $0e, $ca
@@ -1339,6 +1343,17 @@ E_GroundArea6:
 	.byte $a5, $3a, $06, $3d, $0c, $4c, $29, $55, $12, $93
 	.byte $11, $d6, $28, $0f, $0c, $ae, $2d, $00, $4b, $b5
 	.byte $ff
+=======
+	.byte $0b, $37, $8e, $ad, $09, $57, $b9, $96, $00, $e5
+	.byte $02, $47, $ae, $ab, $03, $57, $85, $8b, $01, $d7
+	.byte $08, $4a, $90, $8a, $0e, $eb, $3b, $0f, $07, $5c
+	.byte $0a, $74, $07, $8a, $14, $8c, $0b, $a7, $0d, $ad
+	.byte $0c, $bc, $2c, $d6, $2b, $07, $9d, $48, $0f, $86
+	.byte $2a, $06, $a4, $41, $12, $4a, $1e, $63, $24, $0c
+	.byte $a9, $47, $1b, $a4, $1f, $15, $92, $1c, $25, $3a
+	.byte $06, $3d, $0c, $93, $11, $d6, $28, $0f, $0d, $ae
+	.byte $2d, $00, $4b, $b5, $ff
+>>>>>>> Stashed changes
 
 ;level 1-3/5-3
 E_GroundArea7:
@@ -1679,6 +1694,7 @@ L_GroundArea5:
 
 ;level 1-1
 L_GroundArea6:
+<<<<<<< Updated upstream
 	.byte $50, $01, $08, $7a, $a5, $02, $54, $83, $58, $00
 	.byte $64, $06, $68, $01, $74, $0a, $78, $04, $84, $05
 	.byte $88, $07, $08, $d2, $19, $0b, $29, $0b, $39, $0b
@@ -1690,6 +1706,19 @@ L_GroundArea6:
 	.byte $80, $0c, $ef, $38, $7d, $c1, $8a, $40, $9f, $26
 	.byte $ff, $58, $1f, $d8, $1f, $58, $38, $62, $58, $62
 	.byte $a0, $0c, $3c, $80, $68, $62, $fd
+=======
+	.byte $50, $21, $a5, $02, $54, $83, $58, $00, $64, $06
+	.byte $68, $01, $74, $0a, $78, $04, $84, $05, $88, $07
+	.byte $c8, $7a, $08, $d2, $19, $0b, $29, $0b, $39, $0b
+	.byte $48, $52, $56, $12, $63, $08, $88, $52, $a8, $52
+	.byte $c4, $42, $c5, $22, $39, $89, $48, $62, $2c, $e3
+	.byte $2c, $73, $ed, $40, $0d, $06, $6c, $43, $3c, $b3
+	.byte $3c, $57, $7c, $23, $0d, $09, $1c, $16, $1f, $12
+	.byte $68, $36, $9f, $47, $48, $b6, $3f, $86, $80, $0c
+	.byte $ef, $38, $7d, $c1, $8a, $40, $9f, $26, $ff, $58
+	.byte $1f, $d8, $1f, $58, $38, $62, $58, $62, $a0, $0c
+	.byte $3c, $80, $68, $62, $fd
+>>>>>>> Stashed changes
 
 
 ;level 1-3/5-3
