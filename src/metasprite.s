@@ -318,19 +318,49 @@ MetaspriteBox "GOOMBA", "DEAD", $26, $26 | SPR_FLIP_H
 
 
 KOOPA_VRAM_OFFSET = SPRITE_BANK_2
-KOOPA_Y_OFFSET = -8
+Y_OFFSET .set 0
+X_OFFSET .set 0
 KOOPA_PALETTE = $00 ; Don't set a palette here so we can do red or green koopa later
 ; Koopa shell is offset by 2 pixels for the right side up animation. 
 ; We account for this in the code by adding 2 with the vertical flip flag
-KOOPA_SHELL_Y_OFFSET = 0
-KOOPA_SHELL_REVIVE_Y_OFFSET = 0
-MetaspriteBox "KOOPA", "WALKING_1", $38, $12, $30, $32
-MetaspriteBox "KOOPA", "WALKING_2", $18, $16, $34, $36
-MetaspriteBox "KOOPA", "SHELL", $1a, $1a | SPR_FLIP_H
-MetaspriteBox "KOOPA", "SHELL_REVIVE", $3a, $3a | SPR_FLIP_H
-MetaspriteBox "KOOPA", "FLYING_1", $10, $12, $30, $32
-MetaspriteBox "KOOPA", "FLYING_2", $14, $16, $34, $36
+MetaspriteData "KOOPA_WALKING_1", Koopa_walking_1
+MetaspriteData "KOOPA_WALKING_2", Koopa_walking_2
+MetaspriteData "KOOPA_SHELL", Koopa_shell
+MetaspriteData "KOOPA_SHELL_REVIVE", Koopa_shell_revive
+MetaspriteData "KOOPA_FLYING_1", Koopa_flying_1
+MetaspriteData "KOOPA_FLYING_2", Koopa_flying_2
 
+Koopa_walking_1:
+.byte 3 * 4
+.byte MetaspriteVramOffset{$2c}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$2e}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$30}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  16 + X_OFFSET
+
+Koopa_walking_2:
+.byte 3 * 4
+.byte MetaspriteVramOffset{$32}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$34}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$30}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  16 + X_OFFSET
+
+Koopa_shell:
+.byte 2 * 4
+.byte MetaspriteVramOffset{$36}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$36}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+
+Koopa_shell_revive:
+.byte 2 * 4
+.byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+
+Koopa_flying_1:
+.byte 2 * 4
+.byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+
+Koopa_flying_2:
+.byte 2 * 4
+.byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
 
 PIRANHA_VRAM_OFFSET = SPRITE_BANK_3
 PIRANHA_PALETTE = $01
