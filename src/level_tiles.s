@@ -173,15 +173,12 @@ BackSceneryMetatiles:
   .byte $80, $83, $00 ;cloud left
   .byte $81, $84, $00 ;cloud middle
   .byte $82, $85, $00 ;cloud right
-  .byte $27, $02, $00 ;bush left
-  .byte $28, $03, $00 ;bush middle
-  .byte $00, $04, $00 ;bush right
-  ; .byte $00, $05, $06 ;mountain left
-  ; .byte $07, $0a, $0a ;mountain middle
-  ; .byte $00, $08, $09 ;mountain right
-  .byte $00, $8a, $8b ;mountain left
-  .byte $8c, $8f, $8f ;mountain middle
-  .byte $00, $8d, $8e ;mountain right
+  .byte $02, $00, $00 ;bush left
+  .byte $03, $00, $00 ;bush middle
+  .byte $04, $00, $00 ;bush right
+  .byte $00, $05, $06 ;mountain left
+  .byte $07, $06, $0a ;mountain middle
+  .byte $00, $08, $09 ;mountain right
   .byte $4d, $00, $00 ;fence
   .byte $0d, $0f, $4e ;tall tree
   .byte $0e, $4e, $4e ;short tree
@@ -353,13 +350,15 @@ RendBBuf:
     ldy #$00                   ;init index regs and start at beginning of smaller buffer
 ChkMTLow:
     sty R0 
-    ldy MetatileBuffer,x       ;load stored metatile number
-    ; If its interactable at all (ie it has attributes that aren't a palette)
-    lda MTileAttribute,y
-    and #%00111111
-    cmp #1 ; set the carry if there is any attributes
-    tya    ; and restore the tile id to A
-    bcs StrBlock               ;if it has an attribute, branch
+    lda MetatileBuffer,x       ;load stored metatile number
+    and #%11000000             ;mask out all but 2 MSB
+    asl
+    rol                        ;make %xx000000 into %000000xx
+    rol
+    tay                        ;use as offset in Y
+    lda MetatileBuffer,x       ;reload original unmasked value here
+    cmp BlockBuffLowBounds,y   ;check for certain values depending on bits set
+    bcs StrBlock               ;if equal or greater, branch
       lda #$00                   ;if less, init value before storing
 StrBlock:
     ldy R0                     ;get offset for block buffer
@@ -373,6 +372,10 @@ StrBlock:
     bcc ChkMTLow               ;continue until we pass last row, then leave
   rts
 
+;numbers lower than these with the same attribute bits
+;will not be stored in the block buffer
+BlockBuffLowBounds:
+  .byte $10, $51, $88, $c0
 
 .endproc
 
@@ -1326,15 +1329,10 @@ E_GroundArea5:
 
 ;level 1-1
 E_GroundArea6:
-	.byte $0b, $37, $8e, $ad, $09, $57, $b9, $96, $00, $e5
-	.byte $02, $47, $ae, $ab, $03, $57, $85, $8b, $01, $d7
-	.byte $08, $4a, $90, $8a, $0e, $eb, $3b, $0f, $07, $5c
-	.byte $0a, $74, $07, $8a, $14, $8c, $0b, $a7, $0d, $ad
-	.byte $0c, $bc, $2c, $d6, $2b, $07, $9d, $48, $0f, $86
-	.byte $2a, $06, $a4, $41, $12, $4a, $1e, $63, $24, $0c
-	.byte $a9, $47, $1b, $a4, $1f, $15, $92, $1c, $25, $3a
-	.byte $06, $3d, $0c, $93, $11, $d6, $28, $0f, $0d, $ae
-	.byte $2d, $00, $4b, $b5, $ff
+      .byte $1e, $c2, $00, $6b, $06, $8b, $86, $63, $b7, $0f, $05
+      .byte $03, $06, $23, $06, $4b, $b7, $bb, $00, $5b, $b7
+      .byte $fb, $37, $3b, $b7, $0f, $0b, $1b, $37
+      .byte $ff
 
 ;level 1-3/5-3
 E_GroundArea7:
@@ -1675,18 +1673,18 @@ L_GroundArea5:
 
 ;level 1-1
 L_GroundArea6:
-	.byte $50, $21, $a5, $02, $54, $83, $58, $00, $64, $06
-	.byte $68, $01, $74, $0a, $78, $04, $84, $05, $88, $07
-	.byte $c8, $7a, $08, $d2, $19, $0b, $29, $0b, $39, $0b
-	.byte $48, $52, $56, $12, $63, $08, $88, $52, $a8, $52
-	.byte $c4, $42, $c5, $22, $39, $89, $48, $62, $2c, $e3
-	.byte $2c, $73, $ed, $40, $0d, $06, $6c, $43, $3c, $b3
-	.byte $3c, $57, $7c, $23, $0d, $09, $1c, $16, $1f, $12
-	.byte $68, $36, $9f, $47, $48, $b6, $3f, $86, $80, $0c
-	.byte $ef, $38, $7d, $c1, $8a, $40, $9f, $26, $ff, $58
-	.byte $1f, $d8, $1f, $58, $38, $62, $58, $62, $a0, $0c
-	.byte $3c, $80, $68, $62, $fd
-
+      .byte $50, $21
+      .byte $07, $81, $47, $24, $57, $00, $63, $01, $77, $01
+      .byte $c9, $71, $68, $f2, $e7, $73, $97, $fb, $06, $83
+      .byte $5c, $01, $d7, $22, $e7, $00, $03, $a7, $6c, $02
+      .byte $b3, $22, $e3, $01, $e7, $07, $47, $a0, $57, $06
+      .byte $a7, $01, $d3, $00, $d7, $01, $07, $81, $67, $20
+      .byte $93, $22, $03, $a3, $1c, $61, $17, $21, $6f, $33
+      .byte $c7, $63, $d8, $62, $e9, $61, $fa, $60, $4f, $b3
+      .byte $87, $63, $9c, $01, $b7, $63, $c8, $62, $d9, $61
+      .byte $ea, $60, $39, $f1, $87, $21, $a7, $01, $b7, $20
+      .byte $39, $f1, $5f, $38, $6d, $c1, $af, $26
+      .byte $fd
 
 ;level 1-3/5-3
 L_GroundArea7:
@@ -2629,8 +2627,6 @@ FlagpoleObject:
   sta FlagpoleFNum_Y_Pos   ;set initial vertical coordinate for flagpole's floatey number
   lda #FlagpoleFlagObject
   sta Enemy_ID,x           ;set flag identifier, note that identifier and coordinates
-  lda #1
-  sta Enemy_MovingDir,x      ; force the flag to always face the same certain direction
   inc Enemy_Flag,x         ;use last space in enemy object buffer
 FlagpoleFull:
   rts
