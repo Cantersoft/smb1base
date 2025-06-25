@@ -105,7 +105,8 @@ Exit:
   lda #1
   sta Enemy_MovingDir + (Misc_SprAttrib - Enemy_SprAttrib),x
   ldy #METASPRITE_HAMMER_FRAME_1
-  lda TimerControl
+  lda TimerControl      
+  ora FreezeTimer
   bne ForceHPose
     lda Misc_State,x            ;otherwise get hammer's state
     and #%01111111              ;mask out d7
@@ -204,6 +205,9 @@ DrawFloateyNumber_Coin:
 @NotRsNum:
   lda #METASPRITE_NUMBER_200
   sta MiscMetasprite,x
+  ; Force the number metasprite to always face the correct direction
+  lda #1
+  sta Enemy_MovingDir+12,x
   rts
 
 JumpingCoinTiles:
@@ -287,6 +291,7 @@ Noop:
   lda #%00100000              ;set background priority bit in sprite
   sta Enemy_SprAttrib,x       ;attributes to give illusion of being inside pipe
   lda TimerControl
+  ora FreezeTimer 
   bne Exit                    ; Just use the previous metasprite and leave if we aren't moving
     lda PiranhaPlant_Y_Speed,x
     bmi DrawPiranha           ;if piranha plant moving upwards, branch
@@ -323,7 +328,8 @@ Exit:
     bne Exit
 GmbaAnim:
   and #%00100000        ;check for d5 set in enemy object state
-  ora TimerControl      ;or timer disable flag set
+  ora TimerControl
+  ora FreezeTimer      ;or timer disable flag set
   bne Exit              ;if either condition true, do not animate goomba
     lda FrameCounter
     and #%00001000        ;check for every eighth frame
@@ -378,6 +384,7 @@ NormalKoopaAnimation:
   ; for d7 or d5, or check for timers stopped
   and #%10100000
   ora TimerControl
+  ora FreezeTimer
   bne WriteMetasprite
     ; Check if the timer is in the last 5 frame rules
     lda EnemyIntervalTimer,x
@@ -415,6 +422,7 @@ ProcessJumpingParatrooperInner:
   ; for d7 or d5, or check for timers stopped
   and #%10100000
   ora TimerControl
+  ora FreezeTimer
   bne @WriteMetasprite
     ; and run the animation every 8 frames
     lda FrameCounter
@@ -494,6 +502,7 @@ NormalBuzzyAnimation:
   ; for d7 or d5, or check for timers stopped
   and #%10100000
   ora TimerControl      ;or timer disable flag set
+  ora FreezeTimer
   bne WriteMetasprite   ;if either condition true, do not animate goomba
     lda FrameCounter
     and #%00001000        ;check for every eighth frame
@@ -517,6 +526,7 @@ ProcessSwimmingCheepCheep:
   ; check for the animation bits
   and #%10100000
   ora TimerControl      ;or timer disable flag set
+  ora FreezeTimer
   bne CheckDefeated   ;if either condition true, do not animate goomba
     lda FrameCounter
     and #%00001000        ;check for every eighth frame
@@ -547,7 +557,8 @@ WriteMetasprite:
       ; Check if the timers are running
       lda Enemy_State,x        ;check saved enemy state
       and #%10100000      ;for d7 or d5, or check for timers stopped
-      ora TimerControl
+      ora TimerControl      ;or timer disable flag set
+		ora FreezeTimer
       bne CheckDefeated   ;if either condition true, branch
         ldy #METASPRITE_BLOOPER_SWIM_2
 CheckDefeated:
@@ -578,7 +589,8 @@ CheckToAnimateEnemy:
   bne CheckDefeatedState
       lda Local_ed                 ;check saved enemy state
       and #%10100000          ;for d7 or d5, or check for timers stopped
-      ora TimerControl
+		ora TimerControl      ;or timer disable flag set
+		ora FreezeTimer
       bne CheckDefeatedState  ;if either condition true, branch
         iny ; use the next frame of whatever action is selected
 CheckDefeatedState:
@@ -633,7 +645,8 @@ CheckToAnimateEnemy:
   bne CheckDefeatedState
       lda Local_ed                 ;check saved enemy state
       and #%10100000          ;for d7 or d5, or check for timers stopped
-      ora TimerControl
+		ora TimerControl      ;or timer disable flag set
+		ora FreezeTimer
       bne CheckDefeatedState  ;if either condition true, branch
         iny ; use the next frame of whatever action is selected
 
@@ -673,7 +686,16 @@ WriteMetasprite:
 .proc DrawBlock
   ldx ObjectOffset              ;get block object offset
   ldy #METASPRITE_MISC_BRICK_GROUND
+  txa
+  cmp #$00 ;if breakable brick
+  beq BreakableBrickPalette
+  bne BlockPalette
+  BlockPalette:
+  lda #2
+  jmp AfterPalette
+  BreakableBrickPalette:
   lda #3
+  AfterPalette:
   sta Block_SprAttrib,x
   lda AreaType
   cmp #1                        ;check for ground level type area
@@ -961,3 +983,144 @@ DumpTwoSpr:
 
 ExitDumpSpr:
   rts
+
+DrawBubbleOnPlayer:
+	;Unless the timer for this routine is set, exit.
+	lda BubblesVFXTimer
+	beq DrawBubbleOnPlayerExit
+	
+	;Allocate space in OAM and prepare the bubble tile for insertion
+	AllocSpr 6
+	iny
+	lda #BUBBLE_TILE
+	;sta Sprite_Tilenumber,y
+	jsr DumpSixSpr
+		
+	;Use moot/florie palette (goomba palette in vanilla SMB1)
+	iny
+	lda #%00000011             
+    ;sta Sprite_Attributes,y 
+	jsr DumpSixSpr
+	
+	dey
+	dey
+	
+
+	;Control reset points for animation
+	lda DrawBubbleOnPlayerAnimCtrl
+	cmp #32
+	jeq DrawBubbleOnPlayerInit
+	cmp #00
+	jeq DrawBubbleOnPlayerInit
+
+	ldx DrawBubbleOnPlayerAnimCtrl
+	inx
+	stx DrawBubbleOnPlayerAnimCtrl
+	
+	DrawBubbleOnPlayerAnim:	
+		;Check for every fourth frame
+		lda FrameCounter
+		and #%00000010        
+		bne DrawBubbleOnPlayerHold
+		
+		;Update x/y offset coordinates when it is time to move the bubble
+		clc
+		lda Bubble_Y_Offset_Prev
+		adc #01
+		sta Bubble_Y_Offset_Prev
+
+		clc
+		lda Bubble_X_Offset_Prev
+		adc #01
+		sta Bubble_X_Offset_Prev
+		
+		jmp DrawBubbleOnPlayerHold
+	DrawBubbleOnPlayerExit:
+		rts
+
+	;Place the bubble in the same position as it was on the previous frame plus the offset value
+	DrawBubbleOnPlayerHold:
+		;Bubble animation arrangement:
+		;
+		; upper			= 0 = 0x, 2y
+		; lower			= 1 = 0x, -2y
+		; upper right	= 2 = x, y
+		; lower right	= 3 = x, -y
+		; upper left	= 4 = -x y
+		; lower left	= 5 = -x -y
+	
+		;No x movement for upper and lower bubbles (bubbles 0 and 1)
+		clc
+		lda Player_Rel_XPos
+		sta Sprite_X_Position,y
+		sta Sprite_X_Position+4,y
+
+		;Positive x movement for bubbles 2 and 3
+		clc
+		lda Player_Rel_XPos
+		adc Bubble_X_Offset_Prev
+		sta Sprite_X_Position+8,y
+		sta Sprite_X_Position+12,y
+		
+		;Negative x movement for bubbles 4 and 5
+		clc
+		lda Player_Rel_XPos
+		sbc Bubble_X_Offset_Prev
+		sta Sprite_X_Position+16,y
+		sta Sprite_X_Position+20,y	
+
+		;Double y movement for upper and lower bubbles (bubbles 0 and 1)
+		clc
+		lda Bubble_Y_Offset_Prev	;load the offset first so we can
+		asl 						;multiply by 2
+		sta Bubble_Y_Offset_Prev
+		
+		adc Player_Rel_YPos
+		sta Sprite_Y_Position,y
+
+		lda Player_Rel_YPos
+		
+		sbc Bubble_Y_Offset_Prev
+		sta Sprite_Y_Position+4,y
+		
+		lda Bubble_Y_Offset_Prev	;now fix the offset so it doesn't mess up the other bubbles
+		lsr							;I think this undoes an asl???
+		sta Bubble_Y_Offset_Prev
+		
+		;Positive y movement for bubbles 2 and 4
+		clc
+		lda Player_Rel_YPos
+		adc Bubble_Y_Offset_Prev
+		sta Sprite_Y_Position+8,y
+		sta Sprite_Y_Position+16,y
+		
+		;Negative y movement for bubbles 3 and 5
+		clc
+		lda Player_Rel_YPos
+		sbc Bubble_Y_Offset_Prev	
+		sta Sprite_Y_Position+12,y
+		sta Sprite_Y_Position+20,y
+		
+		rts
+
+	;Reset the bubble to the original position
+	DrawBubbleOnPlayerInit:
+		;clc
+		;lda Player_Rel_XPos
+		;adc #04
+		;sta Sprite_X_Position,y
+		
+		lda #04
+		sta Bubble_X_Offset_Prev
+			
+		;clc
+		;lda Player_Rel_YPos
+		;adc #00
+		;sta Sprite_Y_Position,y
+		
+		lda #00
+		sta Bubble_Y_Offset_Prev
+		
+		lda #01
+		sta DrawBubbleOnPlayerAnimCtrl
+		rts

@@ -379,7 +379,8 @@ OnCooldown:
       PrincessSaved2, \
       WorldSelectMessage1, \
       WorldSelectMessage2, \
-      TitleScreenData
+      TitleScreenData, \
+	  ZaWarudoPaletteData
 
 clabel VRAM_AddrTable_Low
 clabel VRAM_AddrTable_High
@@ -406,23 +407,23 @@ WaterPaletteData:
   .byte $00
 
 GroundPaletteData:
-  .byte $3f, $00, $20
-  .byte $0f, $29, $1a, $0f
-  .byte $0f, $36, $17, $0f
-  .byte $0f, $30, $21, $0f
-  .byte $0f, $27, $17, $0f
-  .byte $0f, $16, $27, $18
-  .byte $0f, $1a, $30, $27
-  .byte $0f, $16, $30, $27
-  .byte $0f, $0f, $36, $17
-  .byte $00
+	.byte $3f, $00, $20
+	.byte $0f, $30, $36, $38	;houses
+	.byte $0f, $37, $17, $07	;ground, hay, bricks, pipes, wood
+	.byte $0f, $30, $22, $31	;clouds, mountains
+	.byte $0f, $29, $19, $0f
+	.byte $0f, $0f, $29, $19	;player
+	.byte $0f, $05, $30, $26	;moot, florie, soyjack
+	.byte $0f, $0f, $1a, $3a	;4chan flower, Pepe
+	.byte $0f, $07, $37, $17	;spurdo (goomba), muffin (mushroom)
+	.byte $00	
 
 UndergroundPaletteData:
   .byte $3f, $00, $20
   .byte $0f, $29, $1a, $09
   .byte $0f, $3c, $1c, $0f
   .byte $0f, $30, $21, $1c
-  .byte $0f, $27, $17, $1c
+  .byte $0f, $29, $19, $1c
   .byte $0f, $16, $27, $18
   .byte $0f, $1c, $36, $17
   .byte $0f, $16, $30, $27
@@ -434,7 +435,7 @@ CastlePaletteData:
   .byte $0f, $30, $10, $00
   .byte $0f, $30, $10, $00
   .byte $0f, $30, $16, $00
-  .byte $0f, $27, $17, $00
+  .byte $0f, $29, $19, $00
   .byte $0f, $16, $27, $18
   .byte $0f, $1c, $36, $17
   .byte $0f, $16, $30, $27
@@ -498,6 +499,18 @@ WorldSelectMessage2:
   .byte "TO SELECT A WORLD"
   .byte $00
 
+ZaWarudoPaletteData:
+  .byte $3f, $00, $20
+  .byte $0f, $24, $04, $0f	; background elements, pipe colors
+  .byte $0f, $39, $19, $0f	; floor tile, breakable brick?
+  .byte $0f, $31, $04, $0f	; clouds and text
+  .byte $0f, $39, $19, $0f	; ??? -boxes (no animation)
+  .byte $0f, $31, $24, $04	; world background/ player
+  .byte $0f, $1c, $31, $21	; piranha plant colors + koopa
+  .byte $0f, $1a, $31, $2a	; mushroom/ fireflower
+  .byte $0f, $0f, $31, $12	; goomba colors/ bumped brick
+  .byte $00
+  
 ;-------------------------------------------------------------------------------------
 .segment "FIXED"
 ;$06 - RAM address low

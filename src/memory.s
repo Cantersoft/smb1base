@@ -375,6 +375,9 @@ RESERVE JumpspringForce, 1
 RESERVE MaxRangeFromOrigin, 1
 RESERVE BitMFilter, 1
 RESERVE ChangeAreaTimer, 2
+RESERVE TimeResumed, 1		;-Cantersoft
+RESERVE ChangeSizeTimerTimeFrozen, 1	;-Cantersoft
+RESERVE AreaPaletteResetFlag, 1		;-Cantersoft
 
 ; RESERVE PlayerOAMOffset, 1
 RESERVE CurrentOAMOffset, 1
@@ -410,6 +413,9 @@ RESERVE PlayerAnimDirection, 1
 RESERVE PlayerAnimTimerSet, 1
 RESERVE PlayerAnimCtrl, 1
 RESERVE JumpspringAnimCtrl, 1
+RESERVE DrawBubbleOnPlayerAnimCtrl, 1 ;-Cantersoft
+RESERVE Bubble_Y_Offset_Prev, 1
+RESERVE Bubble_X_Offset_Prev, 1
 RESERVE FlagpoleCollisionYPos, 1
 RESERVE PlayerEntranceCtrl, 1
 RESERVE FireballThrowingTimer, 1
@@ -466,6 +472,7 @@ RESERVE StarFlagTaskControl, 1
 RESERVE TimerControl, 1
 RESERVE CoinTallyFor1Ups, 1
 RESERVE SecondaryMsgCounter, 1
+RESERVE powerup_jumped, 1 ;Cantersoft
 
 FirebarSpinDirection := DestinationPageLoc
 RESERVE DestinationPageLoc, 1
@@ -539,11 +546,13 @@ RESERVE SelectTimer, 1
 RESERVE PlayerAnimTimer, 1
 RESERVE JumpSwimTimer, 1
 RESERVE RunningTimer, 1
-RESERVE BlockBounceTimer, 1
 RESERVE SideCollisionTimer, 1
+RESERVE ClimbSideTimer, 1
+RESERVE BubblesVFXTimer, 1	;-Cantersoft
+RESERVE BlockBounceTimer, 1
+RESERVE FreezeTimer, 1	;-Cantersoft
 RESERVE JumpspringTimer, 1
 RESERVE GameTimerCtrlTimer, 2
-RESERVE ClimbSideTimer, 1
 RESERVE EnemyFrameTimer, 5
 RESERVE FrenzyEnemyTimer, 1
 RESERVE BowserFireBreathTimer, 1
@@ -551,17 +560,21 @@ RESERVE StompTimer, 1
 RESERVE AirBubbleTimer, 3
 
 FRAME_TIMER_COUNT = AirBubbleTimer - Timers
+FRAME_TIMER_COUNT_FREEZE = BlockBounceTimer - Timers
 
-RESERVE ScrollIntervalTimer, 1
-RESERVE EnemyIntervalTimer, 7
-RESERVE BrickCoinTimer, 1
 RESERVE InjuryTimer, 1
 RESERVE StarInvincibleTimer, 1
 RESERVE ScreenTimer, 1
 RESERVE WorldEndTimer, 1
+RESERVE ScrollIntervalTimer, 1
+RESERVE EnemyIntervalTimer, 7
 RESERVE DemoTimer, 1
+RESERVE BrickCoinTimer, 1
 
-ALL_TIMER_COUNT = DemoTimer - Timers
+
+ALL_TIMER_COUNT = BrickCoinTimer - Timers
+ALL_TIMER_COUNT_FREEZE = DemoTimer - Timers
+
 
 RESERVE PseudoRandomBitReg, 9
 

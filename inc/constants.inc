@@ -198,6 +198,7 @@ FIREFLOWER_BOX_METATILE = $c1
   WorldSelectMessage1Offset
   WorldSelectMessage2Offset
   TitleScreenDataOffset
+  ZaWarudoPaletteDataOffset
 .endenum
 
 .enum

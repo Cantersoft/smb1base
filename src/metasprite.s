@@ -124,38 +124,43 @@ BIG_MARIO_SWIMMING_1_HOLD_BANK = CHR_MARIOACTION
 BIG_MARIO_SWIMMING_2_HOLD_BANK = CHR_MARIOACTION
 BIG_MARIO_SWIMMING_3_HOLD_BANK = CHR_MARIOACTION
 MetaspriteBox "BIG_MARIO", "SWIMMING_1_KICK", $00, $02, $20, $22
-MetaspriteBox "BIG_MARIO", "SWIMMING_2_KICK", $04, $06, $20, $26
-MetaspriteBox "BIG_MARIO", "SWIMMING_3_KICK", $04, $06, $2a, $22
-MetaspriteBox "BIG_MARIO", "SWIMMING_1_HOLD", $00, $02, $24, $22
-MetaspriteBox "BIG_MARIO", "SWIMMING_2_HOLD", $04, $06, $24, $26
-MetaspriteBox "BIG_MARIO", "SWIMMING_3_HOLD", $04, $06, $28, $22
+MetaspriteBox "BIG_MARIO", "SWIMMING_2_KICK", $06, $08, $24, $28
+MetaspriteBox "BIG_MARIO", "SWIMMING_3_KICK", $06, $08, $26, $28
+MetaspriteBox "BIG_MARIO", "SWIMMING_1_HOLD", $0a, $0c, $2a, $2c
+MetaspriteBox "BIG_MARIO", "SWIMMING_2_HOLD", $0e, $10, $2e, $30
+MetaspriteBox "BIG_MARIO", "SWIMMING_3_HOLD", $12, $14, $32, $34
 
 FIRE_MARIO_OFFSET = METASPRITES_COUNT - METASPRITE_BIG_MARIO_STANDING
 FIRE_MARIO_VRAM_OFFSET = SPRITE_BANK_0
 FIRE_MARIO_BANK = CHR_MARIOACTION
 FIRE_MARIO_PALETTE = $00
 FIRE_MARIO_Y_OFFSET = -8
-MetaspriteBox "FIRE_MARIO", "STANDING",  $00, $02, $2c, $2e
+
+FIRE_MARIO_CROUCHING_BANK = CHR_SMALLFIRE
+FIRE_MARIO_FIREBALL_BANK = CHR_SMALLFIRE
+MetaspriteBox "FIRE_MARIO", "CROUCHING", $00, $02, $18, $1a
+MetaspriteBox "FIRE_MARIO", "FIREBALL",  $00, $02, $20, $22
+
 ; MetaspriteBox "BIG_MARIO", "FIRE_WALKING_1", $00, $02, $2c, $2e
-MetaspriteDuplicate "FIRE_MARIO_WALKING_1", "FIRE_MARIO_STANDING"
+MetaspriteDuplicate "FIRE_MARIO_WALKING_1", "FIRE_MARIO_FIREBALL"
 MetaspriteBox "FIRE_MARIO", "WALKING_2", $00, $02, $30, $32
 MetaspriteBox "FIRE_MARIO", "WALKING_3", $00, $02, $14, $16
 MetaspriteBox "FIRE_MARIO", "SKIDDING",  $00, $02, $34, $36
 MetaspriteBox "FIRE_MARIO", "JUMPING",   $00, $02, $10, $12
-FIRE_MARIO_CROUCHING_BANK = CHR_SMALLFIRE
-MetaspriteBox "FIRE_MARIO", "CROUCHING", $00, $02, $18, $1a
+
 
 MetaspriteBox "FIRE_MARIO", "SWIMMING_1_KICK", $00, $02, $20, $22
-MetaspriteBox "FIRE_MARIO", "SWIMMING_2_KICK", $04, $06, $20, $26
+MetaspriteBox "FIRE_MARIO", "SWIMMING_2_KICK", $06, $08, $26, $28
 MetaspriteBox "FIRE_MARIO", "SWIMMING_3_KICK", $04, $06, $2a, $22
-MetaspriteBox "FIRE_MARIO", "SWIMMING_1_HOLD", $00, $02, $24, $22
-MetaspriteBox "FIRE_MARIO", "SWIMMING_2_HOLD", $04, $06, $24, $26
-MetaspriteBox "FIRE_MARIO", "SWIMMING_3_HOLD", $04, $06, $28, $22
+MetaspriteBox "FIRE_MARIO", "SWIMMING_1_HOLD", $0a, $0c, $2a, $2c
+MetaspriteBox "FIRE_MARIO", "SWIMMING_2_HOLD", $0e, $10, $2e, $30
+MetaspriteBox "FIRE_MARIO", "SWIMMING_3_HOLD", $12, $14, $32, $34
+
 
 BIG_MARIO_CLIMBING_1_BANK = CHR_MARIOACTION
 BIG_MARIO_CLIMBING_2_BANK = CHR_MARIOACTION
-MetaspriteBox "BIG_MARIO", "CLIMBING_1",   $00, $02, $08, $0a
-MetaspriteBox "BIG_MARIO", "CLIMBING_2",   $04, $06, $0c, $0e
+MetaspriteBox "BIG_MARIO", "CLIMBING_1",   $16, $18, $26, $28
+MetaspriteBox "BIG_MARIO", "CLIMBING_2",   $16, $1a, $26, $2a
 
 SMALL_MARIO_VRAM_OFFSET = SPRITE_BANK_0
 SMALL_MARIO_BANK = CHR_SMALLMARIO
@@ -194,26 +199,28 @@ MetaspriteBox "SMALL_FIRE", "SWIMMING_1_HOLD", $00, $02, $18, $1a
 MetaspriteBox "SMALL_FIRE", "SWIMMING_2_HOLD", $00, $02, $2c, $2e
 MetaspriteDuplicate "SMALL_FIRE_SWIMMING_3_HOLD", "SMALL_FIRE_SWIMMING_3_KICK"
 
-MetaspriteBox "SMALL_MARIO", "CLIMBING_1", $18, $1a
-MetaspriteBox "SMALL_MARIO", "CLIMBING_2", $38, $3a
+MetaspriteBox "SMALL_MARIO", "CLIMBING_1", $18, $1a, $38, $3a
+MetaspriteBox "SMALL_MARIO", "CLIMBING_2", $18, $1c, $38, $3a
 MetaspriteBox "SMALL_MARIO", "DEATH",      $34, $36
 
 SMALL_MARIO_GROW_STANDING_BANK = CHR_SMALLMARIO
-BIG_MARIO_GROW_INTERMEDIATE_BANK = CHR_MARIOACTION
+BIG_MARIO_GROW_INTERMEDIATE_BANK = CHR_SMALLFIRE
 BIG_MARIO_GROW_STANDING_BANK = CHR_BIGMARIO
 MetaspriteDuplicate "SMALL_MARIO_GROW_STANDING", "SMALL_MARIO_STANDING"
-MetaspriteBox "BIG_MARIO", "GROW_INTERMEDIATE", $18, $1a, $38, $3a
+MetaspriteBox "BIG_MARIO", "GROW_INTERMEDIATE", $04, $06, $24, $26
 MetaspriteDuplicate "BIG_MARIO_GROW_STANDING", "BIG_MARIO_STANDING"
+
+
 
 ; Glitchy looking sprite used when mario fires a fireball with no momentum in the water.
 FIRE_MARIO_SWIMMING_STILL_1_BANK = CHR_MARIOACTION
-MetaspriteDuplicate "FIRE_MARIO_SWIMMING_STILL_1", "FIRE_MARIO_STANDING"
+MetaspriteDuplicate "FIRE_MARIO_SWIMMING_STILL_1", "FIRE_MARIO_FIREBALL"
 ; This second sprite is a unique one with the "Hold" foot sprite overwriting the walking sprite
 FIRE_MARIO_SWIMMING_STILL_2_BANK = CHR_MARIOACTION
 MetaspriteBox "FIRE_MARIO", "SWIMMING_STILL_2", $00, $02, $24, $2e
 ; Glitchy looking sprite used when mario fires a fireball with no momentum in the water.
 SMALL_FIRE_SWIMMING_STILL_1_BANK = CHR_SMALLFIRE
-MetaspriteDuplicate "SMALL_FIRE_SWIMMING_STILL_1", "FIRE_MARIO_STANDING"
+MetaspriteDuplicate "SMALL_FIRE_SWIMMING_STILL_1", "FIRE_MARIO_FIREBALL"
 ; This second sprite is a unique one with the "Hold" foot sprite overwriting the walking sprite
 SMALL_FIRE_SWIMMING_STILL_2_BANK = CHR_SMALLFIRE
 MetaspriteBox "SMALL_FIRE", "SWIMMING_STILL_2", $00, $02, $28, $2a
@@ -312,17 +319,15 @@ MetaspriteBox "NUMBER", "1UP", $12, $14
 GOOMBA_VRAM_OFFSET = SPRITE_BANK_2
 GOOMBA_PALETTE = $03
 GOOMBA_DEAD_Y_OFFSET = $08
-MetaspriteBox "GOOMBA", "WALKING_1", $22, $24
-MetaspriteBox "GOOMBA", "WALKING_2", $24 | SPR_FLIP_H, $22 | SPR_FLIP_H
-MetaspriteBox "GOOMBA", "DEAD", $26, $26 | SPR_FLIP_H
+MetaspriteBox "GOOMBA", "WALKING_1", $00, $02
+MetaspriteBox "GOOMBA", "WALKING_2", $04, $06
+MetaspriteBox "GOOMBA", "DEAD", $08, $0a
 
 
-KOOPA_VRAM_OFFSET = SPRITE_BANK_2
 Y_OFFSET .set 0
 X_OFFSET .set 0
-KOOPA_PALETTE = $00 ; Don't set a palette here so we can do red or green koopa later
-; Koopa shell is offset by 2 pixels for the right side up animation. 
-; We account for this in the code by adding 2 with the vertical flip flag
+PALETTE  .set 0
+
 MetaspriteData "KOOPA_WALKING_1", Koopa_walking_1
 MetaspriteData "KOOPA_WALKING_2", Koopa_walking_2
 MetaspriteData "KOOPA_SHELL", Koopa_shell
@@ -362,11 +367,12 @@ Koopa_flying_2:
 .byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
 .byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
 
+
 PIRANHA_VRAM_OFFSET = SPRITE_BANK_3
 PIRANHA_PALETTE = $01
 PIRANHA_Y_OFFSET = -8
-MetaspriteBox "PIRANHA", "MOUTH_OPEN", $1c, $1c | SPR_FLIP_H, $3c, $3c | SPR_FLIP_H
-MetaspriteBox "PIRANHA", "MOUTH_CLOSED", $1e, $1e | SPR_FLIP_H, $3e, $3e | SPR_FLIP_H
+MetaspriteBox "PIRANHA", "MOUTH_OPEN", $00, $02, $20, $22
+MetaspriteBox "PIRANHA", "MOUTH_CLOSED", $04, $06, $24, $26
 
 BULLET_VRAM_OFFSET = SPRITE_BANK_2
 BULLET_PALETTE = $03
@@ -381,9 +387,9 @@ BUZZY_BEETLE_VRAM_OFFSET = SPRITE_BANK_2
 BUZZY_BEETLE_PALETTE = $03
 ; See note about koopa shell for this offset
 BUZZY_BEETLE_SHELL_Y_OFFSET = 0
-MetaspriteBox "BUZZY_BEETLE", "WALKING_1", $00, $02
-MetaspriteBox "BUZZY_BEETLE", "WALKING_2", $04, $06
-MetaspriteBox "BUZZY_BEETLE", "SHELL", $20, $20 | SPR_FLIP_H
+MetaspriteBox "BUZZY_BEETLE", "WALKING_1", $20, $22
+MetaspriteBox "BUZZY_BEETLE", "WALKING_2", $24, $26
+MetaspriteBox "BUZZY_BEETLE", "SHELL", $28, $28 | SPR_FLIP_H
 
 
 CHEEP_CHEEP_VRAM_OFFSET = SPRITE_BANK_2
@@ -435,12 +441,12 @@ MetaspriteBox "SPINY", "EGG_1", $10, $10 | SPR_FLIP_H | SPR_FLIP_V
 MetaspriteBox "SPINY", "EGG_2", $12, $12 | SPR_FLIP_H | SPR_FLIP_V
 
 
-JUMPSPRING_VRAM_OFFSET = SPRITE_BANK_3
+JUMPSPRING_VRAM_OFFSET = SPRITE_BANK_5
 JUMPSPRING_PALETTE = $02
 JUMPSPRING_Y_OFFSET = -8
-MetaspriteBox "JUMPSPRING", "FRAME_1", $16, $16 | SPR_FLIP_H , $36, $36 | SPR_FLIP_H
-MetaspriteBox "JUMPSPRING", "FRAME_2", $38, $38 | SPR_FLIP_H
-MetaspriteBox "JUMPSPRING", "FRAME_3", $14, $14
+MetaspriteBox "JUMPSPRING", "FRAME_1", $28, $28 | SPR_FLIP_H , $2a, $2a | SPR_FLIP_H
+MetaspriteBox "JUMPSPRING", "FRAME_2", $2a, $2a | SPR_FLIP_H
+MetaspriteBox "JUMPSPRING", "FRAME_3", $24, $24
 
 BOWSER_VRAM_OFFSET = SPRITE_BANK_4
 BOWSER_PALETTE = $01
@@ -494,7 +500,6 @@ VINE_TILE_2 = MetaspriteVramOffset {$2a}, {SPRITE_BANK_3}
 ; Used when drawing firebars (not when shooting fireballs which are metasprites)
 FIREBALL_TILE1 = MetaspriteVramOffset {$3c}, {SPRITE_BANK_0}
 FIREBALL_TILE2 = MetaspriteVramOffset {$3e}, {SPRITE_BANK_0}
-
 
 ;;;;;;;;;;;
 ; NULL Metasprite needs to be reserved in slot 0 to allow disabling drawing a sprite before its deleted
@@ -624,5 +629,5 @@ TOTAL_MARIO_SPRITE_BANK = * - PlayerBankTableReal
 .assert TOTAL_MARIO_SPRITE_BANK = TOTAL_MARIO_METASPRITES, error, .sprintf("Total number of Mario Metasprites (%d) does not match the mario bank table (%d)! Update the bank table to match ", TOTAL_MARIO_METASPRITES, TOTAL_MARIO_SPRITE_BANK)
 
 
-
+BUBBLE_TILE = MetaspriteVramOffset {$1c}, {SPRITE_BANK_1} ;-Cantersoft
 
