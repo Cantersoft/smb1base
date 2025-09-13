@@ -2211,8 +2211,12 @@ BumpBlock:
            sta Block_Y_MoveForce,x ;init fractional movement force
            sta Player_Y_Speed      ;init player's vertical speed
            lda #$fe
-           sta Block_Y_Speed,x     ;set vertical speed for block object
+           sta Block_Y_Speed,x     ;set vertical speed for block object	   
            lda R5                  ;get original metatile from stack
+		   ;ldx ObjectOffset 	   ;get block object offset
+		   ;lda #3
+		   ;sta Block_SprAttrib,x
+		   lda R5
            jsr BlockBumpedChk      ;do a sub to check which block player bumped head on
            bcc ExitBlockChk        ;if no match was found, branch to leave
            tya                     ;move block number to A

@@ -281,12 +281,12 @@ MISC_BUBBLE_PALETTE = $02
 MetaspriteBox "MISC", "BUBBLE", $18
 MetaspriteBox "MISC", "SMALL_OVERLAY", $1e, $1e
 MetaspriteBox "MISC", "LARGE_OVERLAY", $1e, $1e, $1e, $1e
-MISC_STAR_FLAG_VRAM_OFFSET = SPRITE_BANK_2
+MISC_STAR_FLAG_VRAM_OFFSET = SPRITE_BANK_5
 MISC_STAR_FLAG_PALETTE = $02
-MetaspriteBox "MISC", "STAR_FLAG", $3c, $3e
-MISC_FLAGPOLE_FLAG_VRAM_OFFSET = SPRITE_BANK_3
+MetaspriteBox "MISC", "STAR_FLAG", $2c, $2e
+MISC_FLAGPOLE_FLAG_VRAM_OFFSET = SPRITE_BANK_5
 MISC_FLAGPOLE_FLAG_PALETTE = $01
-MetaspriteBox "MISC", "FLAGPOLE_FLAG", $32, $34
+MetaspriteBox "MISC", "FLAGPOLE_FLAG", $30, $32
 
 PLATFORM_VRAM_OFFSET = SPRITE_BANK_1
 PLATFORM_PALETTE = $02
@@ -324,24 +324,36 @@ MetaspriteBox "GOOMBA", "WALKING_2", $04, $06
 MetaspriteBox "GOOMBA", "DEAD", $08, $0a
 
 
-Y_OFFSET .set 0
+Y_OFFSET .set 7
 X_OFFSET .set 0
-PALETTE  .set 0
+PALETTE  .set 1
 
-MetaspriteData "KOOPA_WALKING_1", Koopa_walking_1
-MetaspriteData "KOOPA_WALKING_2", Koopa_walking_2
+MetaspriteData "KOOPA_WALKING_1", Koopa_walking_1_Left, Koopa_walking_1_Right
+MetaspriteData "KOOPA_WALKING_2", Koopa_walking_2_Left, Koopa_walking_2_Right
 MetaspriteData "KOOPA_SHELL", Koopa_shell
 MetaspriteData "KOOPA_SHELL_REVIVE", Koopa_shell_revive
 MetaspriteData "KOOPA_FLYING_1", Koopa_flying_1
 MetaspriteData "KOOPA_FLYING_2", Koopa_flying_2
 
-Koopa_walking_1:
+Koopa_walking_1_Left:
+.byte 3 * 4
+.byte MetaspriteVramOffset{$30}, {SPRITE_BANK_2}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$2e}, {SPRITE_BANK_2}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$2c}, {SPRITE_BANK_2}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  16 + X_OFFSET
+
+Koopa_walking_1_Right:
 .byte 3 * 4
 .byte MetaspriteVramOffset{$2c}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
 .byte MetaspriteVramOffset{$2e}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
 .byte MetaspriteVramOffset{$30}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  16 + X_OFFSET
 
-Koopa_walking_2:
+Koopa_walking_2_Left:
+.byte 3 * 4
+.byte MetaspriteVramOffset{$30}, {SPRITE_BANK_2}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$34}, {SPRITE_BANK_2}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$32}, {SPRITE_BANK_2}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  16 + X_OFFSET
+
+Koopa_walking_2_Right:
 .byte 3 * 4
 .byte MetaspriteVramOffset{$32}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
 .byte MetaspriteVramOffset{$34}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
@@ -349,13 +361,13 @@ Koopa_walking_2:
 
 Koopa_shell:
 .byte 2 * 4
-.byte MetaspriteVramOffset{$36}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
-.byte MetaspriteVramOffset{$36}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$36}, {SPRITE_BANK_2}, OAM_FLIP_V | PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$36}, {SPRITE_BANK_2}, OAM_FLIP_V | OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
 
 Koopa_shell_revive:
 .byte 2 * 4
-.byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
-.byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, OAM_FLIP_V | PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, OAM_FLIP_V | OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
 
 Koopa_flying_1:
 .byte 2 * 4
@@ -414,13 +426,14 @@ HAMMER_PALETTE = $03
 MetaspriteBox "HAMMER", "FRAME_1", $1e
 MetaspriteBox "HAMMER", "FRAME_2", $00, $02
 
-HAMMER_BRO_VRAM_OFFSET = SPRITE_BANK_3
+HAMMER_BRO_VRAM_OFFSET = SPRITE_BANK_2
 HAMMER_BRO_PALETTE = $01
-HAMMER_BRO_Y_OFFSET = -8
-MetaspriteBox "HAMMER_BRO", "WALK_1", $00, $02, $20, $22
-MetaspriteBox "HAMMER_BRO", "WALK_2", $08, $0a, $24, $26
-MetaspriteBox "HAMMER_BRO", "THROW_1", $04, $06, $20, $22
-MetaspriteBox "HAMMER_BRO", "THROW_2", $04, $06, $24, $26
+HAMMER_BRO_Y_OFFSET = 0
+MetaspriteBox "HAMMER_BRO", "WALK_1", $0c, $0e
+MetaspriteBox "HAMMER_BRO", "WALK_2", $10, $12
+MetaspriteBox "HAMMER_BRO", "THROW_1", $14, $16
+MetaspriteBox "HAMMER_BRO", "THROW_2", $14, $16
+MetaspriteBox "HAMMER_BRO", "DEAD", $18, $20
 
 
 LAKITU_VRAM_OFFSET = SPRITE_BANK_3
@@ -442,9 +455,9 @@ MetaspriteBox "SPINY", "EGG_2", $12, $12 | SPR_FLIP_H | SPR_FLIP_V
 
 
 JUMPSPRING_VRAM_OFFSET = SPRITE_BANK_5
-JUMPSPRING_PALETTE = $02
+JUMPSPRING_PALETTE = $01
 JUMPSPRING_Y_OFFSET = -8
-MetaspriteBox "JUMPSPRING", "FRAME_1", $28, $28 | SPR_FLIP_H , $2a, $2a | SPR_FLIP_H
+MetaspriteBox "JUMPSPRING", "FRAME_1", $28, $28 | SPR_FLIP_H , $26, $26 | SPR_FLIP_H
 MetaspriteBox "JUMPSPRING", "FRAME_2", $2a, $2a | SPR_FLIP_H
 MetaspriteBox "JUMPSPRING", "FRAME_3", $24, $24
 

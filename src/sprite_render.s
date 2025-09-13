@@ -595,10 +595,14 @@ CheckToAnimateEnemy:
         iny ; use the next frame of whatever action is selected
 CheckDefeatedState:
   lda Enemy_State,x
+  cmp #4
+  bne :+
+  ldy #METASPRITE_HAMMER_BRO_DEAD
+  :
   and #%00100000        ;for d5 set
   beq WriteMetasprite   ;branch if not set
     lda #MSPR_VERTICAL_FLIP
-    sta EnemyVerticalFlip,x
+    sta EnemyVerticalFlip,x	
 WriteMetasprite:
   tya
   sta EnemyMetasprite,x
@@ -685,18 +689,9 @@ WriteMetasprite:
 
 .proc DrawBlock
   ldx ObjectOffset              ;get block object offset
+  ;lda #3
+  ;sta Block_SprAttrib,x
   ldy #METASPRITE_MISC_BRICK_GROUND
-  txa
-  cmp #$00 ;if breakable brick
-  beq BreakableBrickPalette
-  bne BlockPalette
-  BlockPalette:
-  lda #2
-  jmp AfterPalette
-  BreakableBrickPalette:
-  lda #3
-  AfterPalette:
-  sta Block_SprAttrib,x
   lda AreaType
   cmp #1                        ;check for ground level type area
   beq CheckReplacement          ;if found, branch to next part
@@ -704,13 +699,17 @@ WriteMetasprite:
 CheckReplacement:
   lda Block_Metatile,x          ;check replacement metatile
   cmp #$c4                      ;if not used block metatile, then
-  bne Exit                 ;branch ahead to use current graphics
+  bne notblock                 ;branch ahead to use current graphics
+  lda #2
+    sta Block_SprAttrib,x
     ldy #METASPRITE_MISC_BLOCK
     lda AreaType
     cmp #1
     beq Exit
-      lda #1
-      sta Block_SprAttrib,x
+	jmp Exit
+	notblock:
+	lda #3
+	sta Block_SprAttrib,x
 Exit:
   tya
   sta BlockMetasprite,x

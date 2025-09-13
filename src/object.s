@@ -988,7 +988,7 @@ ExFlmeD: rts                        ;leave
 ;$00 - used in HammerBroJumpCode as bitmask
 
 HammerThrowTmrData:
-      .byte $30, $1c
+      .byte $80, $30
 
 XSpeedAdderData:
       .byte $00, $e8, $00, $18
@@ -1000,7 +1000,7 @@ ProcHammerBro:
        lda Enemy_State,x          ;check hammer bro's enemy state for d5 set
        and #%00100000
        beq ChkJH                  ;if not set, go ahead with code
-       jmp MoveDefeatedEnemy      ;otherwise jump to something else
+       jmp ChkKillEnemy      ;otherwise jump to something else
 ChkJH: lda HammerBroJumpTimer,x   ;check jump timer
        beq HammerBroJumpCode      ;if expired, branch to jump
        dec HammerBroJumpTimer,x   ;otherwise decrement jump timer
@@ -1156,6 +1156,13 @@ ChkKillGoomba:
         jmp EraseEnemyObject  ;otherwise, kill this goomba object
 NKGmba: rts ; TODO check this RTS can be removed                   ;leave!
 
+ChkKillEnemy:
+        cmp #$0e              ;check to see if enemy timer has reached
+		bne NKEnemy
+		lda Enemy_ID,x
+        jmp EraseEnemyObject  ;otherwise, kill this object
+		NKEnemy: 
+		rts
 ;--------------------------------
 ;$00 - used to hold horizontal difference
 ;$01-$03 - used to hold difference adjusters
