@@ -2213,20 +2213,20 @@ BumpBlock:
            lda #$fe
            sta Block_Y_Speed,x     ;set vertical speed for block object	   
            lda R5                  ;get original metatile from stack
-		   ;ldx ObjectOffset 	   ;get block object offset
-		   ;lda #3
-		   ;sta Block_SprAttrib,x
-		   ;lda R5
-           jsr BlockBumpedChk      ;do a sub to check which block player bumped head on
-		bcs :+ ; NEW = set palette override differently and exit if not set
-		lda #3 ; use palette 3 instead
-		sta BlockPaletteOverride,x
-		rts
-		: ; 
-		lda #2 ; use palette 2 instead
-		sta BlockPaletteOverride,x
-		tya
-           ;bcc ExitBlockChk        ;if no match was found, branch to leave
+		   
+		   ldy #$03
+           jsr BumpChkLoop       ;do a sub to check which block player bumped head on
+			bcs :+ ; NEW = set palette override differently and exit if not set
+			lda #$03 ; use palette 3 instead
+			jmp AfterBlockPaletteOverrideChk
+			:
+			lda #$02 ; use palette 2 instead
+			AfterBlockPaletteOverrideChk:
+			sta BlockPaletteOverride,x	
+
+			lda R5                  ;get original metatile from stack
+			jsr BlockBumpedChk      ;do a sub to check which block player bumped head on
+           bcc ExitBlockChk        ;if no match was found, branch to leave
            tya                     ;move block number to A
            cmp #$09                ;if block number was within 0-8 range,
            bcc BlockCode           ;branch to use current number
