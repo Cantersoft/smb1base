@@ -709,19 +709,19 @@ lda Block_Metatile,x          ;check replacement metatile
 cmp #$c4                      ;if not used block metatile, then
 bne notblock                 ;branch ahead to use current graphics
 
-lda Sprite_Tilenumber,x
-cmp #$00
-beq QuestionBlockPalette
-cmp #$14
-beq QuestionBlockPalette
-cmp #$16
-beq QuestionBlockPalette
-lda #3			;Not a question block, so use normal palette
-jmp AfterPalette
-QuestionBlockPalette:
-lda #2
-AfterPalette:
-sta Block_SprAttrib,x
+; lda Sprite_Tilenumber,x
+; cmp #$00
+; beq QuestionBlockPalette
+; cmp #$14
+; beq QuestionBlockPalette
+; cmp #$16
+; beq QuestionBlockPalette
+; lda #3			;Not a question block, so use normal palette
+; jmp AfterPalette
+; QuestionBlockPalette:
+; lda #2
+; AfterPalette:
+; sta Block_SprAttrib,x
     ldy #METASPRITE_MISC_BLOCK
     lda AreaType
     cmp #1
@@ -729,10 +729,13 @@ sta Block_SprAttrib,x
 	jmp Exit
 	notblock:
 	lda #3
-	sta Block_SprAttrib,x
+	
+	
 Exit:
   tya
   sta BlockMetasprite,x
+lda BlockPaletteOverride,x
+sta Block_SprAttrib,x
   rts
 .endproc
 

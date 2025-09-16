@@ -378,6 +378,7 @@ RESERVE ChangeAreaTimer, 2
 RESERVE TimeResumed, 1		;-Cantersoft
 RESERVE ChangeSizeTimerTimeFrozen, 1	;-Cantersoft
 RESERVE AreaPaletteResetFlag, 1		;-Cantersoft
+RESERVE BlockPaletteOverride, 4
 
 ; RESERVE PlayerOAMOffset, 1
 RESERVE CurrentOAMOffset, 1

@@ -2216,9 +2216,17 @@ BumpBlock:
 		   ;ldx ObjectOffset 	   ;get block object offset
 		   ;lda #3
 		   ;sta Block_SprAttrib,x
-		   lda R5
+		   ;lda R5
            jsr BlockBumpedChk      ;do a sub to check which block player bumped head on
-           bcc ExitBlockChk        ;if no match was found, branch to leave
+		bcs :+ ; NEW = set palette override differently and exit if not set
+		lda #3 ; use palette 3 instead
+		sta BlockPaletteOverride,x
+		rts
+		: ; 
+		lda #2 ; use palette 2 instead
+		sta BlockPaletteOverride,x
+		tya
+           ;bcc ExitBlockChk        ;if no match was found, branch to leave
            tya                     ;move block number to A
            cmp #$09                ;if block number was within 0-8 range,
            bcc BlockCode           ;branch to use current number
