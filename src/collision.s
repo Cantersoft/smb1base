@@ -415,8 +415,18 @@ EnemyStomped:
       cmp #Lakitu                ;branch for lakitu
       beq EnemyStompedPts
       iny                        ;increment points data offset
+	  cmp #BuzzyBeetle
+	   bne :+
+	   lda Enemy_State,x
+	   cmp #$20					;Check if Angry Beetle
+	   beq HandleStompedShellE
+	   lda #$20					;Set Angry Beetle
+	   sta Enemy_State,x
+	   jmp EnemyStompedPts
+	   :	  
       cmp #Bloober               ;branch if NOT bloober
       bne ChkForDemoteKoopa
+
 
 EnemyStompedPts:
       lda StompedEnemyPtsData,y  ;load points data using offset in Y

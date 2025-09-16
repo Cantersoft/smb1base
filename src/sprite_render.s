@@ -33,7 +33,7 @@
   sta Sprite_X_Position+4,y  ;to give characteristic staggered vine shape to
   sta Sprite_X_Position+12,y ;our vertical stack of sprites
   sta Sprite_X_Position+20,y
-  lda #%00100001             ;set bg priority and palette attribute bits
+  lda #%00100010             ;set bg priority and palette attribute bits
   sta Sprite_Attributes,y    ;set in first, third and fifth sprites
   sta Sprite_Attributes+8,y
   sta Sprite_Attributes+16,y
@@ -321,10 +321,12 @@ Exit:
       ; goomba was squished so use that metasprite instead
       ldy #METASPRITE_GOOMBA_DEAD
       ; the sprite in CHR is upside down intentionally so let the flip happen anyway
+	  jmp AfterGoombaStomp
     :
     lda Enemy_SprAttrib,x
     ora #%10000000
     sta Enemy_SprAttrib,x
+	AfterGoombaStomp:
     bne Exit
 GmbaAnim:
   and #%00100000        ;check for d5 set in enemy object state
@@ -595,14 +597,20 @@ CheckToAnimateEnemy:
         iny ; use the next frame of whatever action is selected
 CheckDefeatedState:
   lda Enemy_State,x
-  cmp #4
-  bne :+
+  cmp #$20			;if enemy state = 20 (hammerbro stomped)...
+  bne HammerBroNoDeathSequence
   ldy #METASPRITE_HAMMER_BRO_DEAD
+  lda EnemyIntervalTimer,x		
+  cmp #$11 					;...and timer > #11
+  bcc :+
+  lda #$11
+  sta EnemyIntervalTimer,x	;...reduce the timer (timer gets auto-reset at #0e).
   :
-  and #%00100000        ;for d5 set
-  beq WriteMetasprite   ;branch if not set
-    lda #MSPR_VERTICAL_FLIP
-    sta EnemyVerticalFlip,x	
+  HammerBroNoDeathSequence:
+  ;and #%00100000        ;for d5 set
+  ;beq WriteMetasprite   ;branch if not set
+    ;lda #MSPR_VERTICAL_FLIP
+    ;sta EnemyVerticalFlip,x	
 WriteMetasprite:
   tya
   sta EnemyMetasprite,x
@@ -697,11 +705,23 @@ WriteMetasprite:
   beq CheckReplacement          ;if found, branch to next part
     ldy #METASPRITE_MISC_BRICK_OTHER
 CheckReplacement:
-  lda Block_Metatile,x          ;check replacement metatile
-  cmp #$c4                      ;if not used block metatile, then
-  bne notblock                 ;branch ahead to use current graphics
-  lda #2
-    sta Block_SprAttrib,x
+lda Block_Metatile,x          ;check replacement metatile
+cmp #$c4                      ;if not used block metatile, then
+bne notblock                 ;branch ahead to use current graphics
+
+lda Sprite_Tilenumber,x
+cmp #$00
+beq QuestionBlockPalette
+cmp #$14
+beq QuestionBlockPalette
+cmp #$16
+beq QuestionBlockPalette
+lda #3			;Not a question block, so use normal palette
+jmp AfterPalette
+QuestionBlockPalette:
+lda #2
+AfterPalette:
+sta Block_SprAttrib,x
     ldy #METASPRITE_MISC_BLOCK
     lda AreaType
     cmp #1

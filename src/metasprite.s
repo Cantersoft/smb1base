@@ -231,15 +231,15 @@ TOTAL_MARIO_METASPRITES = METASPRITE_SMALL_FIRE_SWIMMING_STILL_2 - METASPRITE_BI
 POWERUP_VRAM_OFFSET = SPRITE_BANK_1
 ; POWERUP_Y_OFFSET = 8
 POWERUP_1UP_PALETTE = $01
-POWERUP_STAR_PALETTE = $00
-POWERUP_FIREFLOWER_PALETTE = $00
+POWERUP_STAR_PALETTE = $01
+POWERUP_FIREFLOWER_PALETTE = $02
 POWERUP_FIREFLOWER_Y_OFFSET = -8
-POWERUP_MUSHROOM_PALETTE = $02
+POWERUP_MUSHROOM_PALETTE = $03
 POWERUP_1UP_NO_MIRROR = 1
 POWERUP_MUSHROOM_NO_MIRROR = 1
 MetaspriteBox "POWERUP", "STAR",       $34, $36
 ; Force the lower two parts of the fireflower to be palette two by using the override
-MetaspriteBox "POWERUP", "FIREFLOWER", $38, $38 | SPR_FLIP_H , $3a | SPR_PALETTE_1, $3a | SPR_FLIP_H | SPR_PALETTE_1
+MetaspriteBox "POWERUP", "FIREFLOWER", $1e, $1e | SPR_FLIP_H
 MetaspriteBox "POWERUP", "MUSHROOM",   $3c, $3e
 MetaspriteBox "POWERUP", "1UP",        $3c, $3e
 
@@ -394,14 +394,14 @@ PODOBOO_VRAM_OFFSET = SPRITE_BANK_4
 PODOBOO_PALETTE = $02
 MetaspriteBox "PODOBOO", "UP", $18, $18 | SPR_FLIP_H
 
-
+Y_OFFSET .set 4
 BUZZY_BEETLE_VRAM_OFFSET = SPRITE_BANK_2
 BUZZY_BEETLE_PALETTE = $03
 ; See note about koopa shell for this offset
 BUZZY_BEETLE_SHELL_Y_OFFSET = 0
 MetaspriteBox "BUZZY_BEETLE", "WALKING_1", $20, $22
-MetaspriteBox "BUZZY_BEETLE", "WALKING_2", $24, $26
-MetaspriteBox "BUZZY_BEETLE", "SHELL", $28, $28 | SPR_FLIP_H
+MetaspriteBox "BUZZY_BEETLE", "WALKING_2", $22 |SPR_FLIP_H, $20 |SPR_FLIP_H
+MetaspriteBox "BUZZY_BEETLE", "SHELL", $24, $26, 0 + Y_OFFSET
 
 
 CHEEP_CHEEP_VRAM_OFFSET = SPRITE_BANK_2
@@ -422,8 +422,8 @@ HAMMER_FRAME_1_X_OFFSET = 4
 HAMMER_FRAME_1_Y_OFFSET = -8
 HAMMER_FRAME_2_X_OFFSET = 0
 HAMMER_FRAME_2_Y_OFFSET = -8
-HAMMER_PALETTE = $03
-MetaspriteBox "HAMMER", "FRAME_1", $1e
+HAMMER_PALETTE = $01
+MetaspriteBox "HAMMER", "FRAME_1", $38, $3a
 MetaspriteBox "HAMMER", "FRAME_2", $00, $02
 
 HAMMER_BRO_VRAM_OFFSET = SPRITE_BANK_2
@@ -433,7 +433,7 @@ MetaspriteBox "HAMMER_BRO", "WALK_1", $0c, $0e
 MetaspriteBox "HAMMER_BRO", "WALK_2", $10, $12
 MetaspriteBox "HAMMER_BRO", "THROW_1", $14, $16
 MetaspriteBox "HAMMER_BRO", "THROW_2", $14, $16
-MetaspriteBox "HAMMER_BRO", "DEAD", $18, $20
+MetaspriteBox "HAMMER_BRO", "DEAD", $18, $1a
 
 
 LAKITU_VRAM_OFFSET = SPRITE_BANK_3
@@ -507,8 +507,10 @@ BRICK_CHUNK_TILE = MetaspriteVramOffset {$16}, {SPRITE_BANK_1}
 PLATFORM_GIRDER = MetaspriteVramOffset {$1a}, {SPRITE_BANK_1}
 
 ; Vine drawing is probably possible to do as a metasprite but not worth the trouble
-VINE_TILE_1 = MetaspriteVramOffset {$28}, {SPRITE_BANK_3}
-VINE_TILE_2 = MetaspriteVramOffset {$2a}, {SPRITE_BANK_3}
+PALETTE  .set 2
+
+VINE_TILE_1 = MetaspriteVramOffset {$20}, {SPRITE_BANK_5}
+VINE_TILE_2 = MetaspriteVramOffset {$22}, {SPRITE_BANK_5}
 
 ; Used when drawing firebars (not when shooting fireballs which are metasprites)
 FIREBALL_TILE1 = MetaspriteVramOffset {$3c}, {SPRITE_BANK_0}

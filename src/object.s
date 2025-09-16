@@ -146,6 +146,7 @@ MiscLoopBack:
 ;$02 - used to set maximum speed
 ProcHammerObj:
   lda TimerControl           ;if master timer control set
+  ora FreezeTimer
   bne RunHSubs               ;skip all of this code and go to last subs at the end
     lda Misc_State,x           ;otherwise get hammer's state
     and #%01111111             ;mask out d7
@@ -182,15 +183,31 @@ SetHSpd:
 SetHPos:
     dec Misc_State,x           ;decrement hammer's state
     lda Enemy_X_Position,y     ;get enemy's horizontal position
-    clc
-    adc #$02                   ;set position 2 pixels to the right
-    sta Misc_X_Position,x      ;store as hammer's horizontal position
-    lda Enemy_PageLoc,y        ;get enemy's page location
-    adc #$00                   ;add carry
+	pha
+clc
+lda Enemy_MovingDir,y
+cmp #$01
+bne EnemyFacingLeft
+
+pla
+adc #$02
+sta Misc_X_Position,x      ;store as hammer's horizontal position
+lda Enemy_PageLoc,y        ;get enemy's page location
+adc #$00                   ;add carry
+
+jmp AfterEnemyFacingDirection
+EnemyFacingLeft:
+pla
+sbc #$0b
+sta Misc_X_Position,x      ;store as hammer's horizontal position
+lda Enemy_PageLoc,y        ;get enemy's page location
+sbc #$00                   ;add carry
+AfterEnemyFacingDirection:
+
     sta Misc_PageLoc,x         ;store as hammer's page location
     lda Enemy_Y_Position,y     ;get enemy's vertical position
     sec
-    sbc #$0a                   ;move position 10 pixels upward
+    adc #$00                   ;move position 10 pixels upward
     sta Misc_Y_Position,x      ;store as hammer's vertical position
     lda #$01
     sta Misc_Y_HighPos,x       ;set hammer's vertical high byte
@@ -998,8 +1015,9 @@ RevivedXSpeed:
 
 ProcHammerBro:
        lda Enemy_State,x          ;check hammer bro's enemy state for d5 set
-       and #%00100000
+       and #$20
        beq ChkJH                  ;if not set, go ahead with code
+	   lda EnemyIntervalTimer,x
        jmp ChkKillEnemy      ;otherwise jump to something else
 ChkJH: lda HammerBroJumpTimer,x   ;check jump timer
        beq HammerBroJumpCode      ;if expired, branch to jump
@@ -1081,6 +1099,17 @@ SetShim: pha
 
 MoveNormalEnemy:
        ldy #$00                   ;init Y to leave horizontal movement as-is 
+	   lda Enemy_State,x
+	   cmp #$20
+	   bne :+
+	   ;ldy #$01
+	   ;jmp AddHS
+	   ;lda #$XSpeedAdderData,y
+	   ;sta Enemy_X_Speed,x 
+	   lda #$40
+	   sta Enemy_X_Speed,x
+	   jmp MoveEnemyHorizontally
+	   :
        lda Enemy_State,x
        and #%01000000             ;check enemy state for d6 set, if set skip
        bne FallE                  ;to move enemy vertically, then horizontally if necessary
