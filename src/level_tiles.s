@@ -2214,13 +2214,13 @@ BumpBlock:
            sta Block_Y_Speed,x     ;set vertical speed for block object	   
            lda R5                  ;get original metatile from stack
 		   
-		   ldy #$03
-           jsr BumpChkLoop       ;do a sub to check which block player bumped head on
-			bcs :+ ; NEW = set palette override differently and exit if not set
-			lda #$03 ; use palette 3 instead
+			ldy #$03				;Create an index for the block table, starting with the end of the question block tiles
+			jsr BumpChkLoop      	;do a sub to check whether the tile the player bumped his head on is part of the question block
+			bcs :+ 					; NEW = set palette override differently and exit if not set
+			lda #$03 				; use palette 3 for regular blocks
 			jmp AfterBlockPaletteOverrideChk
 			:
-			lda #$02 ; use palette 2 instead
+			lda #$02 				; use palette 2 instead for question blocks
 			AfterBlockPaletteOverrideChk:
 			sta BlockPaletteOverride,x	
 

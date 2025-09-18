@@ -1122,8 +1122,11 @@ LandPlyr:
   sta Player_Y_MoveForce     ;movement force to stop player's vertical movement
   sta StompChainCounter      ;initialize enemy stomp counter
 InitSteP:
+	lda SwimmingFlag		;If swimming (seapony in this hack), don't switch back to the standing tile on landing!
+	bne :+
   lda #$00
   sta Player_State           ;set player's state to normal
+  :
   ; fallthrough
 
 DoPlayerSideCheck:
@@ -1189,8 +1192,8 @@ ContSChk:
         jmp StopPlayerMove         ;otherwise jump to impede player's movement
 ChkPBtm:
   ldy Player_State           ;get player's state
-  cpy #$00                   ;check for player's state set to normal
-  bne StopPlayerMove         ;if not, branch to impede player's movement
+  cpy #$02                   ;check for player's state less than #$02 (swimming - #$01, or normal - #$00)
+  bcs StopPlayerMove         ;if not, branch to impede player's movement
     ldy PlayerFacingDir        ;get player's facing direction
     dey
     bne StopPlayerMove         ;if facing left, branch to impede movement
