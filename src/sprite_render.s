@@ -606,11 +606,12 @@ CheckDefeatedState:
   lda #$11
   sta EnemyIntervalTimer,x	;...reduce the timer (timer gets auto-reset at #0e).
   :
+  jmp WriteMetasprite
   HammerBroNoDeathSequence:
-  ;and #%00100000        ;for d5 set
-  ;beq WriteMetasprite   ;branch if not set
-    ;lda #MSPR_VERTICAL_FLIP
-    ;sta EnemyVerticalFlip,x	
+  and #%00100000        ;for d5 set
+  beq WriteMetasprite   ;branch if not set
+    lda #MSPR_VERTICAL_FLIP
+    sta EnemyVerticalFlip,x	
 WriteMetasprite:
   tya
   sta EnemyMetasprite,x

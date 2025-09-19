@@ -99,7 +99,7 @@ BlockBuffer_X_Adder:
 ; Added to the sprite position to get the location to check for tile collision
 ;     head, foot l, r, side 1 2    3,   4
 BlockBuffer_Big_X_Adder:
-  .byte $08, $03, $0c, $02, $02, $0d, $0d ; big
+  .byte $09, $05, $0c, $05, $05, $0c, $0c ; big
 BlockBuffer_Swimming_X_Adder:
   .byte $08, $03, $0c, $02, $02, $0d, $0d ; swimming
 BlockBuffer_Small_X_Adder:
@@ -110,9 +110,9 @@ BlockBufferNeck_X_Adder:
   .byte $06, $09 
 
 BlockBuffer_Y_Adder:
-  .byte $11, $20, $20, $18, $18, $18, $18 ; big
+  .byte $10, $20, $20, $14, $1a, $14, $1a; big
   .byte $02, $20, $20, $08, $18, $08, $18 ; swimming
-  .byte $11, $20, $20, $18, $18, $18, $18 ; small/crouching
+  .byte $10, $20, $20, $18, $18, $18, $18 ; small/crouching
   .byte $18, $14, $14, $06, $06, $08, $10 ; misc
   
 

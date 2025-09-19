@@ -1367,10 +1367,10 @@ ActionSwimming:
   jsr GetGfxOffsetAdder
   lda JumpSwimTimer      ;check jump/swim timer
   ora PlayerAnimCtrl     ;and animation frame control
-  bne FourFrameExtent    ;if any one of these set, branch ahead
+  bne ThreeFrameExtent    ;if any one of these set, branch ahead
   lda A_B_Buttons
   asl                    ;check for A button pressed
-  bcs FourFrameExtent    ;branch to same place if A button pressed
+  bcs ThreeFrameExtent    ;branch to same place if A button pressed
 
 GetCurrentAnimOffset:
   lda PlayerAnimCtrl         ;get animation frame control

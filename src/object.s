@@ -1015,8 +1015,10 @@ RevivedXSpeed:
 
 ProcHammerBro:
        lda Enemy_State,x          ;check hammer bro's enemy state for d5 set
-       and #$20
-       beq ChkJH                  ;if not set, go ahead with code
+	   cmp #$22					  ;if defeated by punch or fire
+	   jeq MoveDefeatedEnemy	  ;fall
+       and #%00100000			  ;#$20
+       beq ChkJH                  ;if not set, go ahead with code   
 	   lda EnemyIntervalTimer,x
        jmp ChkKillEnemy      ;otherwise jump to something else
 ChkJH: lda HammerBroJumpTimer,x   ;check jump timer
