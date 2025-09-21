@@ -534,7 +534,7 @@ GameText:
 TopStatusBarLine:
   .byte $23, $c0, $7f, $aa ; attribute table data, clears name table 0 to palette 2
   .byte $23, $c2, $01, $ea ; attribute table data, used for coin icon in status bar
-  .byte $20, $43, $05, "FILLY"
+  .byte $20, $43, $06, " FILLY"
   .byte $20, $52, $0b, "WORLD  TIME"
   .byte $20, $68, $05, "0  ", $2e, $29 ; score trailing digit and coin display
   .byte $ff ; end of data block
@@ -548,13 +548,13 @@ WorldLivesDisplay:
   .byte $ff
 
 TwoPlayerTimeUp:
-  .byte $21, $cd, $05, "FILLY"
+  .byte $21, $cd, $06, " FILLY"
 OnePlayerTimeUp:
   .byte $22, $0c, $07, "TIME UP"
   .byte $ff
 
 TwoPlayerGameOver:
-  .byte $21, $cd, $05, "FILLY"
+  .byte $21, $cd, $06, " FILLY"
 OnePlayerGameOver:
   .byte $22, $0b, $09, "GAME OVER"
   .byte $ff
