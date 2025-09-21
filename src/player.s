@@ -603,12 +603,14 @@ ShrinkPlayer:
   clc
   adc #$0a                     ;this thing apparently uses two of the swimming frames
   tax                          ;to draw the player shrinking
-  ldy #$09                     ;load offset for small player swimming
+  ldy #$09                   ;load offset for small player swimming
   lda ChangeSizeOffsetAdder,x  ;get what would normally be offset adder
   bne ShrPlF                   ;and branch to use offset if nonzero
     ldy #$01                     ;otherwise load offset for big player swimming
 ShrPlF:
-  lda PlayerGfxTblOffsets,y    ;get offset to graphics table based on offset loaded
+	ldy #GrowAnimation
+	jmp GetOffsetFromAnimCtrl
+  ;lda PlayerGfxTblOffsets,y    ;get offset to graphics table based on offset loaded
   rts                          ;and leave
 
 

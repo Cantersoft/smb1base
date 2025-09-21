@@ -1213,7 +1213,7 @@ ChkLS:   lda Enemy_State,x          ;if lakitu's enemy state not set at all,
          sta EnemyFrenzyBuffer      ;initialize frenzy buffer
          lda #$10
          bne SetLSpd                ;load horizontal speed and do unconditional branch
-Fr12S:   lda #Spiny
+Fr12S:   lda #Soybean
          sta EnemyFrenzyBuffer      ;set spiny identifier in frenzy buffer
          ldy #$02
 LdLDa:   lda LakituDiffAdj,y        ;load values
@@ -1285,7 +1285,7 @@ ChkPSpeed: lda R0
            bcc ChkSpinyO              ;to same place
            iny                        ;otherwise increment once more
 ChkSpinyO: lda Enemy_ID,x             ;check for spiny object
-           cmp #Spiny
+           cmp #Soybean
            bne ChkEmySpd              ;branch if not found
            lda Player_X_Speed         ;if player not moving, skip this part
            bne SubDifAdj
@@ -1791,6 +1791,12 @@ DrawExplosion_Fireball:
   lda ExplosionTiles,y        ;get tile number using offset
   sta FireballMetasprite,x
   ; prevent rotation of the fireball from bleeding into the explosion
+  lda FreezeTimer
+  beq :+
+  lda #%00000010				;set palette 3 if in timefreeze mode
+  sta Fireball_SprAttrib,x
+  rts  
+  :
   lda #0
   sta Fireball_SprAttrib,x
   rts                         ;we are done
@@ -3561,14 +3567,16 @@ CreateSpiny:
   lda Enemy_State,y          ;if lakitu is not in normal state, branch to leave
   bne ExLSHand
   lda Enemy_PageLoc,y        ;store horizontal coordinates (high and low) of lakitu
+  sbc #00
   sta Enemy_PageLoc,x        ;into the coordinates of the spiny we're going to create
   lda Enemy_X_Position,y
+    sbc #16
   sta Enemy_X_Position,x
   lda #$01                   ;put spiny within vertical screen unit
   sta Enemy_Y_HighPos,x
   lda Enemy_Y_Position,y     ;put spiny eight pixels above where lakitu is
   sec
-  sbc #$08
+  sbc #$00
   sta Enemy_Y_Position,x
   lda PseudoRandomBitReg,x   ;get 2 LSB of LSFR and save to Y
   and #%00000011
@@ -3734,6 +3742,10 @@ SwimCC_IDData:
       .byte $0a, $0b
 
 BulletBillCheepCheep:
+lda FreezeTimer			;no motion if time is stopped
+		 beq :+
+		 rts
+		 :
   lda FrenzyEnemyTimer      ;if timer not expired yet, branch to leave
   bne ExF17
   lda AreaType              ;are we in a water-type level?
@@ -3785,6 +3797,10 @@ AddFBit:
   jmp CheckpointEnemyID     ;process our new enemy object
 
 DoBulletBills:
+lda FreezeTimer			;no motion if time is stopped
+		 beq :+
+		 rts
+		 :
   ldy #$ff                   ;start at beginning of enemy slots
 BB_SLoop: iny                        ;move onto the next slot
     cpy #$05                   ;branch to play sound if we've done all slots

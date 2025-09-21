@@ -266,6 +266,7 @@ ClrPlrPal:
   farcall SetBGColor2 		;Update the background color.
   lda #03
   sta AreaPaletteResetFlag	;And set the flag so that we skip this entire function until we need it again later
+  farcall GetPlayerColors
   
   AreaPaletteResetExit: 
 SaveAB:

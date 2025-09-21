@@ -159,8 +159,8 @@ MetaspriteBox "FIRE_MARIO", "SWIMMING_3_HOLD", $12, $14, $32, $34
 
 BIG_MARIO_CLIMBING_1_BANK = CHR_MARIOACTION
 BIG_MARIO_CLIMBING_2_BANK = CHR_MARIOACTION
-MetaspriteBox "BIG_MARIO", "CLIMBING_1",   $16, $18, $26, $28
-MetaspriteBox "BIG_MARIO", "CLIMBING_2",   $16, $1a, $26, $2a
+MetaspriteBox "BIG_MARIO", "CLIMBING_1",   $16, $18, $36, $38
+MetaspriteBox "BIG_MARIO", "CLIMBING_2",   $16, $1a, $36, $3a
 
 SMALL_MARIO_VRAM_OFFSET = SPRITE_BANK_0
 SMALL_MARIO_BANK = CHR_SMALLMARIO
@@ -247,7 +247,7 @@ FIREBALL_VRAM_OFFSET = SPRITE_BANK_0
 FIREBALL_PALETTE = $02
 FIREBALL_Y_OFFSET = -12
 EXPLOSION_VRAM_OFFSET = SPRITE_BANK_1
-EXPLOSION_PALETTE = $02
+EXPLOSION_PALETTE = $00
 EXPLOSION_Y_OFFSET = -12  ; Vanilla offsets the explosion by -4. The other -8 is to account for position due to 8x16 sprites?
 MetaspriteBox "FIREBALL", "FRAME_1", $3c
 MetaspriteBox "FIREBALL", "FRAME_2", $3e
@@ -386,9 +386,34 @@ PIRANHA_Y_OFFSET = -17
 MetaspriteBox "PIRANHA", "MOUTH_OPEN", $00, $02, $20, $22
 MetaspriteBox "PIRANHA", "MOUTH_CLOSED", $04, $06, $24, $26
 
-BULLET_VRAM_OFFSET = SPRITE_BANK_2
+; BULLET_VRAM_OFFSET = SPRITE_BANK_2
+; BULLET_PALETTE = $03
+; MetaspriteBox "BULLET", "BILL", $1c, $1e
+
 BULLET_PALETTE = $03
-MetaspriteBox "BULLET", "BILL", $1c, $1e
+MetaspriteData "BULLET_BILL", Bullet_Bill_Left, Bullet_Bill_Right
+
+Bullet_Bill_Left:
+.byte 7 * 4
+.byte MetaspriteVramOffset{$02}, {SPRITE_BANK_4}, PALETTE, -16 + Y_OFFSET, 8 + X_OFFSET
+.byte MetaspriteVramOffset{$04}, {SPRITE_BANK_4}, PALETTE, -16 + Y_OFFSET, 16 + X_OFFSET
+.byte MetaspriteVramOffset{$20}, {SPRITE_BANK_4}, PALETTE, 0 + Y_OFFSET, 0 + X_OFFSET
+.byte MetaspriteVramOffset{$22}, {SPRITE_BANK_4}, PALETTE, 0 + Y_OFFSET, 8 + X_OFFSET
+.byte MetaspriteVramOffset{$24}, {SPRITE_BANK_4}, PALETTE, 0 + Y_OFFSET, 16 + X_OFFSET
+.byte MetaspriteVramOffset{$26}, {SPRITE_BANK_4}, PALETTE, 0 + Y_OFFSET, 24 + X_OFFSET
+.byte MetaspriteVramOffset{$28}, {SPRITE_BANK_4}, PALETTE, 0 + Y_OFFSET, 32 + X_OFFSET
+
+Bullet_Bill_Right:
+.byte 7 * 4
+.byte MetaspriteVramOffset{$02}, {SPRITE_BANK_4}, OAM_FLIP_H | PALETTE, -16 + Y_OFFSET, -8 + X_OFFSET
+.byte MetaspriteVramOffset{$04}, {SPRITE_BANK_4}, OAM_FLIP_H | PALETTE, -16 + Y_OFFSET, -16 + X_OFFSET
+.byte MetaspriteVramOffset{$20}, {SPRITE_BANK_4}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET, 0 + X_OFFSET
+.byte MetaspriteVramOffset{$22}, {SPRITE_BANK_4}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET, -8 + X_OFFSET
+.byte MetaspriteVramOffset{$24}, {SPRITE_BANK_4}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET, -16 + X_OFFSET
+.byte MetaspriteVramOffset{$26}, {SPRITE_BANK_4}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET, -24 + X_OFFSET
+.byte MetaspriteVramOffset{$28}, {SPRITE_BANK_4}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET, -32 + X_OFFSET
+
+
 
 PODOBOO_VRAM_OFFSET = SPRITE_BANK_4
 PODOBOO_PALETTE = $02
@@ -436,13 +461,42 @@ MetaspriteBox "HAMMER_BRO", "THROW_2", $14, $16
 MetaspriteBox "HAMMER_BRO", "DEAD", $18, $1a
 
 
-LAKITU_VRAM_OFFSET = SPRITE_BANK_3
-LAKITU_PALETTE = $01
-LAKITU_NORMAL_Y_OFFSET = -16
-LAKITU_THROWING_Y_OFFSET = 0
-MetaspriteBox "LAKITU", "NORMAL", $0c, $0e, $2c, $2e
-MetaspriteBox "LAKITU", "THROWING", $30, $30 | SPR_FLIP_H
 
+;LAKITU_VRAM_OFFSET = SPRITE_BANK_3
+; LAKITU_PALETTE = $01
+; LAKITU_NORMAL_Y_OFFSET = -16
+; LAKITU_THROWING_Y_OFFSET = 0
+; LAKITU_NORMAL_VRAM_OFFSET = SPRITE_BANK_3
+; LAKITU_THROWING_VRAM_OFFSET = SPRITE_BANK_2
+; MetaspriteBox "LAKITU", "NORMAL", $0c, $0e, $2c, $2e
+; MetaspriteBox "LAKITU", "THROWING", $30, $30 | SPR_FLIP_H
+
+
+Y_OFFSET .set 0
+X_OFFSET .set 0
+PALETTE  .set 1
+
+MetaspriteData "LAKITU_NORMAL", Lakitu_normal
+MetaspriteData "LAKITU_THROWING", Lakitu_throwing
+
+Lakitu_normal:
+.byte 4 * 4
+.byte MetaspriteVramOffset{$1c}, {SPRITE_BANK_3}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$1e}, {SPRITE_BANK_3}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$3c}, {SPRITE_BANK_3}, PALETTE, 16 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$3e}, {SPRITE_BANK_3}, PALETTE, 16 + Y_OFFSET,  8 + X_OFFSET
+
+Lakitu_throwing:
+.byte 5 * 4
+.byte MetaspriteVramOffset{$1c}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$1e}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$3a}, {SPRITE_BANK_2}, PALETTE, 16 + Y_OFFSET,  -8 + X_OFFSET
+.byte MetaspriteVramOffset{$3c}, {SPRITE_BANK_2}, PALETTE, 16 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$3e}, {SPRITE_BANK_2}, PALETTE, 16 + Y_OFFSET,  8 + X_OFFSET
+
+SOYBEAN_VRAM_OFFSET = SPRITE_BANK_3
+SOYBEAN_PALETTE = $03
+MetaspriteBox "SOYBEAN", "NONE", $18, $1a
 
 SPINY_VRAM_OFFSET = SPRITE_BANK_2
 SPINY_PALETTE = $02
@@ -513,6 +567,7 @@ VINE_TILE_1 = MetaspriteVramOffset {$20}, {SPRITE_BANK_5}
 VINE_TILE_2 = MetaspriteVramOffset {$22}, {SPRITE_BANK_5}
 
 ; Used when drawing firebars (not when shooting fireballs which are metasprites)
+PALETTE  .set 0
 FIREBALL_TILE1 = MetaspriteVramOffset {$3c}, {SPRITE_BANK_0}
 FIREBALL_TILE2 = MetaspriteVramOffset {$3e}, {SPRITE_BANK_0}
 

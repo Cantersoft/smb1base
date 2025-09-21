@@ -102,6 +102,7 @@ RedParatroopa         = $0f
 GreenParatroopaFly    = $10
 Lakitu                = $11
 Spiny                 = $12
+Soybean				  = $05
 FlyCheepCheepFrenzy   = $14
 FlyingCheepCheep      = $14
 BowserFlame           = $15

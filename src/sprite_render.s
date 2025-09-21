@@ -279,6 +279,7 @@ RunEngine:
   .word ProcessSpiny
   .word Noop
   .word ProcessFlyingCheepCheep
+  .word ProcessSoybean
 .endproc
 
 Noop:
@@ -288,6 +289,11 @@ Noop:
   rts
 
 .proc ProcessPiranhaPlant
+  lda Enemy_State,x
+  cmp #$22					  ;if enemy killed
+  bne :+
+	; make him disappear -Cantersoft
+  :
   lda #%00100000              ;set background priority bit in sprite
   sta Enemy_SprAttrib,x       ;attributes to give illusion of being inside pipe
   lda TimerControl
@@ -438,7 +444,14 @@ ProcessJumpingParatrooperInner:
   rts
 
 .proc ProcessBulletBill
-  lda #BULLET_PALETTE
+  ;lda #BULLET_PALETTE
+  lda FrameCounter           ;get frame counter
+    and #%00000011             ;mask out all but d1 and d0 (previously d2 and d1)
+    sta R2
+    lda Enemy_SprAttrib,x      ;add background priority bit if any set
+    and #%11100000
+    ora R2
+
   ldy EnemyFrameTimer,x       ;get timer for enemy object
   beq :+                   ;if expired, do not set priority bit
     ora #%00100000              ;otherwise do so
@@ -675,6 +688,14 @@ WriteMetasprite:
   rts
 .endproc
 
+.proc ProcessSoybean
+ldy #METASPRITE_SOYBEAN_NONE
+WriteMetasprite:
+  tya
+  sta EnemyMetasprite,x
+  rts
+.endproc
+
 ; GreenKoopa            = $00
 ; BuzzyBeetle           = $02
 ; RedKoopa              = $03
@@ -840,7 +861,7 @@ Exit:
   pla                      ;get from stack
   lsr                      ;divide by four again
   lsr
-  lda #$02                 ;load value $02 to set palette in attrib byte
+  lda #$00                 ;load value $02 to set palette in attrib byte
   bcc FireA                ;if last bit shifted out was not set, skip this
   ora #%11000000           ;otherwise flip both ways every eight frames
 FireA:
@@ -865,7 +886,7 @@ FireA:
   pla                      ;get from stack
   lsr                      ;divide by four again
   lsr
-  lda #$02                 ;load value $02 to set palette in attrib byte
+  lda #$00                 ;load value $00 to set palette in attrib byte
   bcc FireA                ;if last bit shifted out was not set, skip this
   ora #%11000000           ;otherwise flip both ways every eight frames
 FireA:

@@ -93,7 +93,8 @@ _COMMON_DEFINE_SEGMENTS = 1
 .incbin "chr/mmc5/bg_underground.chr"
 .incbin "chr/mmc5/bg_castle.chr"
 
-.incbin "chr/mmc5/sprites_mario.chr"
+.incbin "chr/mmc5/sprites_filly.chr"
+; .incbin "chr/mmc5/sprites_floorb.chr"
 .incbin "chr/mmc5/sprites_misc.chr"
 .incbin "chr/mmc5/sprites_enemies.chr"
 
@@ -104,7 +105,7 @@ _COMMON_DEFINE_SEGMENTS = 1
 .incbin "chr/mmc5/bg_underground.chr"
 .incbin "chr/mmc5/bg_castle.chr"
 
-.incbin "chr/mmc3/sprites_mario.chr"
+.incbin "chr/mmc3/sprites_filly.chr"
 .incbin "chr/mmc3/sprites_misc.chr"
 
 .incbin "chr/mmc3/sprites_water.chr"

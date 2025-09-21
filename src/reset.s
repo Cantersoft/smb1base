@@ -501,8 +501,8 @@ WorldSelectMessage2:
 
 ZaWarudoPaletteData:
   .byte $3f, $00, $20
-  .byte $0f, $24, $04, $0f	; background elements, pipe colors
-  .byte $0f, $39, $19, $0f	; floor tile, breakable brick?
+  .byte $0f, $24, $04, $3a	; background elements, pipe colors
+  .byte $0f, $34, $14, $04	; floor tile, breakable brick?
   .byte $0f, $31, $04, $0f	; clouds and text
   .byte $0f, $39, $19, $0f	; ??? -boxes (no animation)
   .byte $0f, $31, $24, $04	; world background/ player

@@ -444,6 +444,10 @@ Bitmasks:
 ;$02 - used to store adder to page location
 
 MoveEnemyHorizontally:
+		 lda FreezeTimer			;no motion if time is stopped
+		 beq :+
+		 rts
+		 :
       inx                         ;increment offset for enemy offset
       jsr MoveObjectHorizontally  ;position object horizontally according to
       ldx ObjectOffset            ;counters, return with saved value in A,
@@ -525,6 +529,10 @@ MoveEnemyUltraSlowVert:		;-Cantersoft
 ;--------------------------------
 
 MoveJ_EnemyVertically:
+		 lda FreezeTimer			;no motion if time is stopped
+		 beq :+
+		 rts
+		 :
              ldy #$1c                ;set movement amount for podoboo/other objects
 SetHiMax:    lda #$03                ;set maximum speed in A
 SetXMoveAmt: sty R0                  ;set movement amount here
