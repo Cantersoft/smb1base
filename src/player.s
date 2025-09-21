@@ -509,7 +509,6 @@ PlayerKilled:
 
 PlayerGfxProcessing:
   sta ObjectMetasprite
-
   lda FireballThrowingTimer
   beq PlayerOffscreenChk        ;if fireball throw timer not set, skip to the end
     ldy #$00                      ;set value to initialize by default

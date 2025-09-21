@@ -190,8 +190,7 @@ NoReset:
 ;   sta Sprite_Attributes+32       ;store and leave
   lda #METASPRITE_SMALL_MARIO_STANDING
   sta ObjectMetasprite
-  lda #CHR_SMALLMARIO
-  sta PlayerChrBank
+  jsr SwitchPlayerGraphics			;Select graphics for player 1 or 2 -Cantersoft
   inc ReloadCHRBank
   lda IntermediatePlayerData+0
   sta SprObject_Y_Position
@@ -343,8 +342,8 @@ BackgroundColors:
 
 PlayerColors:
       .byte $22, $1A, $2A, $2D ; Anonfilly's colors
-      .byte $22, $30, $27, $19 ;luigi's colors
-      .byte $22, $3A, $30, $1A                      ; fiery (used by both)
+      .byte $22, $28, $38, $1D ; FloorBored's colors
+      .byte $22, $3A, $30, $1A ; fiery (used by both)
 
 
 ;-------------------------------------------------------------------------------------
@@ -416,6 +415,23 @@ MushroomIconData:
   .byte $07, $22, $49, $83, $2a, $24, $24, $00
 .endproc
 
+;-------------------------------------------------------------------------------------
+;-cantersoft
+
+.proc SwitchPlayerGraphics
+
+lda CurrentPlayer
+bne :+
+lda #CHR_SMALLMARIO		;If player 1, use first bank
+sta PlayerChrBank
+jmp AfterSwitchPlayerGraphics
+:
+lda #CHR_SMALLMARIO_F		;If player 2, use second bank
+sta PlayerChrBank
+AfterSwitchPlayerGraphics:
+
+rts
+.endproc
 
 ;-------------------------------------------------------------------------------------
 cproc WriteGameText
