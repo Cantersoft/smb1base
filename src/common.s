@@ -335,7 +335,16 @@ TransLoop:
   dex
   bpl TransLoop
   clc            ;clear carry flag to get game going
-  jsr SwitchPlayerGraphics			;Select graphics for player 1 or 2 -Cantersoft
+  ;jsr SwitchPlayerGraphics			;Select graphics for player 1 or 2 -Cantersoft
+  lda CurrentPlayer
+bne :+
+lda #CHR_SMALLMARIO		;If player 1, use first bank
+sta PlayerChrBank
+jmp AfterSwitchPlayerGraphics
+:
+lda #CHR_SMALLMARIO_F		;If player 2, use second bank
+sta PlayerChrBank
+AfterSwitchPlayerGraphics:
 	inc ReloadCHRBank
 ExTrans:
   rts
