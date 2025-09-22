@@ -576,6 +576,7 @@ RESERVE BrickCoinTimer, 1
 ALL_TIMER_COUNT = BrickCoinTimer - Timers
 ALL_TIMER_COUNT_FREEZE = DemoTimer - Timers
 
+RESERVE PlayerBankOffset, 1 ;Cantersoft
 
 RESERVE PseudoRandomBitReg, 9
 

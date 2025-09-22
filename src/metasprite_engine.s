@@ -412,6 +412,8 @@ loadmetasprite:
     beq DoneDrawingPlayer
       ; Load the bank for the player if it changed
       lda PlayerBankTable,x
+	  clc
+	  adc PlayerBankOffset
       cmp PlayerChrBank
       beq :+
         sta PlayerChrBank

@@ -341,9 +341,10 @@ BackgroundColors:
 		;x, x, x, x
 
 PlayerColors:
-      .byte $22, $1A, $2A, $2D ; Anonfilly's colors
-      .byte $22, $28, $38, $1D ; FloorBored's colors
+      .byte $22, $1A, $2A, $08 ; Anonfilly's colors
+      .byte $22, $28, $38, $08 ; FloorBored's colors
       .byte $22, $3A, $30, $1A ; fiery (used by both)
+	  ;.byte $22, $3d, $20, $08 ; FloorBored's colors (clean)
 
 
 ;-------------------------------------------------------------------------------------
@@ -420,17 +421,27 @@ MushroomIconData:
 
 .proc SwitchPlayerGraphics
 
+; replaces the intermediate code from earlier
 lda CurrentPlayer
-bne :+
-lda #CHR_SMALLMARIO		;If player 1, use first bank
+asl ; multiply by 4
+asl
+sta PlayerBankOffset ; only works if CHR_SMALLMARIO_F is CHR_SMALLMARIO + 4
+adc #CHR_SMALLMARIO
 sta PlayerChrBank
-jmp AfterSwitchPlayerGraphics
-:
-lda #CHR_SMALLMARIO_F		;If player 2, use second bank
-sta PlayerChrBank
-AfterSwitchPlayerGraphics:
-
+inc ReloadCHRBank
 rts
+
+; lda CurrentPlayer
+; bne :+
+; lda #CHR_SMALLMARIO		;If player 1, use first bank
+; sta PlayerChrBank
+; jmp AfterSwitchPlayerGraphics
+; :
+; lda #CHR_SMALLMARIO_F		;If player 2, use second bank
+; sta PlayerChrBank
+; AfterSwitchPlayerGraphics:
+
+; rts
 .endproc
 
 ;-------------------------------------------------------------------------------------
