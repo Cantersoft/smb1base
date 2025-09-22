@@ -760,6 +760,8 @@ RdyNextA:
   lda StarFlagTaskControl
   cmp #$05                  ;if star flag task control not yet set
   bne ExitNA                ;beyond last valid task number, branch to leave
+;jsr TransposePlayers     ;switch players around if 2-player game  
+  
 PrcNextA:
   inc LevelNumber           ;increment level number used for game logic
   lda LevelNumber

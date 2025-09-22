@@ -341,9 +341,10 @@ BackgroundColors:
 		;x, x, x, x
 
 PlayerColors:
-      .byte $22, $1A, $2A, $2D ; Anonfilly's colors
-      .byte $22, $28, $38, $1D ; FloorBored's colors
+      .byte $22, $1A, $2A, $08 ; Anonfilly's colors
+      .byte $22, $28, $38, $08 ; FloorBored's colors
       .byte $22, $3A, $30, $1A ; fiery (used by both)
+	  ;.byte $22, $3d, $20, $08 ; FloorBored's colors (clean)
 
 
 ;-------------------------------------------------------------------------------------
@@ -420,17 +421,27 @@ MushroomIconData:
 
 .proc SwitchPlayerGraphics
 
+; replaces the intermediate code from earlier
 lda CurrentPlayer
-bne :+
-lda #CHR_SMALLMARIO		;If player 1, use first bank
+asl ; multiply by 4
+asl
+sta PlayerBankOffset ; only works if CHR_SMALLMARIO_F is CHR_SMALLMARIO + 4
+adc #CHR_SMALLMARIO
 sta PlayerChrBank
-jmp AfterSwitchPlayerGraphics
-:
-lda #CHR_SMALLMARIO_F		;If player 2, use second bank
-sta PlayerChrBank
-AfterSwitchPlayerGraphics:
-
+inc ReloadCHRBank
 rts
+
+; lda CurrentPlayer
+; bne :+
+; lda #CHR_SMALLMARIO		;If player 1, use first bank
+; sta PlayerChrBank
+; jmp AfterSwitchPlayerGraphics
+; :
+; lda #CHR_SMALLMARIO_F		;If player 2, use second bank
+; sta PlayerChrBank
+; AfterSwitchPlayerGraphics:
+
+; rts
 .endproc
 
 ;-------------------------------------------------------------------------------------
@@ -499,7 +510,7 @@ CheckPlayerName:
 ChkLuigi:
   lsr
   bcc ExitChkName        ;if mario is current player, do not change the name
-    ldy #$04
+    ldy #$05
 NameLoop:
       lda LuigiName,y        ;otherwise, replace "MARIO" with "LUIGI"
       sta VRAM_Buffer1+3+8,y
@@ -534,7 +545,8 @@ GameText:
 TopStatusBarLine:
   .byte $23, $c0, $7f, $aa ; attribute table data, clears name table 0 to palette 2
   .byte $23, $c2, $01, $ea ; attribute table data, used for coin icon in status bar
-  .byte $20, $43, $05, "FILLY"
+  ;?, posx, len
+  .byte $20, $43, $06, "FILLY "
   .byte $20, $52, $0b, "WORLD  TIME"
   .byte $20, $68, $05, "0  ", $2e, $29 ; score trailing digit and coin display
   .byte $ff ; end of data block
@@ -548,13 +560,13 @@ WorldLivesDisplay:
   .byte $ff
 
 TwoPlayerTimeUp:
-  .byte $21, $cd, $05, "FILLY"
+  .byte $21, $cd, $06, "FILLY "
 OnePlayerTimeUp:
   .byte $22, $0c, $07, "TIME UP"
   .byte $ff
 
 TwoPlayerGameOver:
-  .byte $21, $cd, $05, "FILLY"
+  .byte $21, $cd, $06, "FILLY "
 OnePlayerGameOver:
   .byte $22, $0b, $09, "GAME OVER"
   .byte $ff

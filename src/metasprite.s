@@ -228,26 +228,6 @@ MetaspriteBox "SMALL_FIRE", "SWIMMING_STILL_2", $00, $02, $28, $2a
 ; Update this with the first and last metasprite if more are added before or after
 TOTAL_MARIO_METASPRITES = METASPRITE_SMALL_FIRE_SWIMMING_STILL_2 - METASPRITE_BIG_MARIO_STANDING + 1
 
-;----------FLOORB's Graphics
-
-; SMALL_MARIO_VRAM_OFFSET = SPRITE_BANK_0
-; SMALL_MARIO_BANK = CHR_SMALLMARIO
-; SMALL_MARIO_PALETTE = $00
-; SMALL_MARIO_Y_OFFSET = 8
-; MetaspriteBox "SMALL_MARIO", "STANDING",   $00, $02
-; MetaspriteBox "SMALL_MARIO", "WALKING_1",  $04, $06
-; MetaspriteBox "SMALL_MARIO", "WALKING_2",  $08, $0a
-; MetaspriteBox "SMALL_MARIO", "WALKING_3",  $0c, $0e
-; MetaspriteBox "SMALL_MARIO", "SKIDDING",   $10, $12
-; MetaspriteBox "SMALL_MARIO", "JUMPING",    $14, $16
-
-; MetaspriteBox "SMALL_MARIO", "SWIMMING_1_KICK", $20, $22
-; MetaspriteBox "SMALL_MARIO", "SWIMMING_2_KICK", $28, $2a
-; MetaspriteBox "SMALL_MARIO", "SWIMMING_3_KICK", $30, $32
-; MetaspriteBox "SMALL_MARIO", "SWIMMING_1_HOLD", $24, $26
-; MetaspriteBox "SMALL_MARIO", "SWIMMING_2_HOLD", $2c, $2e
-; MetaspriteDuplicate "SMALL_MARIO_SWIMMING_3_HOLD", "SMALL_MARIO_SWIMMING_3_KICK"
-
 ;----------
 
 POWERUP_VRAM_OFFSET = SPRITE_BANK_1
@@ -685,7 +665,7 @@ MetaspriteBowserFlame:
 
 
 
-
+BUBBLE_TILE = MetaspriteVramOffset {$1c}, {SPRITE_BANK_1} ;-Cantersoft
 
 ;;;;
 ; Internal use
@@ -721,5 +701,5 @@ TOTAL_MARIO_SPRITE_BANK = * - PlayerBankTableReal
 .assert TOTAL_MARIO_SPRITE_BANK = TOTAL_MARIO_METASPRITES, error, .sprintf("Total number of Mario Metasprites (%d) does not match the mario bank table (%d)! Update the bank table to match ", TOTAL_MARIO_METASPRITES, TOTAL_MARIO_SPRITE_BANK)
 
 
-BUBBLE_TILE = MetaspriteVramOffset {$1c}, {SPRITE_BANK_1} ;-Cantersoft
+
 

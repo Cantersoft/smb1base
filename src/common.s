@@ -316,8 +316,6 @@ ExDivPD:
 .endproc
 
 .proc TransposePlayers
-  jsr SwitchPlayerGraphics			;Select graphics for player 1 or 2 -Cantersoft
-  inc ReloadCHRBank
   sec                       ;set carry flag by default to end game
   lda NumberOfPlayers       ;if only a 1 player game, leave
   beq ExTrans
@@ -337,6 +335,8 @@ TransLoop:
   dex
   bpl TransLoop
   clc            ;clear carry flag to get game going
+  jsr SwitchPlayerGraphics			;Select graphics for player 1 or 2 -Cantersoft
+
 ExTrans:
   rts
 .endproc
