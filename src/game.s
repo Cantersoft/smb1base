@@ -603,7 +603,7 @@ ExitFlagP: rts ; TODO check this RTS can be removed
 
 ;Cantersoft: changed to green
 ColorRotatePalette:
-    .byte $29, $29, $29, $19, $09, $19	
+    .byte $29, $29, $29, $1a, $09, $1a	
 
 BlankPalette:
        .byte $3f, $0c, $04, $ff, $ff, $ff, $ff, $00
@@ -685,7 +685,7 @@ PrimaryGameSetup:
   lda #1
   sta FetchNewGameTimerFlag   ;set flag to load game timer from header
   sta PlayerSize              ;set player's size to small
-  lda #$02
+  lda #$00
   sta NumberofLives           ;give each player three lives
   sta OffScr_NumberofLives
 SecondaryGameSetup:

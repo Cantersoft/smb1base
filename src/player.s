@@ -462,34 +462,47 @@ CntPl:
   
   jsr FindPlayerAction        ;otherwise jump and return
 
-  lda SwimmingFlag
-  beq Exit
+  ; lda SwimmingFlag
+  ; beq Exit
     ; if the player is standing on the ground, don't animate the leg kicking.
-    lda Player_State
-    beq Exit
+    ; lda Player_State
+    ; beq Exit
       ; if the player is swimming, every 8 frames switch metasprite to use the kick animation
-      lda FrameCounter
-      and #%00000100              ;check frame counter for d2 set (8 frames every
-      bne Exit                    ;eighth frame), and branch if set to leave
+      ; lda FrameCounter
+	  ; cmp #%00000100 
+	  ; bne DoNotUpdateSwimFrame
+		; inc PlayerSwimAnimCtrl
+		; lda PlayerSwimAnimCtrl
+		; cmp #SWIMMING_ANIMATION_FRAME_COUNT
+		; bcc :+
+		; lda #$00
+		; sta PlayerSwimAnimCtrl
+		; :	  
+	  ; DoNotUpdateSwimFrame:
+      ; and #%00001000              ;check frame counter for d2 set (8 frames every
+      ; bne Exit                    ;eighth frame), and branch if set to leave
         ; a bit hacky here, but we have two types of offsets. If its one of the glitchy frames, bump the metasprite by one, else
         ; add our animation extent offset
-        lda ObjectMetasprite
-        cmp #METASPRITE_FIRE_MARIO_SWIMMING_STILL_1
-        beq GlitchySprite
-        cmp #METASPRITE_SMALL_FIRE_SWIMMING_STILL_1
-        beq GlitchySprite
-          clc
-          adc #SWIMMING_ANIMATION_FRAME_COUNT
-          sta ObjectMetasprite
-          bne Exit
-    GlitchySprite:
+		
+        ; lda ObjectMetasprite
+        ; cmp #METASPRITE_FIRE_MARIO_SWIMMING_STILL_1
+        ; beq GlitchySprite
+        ; cmp #METASPRITE_SMALL_FIRE_SWIMMING_STILL_1
+        ; beq GlitchySprite
+          ; clc
+          ; adc PlayerSwimAnimCtrl
+		  ; lda #04
+          ; sta ObjectMetasprite
+          ; bne Exit
+    ; GlitchySprite:
       ; Go to the next frame of the glitch animation
-      inc ObjectMetasprite
+      ;inc ObjectMetasprite
 Exit:
   rts                         ;then leave
 
+
 ClearMarioSprite:
-  lda #0
+  lda #0 ;PlayerSwimAnimCtrl;#0
   sta ObjectMetasprite
   rts
 .endproc
@@ -554,6 +567,7 @@ PlayerGfxTblOffsets:
   .byte METASPRITE_BIG_MARIO_CLIMBING_1
   .byte METASPRITE_BIG_MARIO_CROUCHING
   .byte METASPRITE_FIRE_MARIO_FIREBALL
+  ;.byte METASPRITE_BIG_MARIO_SWIMMING_1_HOLD
   ; .byte $80, $88, $b8, $78, $60, $a0, $b0, $b8
   .byte METASPRITE_SMALL_MARIO_JUMPING
   .byte METASPRITE_SMALL_MARIO_SWIMMING_1_KICK
@@ -564,6 +578,7 @@ PlayerGfxTblOffsets:
   .byte METASPRITE_SMALL_MARIO_DEATH
 GrowAnimation = * - PlayerGfxTblOffsets
   .byte METASPRITE_SMALL_MARIO_GROW_STANDING
+  ;.byte METASPRITE_SMALL_MARIO_SWIMMING_1_HOLD
 
 HandleChangeSize:
 ;lda StarInvincibleTimer
@@ -607,9 +622,9 @@ ShrinkPlayer:
   bne ShrPlF                   ;and branch to use offset if nonzero
     ldy #$01                     ;otherwise load offset for big player swimming
 ShrPlF:
-	ldy #GrowAnimation
-	jmp GetOffsetFromAnimCtrl
-  ;lda PlayerGfxTblOffsets,y    ;get offset to graphics table based on offset loaded
+	;ldy #GrowAnimation
+	;jmp GetOffsetFromAnimCtrl
+  lda PlayerGfxTblOffsets,y    ;get offset to graphics table based on offset loaded
   rts                          ;and leave
 
 
@@ -1369,11 +1384,27 @@ ActionSwimming:
   ldy #$01               ;load offset for swimming
   jsr GetGfxOffsetAdder
   lda JumpSwimTimer      ;check jump/swim timer
-  ora PlayerAnimCtrl     ;and animation frame control
-  bne ThreeFrameExtent    ;if any one of these set, branch ahead
+  ;ora PlayerAnimCtrl     ;and animation frame control
+  bne FourFrameExtent    ;if any one of these set, branch ahead
   lda A_B_Buttons
   asl                    ;check for A button pressed
-  bcs ThreeFrameExtent    ;branch to same place if A button pressed
+  bcs FourFrameExtent    ;branch to same place if A button pressed
+  jmp FourFrameExtentSwimHold
+
+FourFrameExtentSwimHold:  
+;lda #$03
+;sta R0
+;lda PlayerAnimCtrl
+;lda #METASPRITE_SMALL_MARIO_SWIMMING_1_HOLD
+;jmp AnimationControl2 
+
+; ldy #$01	
+; jsr GetGfxOffsetAdder
+lda #$03
+sta R0                    ;store upper extent here
+jsr GetCurrentAnimOffset  ;get proper offset to graphics table
+adc #$03
+jmp AnimationControl2
 
 GetCurrentAnimOffset:
   lda PlayerAnimCtrl         ;get animation frame control
@@ -1389,6 +1420,7 @@ ThreeFrameExtent:
 AnimationControl:
   sta R0                    ;store upper extent here
   jsr GetCurrentAnimOffset  ;get proper offset to graphics table
+AnimationControl2:  
   pha                       ;save offset to stack
     lda PlayerAnimTimer       ;load animation frame timer
     bne ExAnimC               ;branch if not expired
