@@ -408,7 +408,7 @@ WaterPaletteData:
 
 GroundPaletteData:
 	.byte $3f, $00, $20
-	.byte $0f, $30, $36, $38	;houses
+	.byte $0f, $30, $36, $38	;sky, houses
 	.byte $0f, $37, $17, $07	;ground, hay, bricks, pipes, wood
 	.byte $0f, $30, $22, $31	;clouds, mountains
 	.byte $0f, $29, $19, $0f
