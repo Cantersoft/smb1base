@@ -2213,10 +2213,12 @@ BumpBlock:
            lda #$fe
            sta Block_Y_Speed,x     ;set vertical speed for block object	   
            lda R5                  ;get original metatile from stack
-		   
+		   jsr ChkInvisibleMTiles ;if we hit an invisible block
+		   beq RegularBlockPalette	;use the normal brick palette
 			ldy #$03				;Create an index for the block table, starting with the end of the question block tiles
 			jsr BumpChkLoop      	;do a sub to check whether the tile the player bumped his head on is part of the question block
 			bcs :+ 					; NEW = set palette override differently and exit if not set
+			RegularBlockPalette:
 			lda #$03 				; use palette 3 for regular blocks
 			jmp AfterBlockPaletteOverrideChk
 			:
