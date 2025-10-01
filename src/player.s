@@ -537,19 +537,27 @@ PlayerGfxProcessing:
       adc #FIRE_MARIO_OFFSET
       sta ObjectMetasprite
       
-      lda Player_X_Speed
-      ora Left_Right_Buttons        ;check for horizontal speed or left/right button press
-      bne SUpdR                     ;if no speed or button press, branch using set value in Y
+      ; lda Player_X_Speed
+      ; ora Left_Right_Buttons        ;check for horizontal speed or left/right button press
+      ; bne SUpdR                     ;if no speed or button press, branch using set value in Y
         ; Use the glitchy version of the sprite
+
         lda PlayerSize
         bne SmallFireMario
+		lda SwimmingFlag
+		beq ExitSwimFire
+		lda #METASPRITE_BIG_MARIO_SWIMMING_2_KICK
+		jmp SetFrame
+		ExitSwimFire:
           lda #METASPRITE_FIRE_MARIO_SWIMMING_STILL_1
           bne SetFrame
         SmallFireMario:
           lda #METASPRITE_SMALL_FIRE_SWIMMING_STILL_1
+		    
+			  
       SetFrame:
         sta ObjectMetasprite
-SUpdR:
+; SUpdR:
 
 PlayerOffscreenChk:
 
@@ -610,13 +618,21 @@ GetOffsetFromAnimCtrl:
     rts                        ;and return with result in A
 ChangeSizeOffsetAdder:
   .byte $00, $01, $00, $01, $00, $01, $02, $00, $01, $02
-  .byte $02, $00, $02, $00, $02, $00, $02, $00, $02, $00
+  .byte $01, $00, $01, $00, $01, $00, $01, $00, $01, $00
 
 ShrinkPlayer:
   tya                          ;add ten bytes to frame control as offset
   clc
   adc #$0a                     ;this thing apparently uses two of the swimming frames
   tax                          ;to draw the player shrinking
+  lda SwimmingFlag
+  bne ShrinkPlayerSwimming
+  ldy #$0a                   ;load offset for small player swimming
+  lda ChangeSizeOffsetAdder,x  ;get what would normally be offset adder
+  bne ShrPlF                   ;and branch to use offset if nonzero
+    ldy #$02    
+jmp ShrPlF	
+  ShrinkPlayerSwimming:
   ldy #$09                   ;load offset for small player swimming
   lda ChangeSizeOffsetAdder,x  ;get what would normally be offset adder
   bne ShrPlF                   ;and branch to use offset if nonzero
