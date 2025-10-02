@@ -618,7 +618,7 @@ GetOffsetFromAnimCtrl:
     rts                        ;and return with result in A
 ChangeSizeOffsetAdder:
   .byte $00, $01, $00, $01, $00, $01, $02, $00, $01, $02
-  .byte $01, $00, $01, $00, $01, $00, $01, $00, $01, $00
+  .byte $02, $00, $02, $00, $02, $00, $02, $00, $02, $00
 
 ShrinkPlayer:
   tya                          ;add ten bytes to frame control as offset
@@ -1340,6 +1340,13 @@ ProcessPlayerAction:
   ldy #$06              ;load offset for crouching
   lda CrouchingFlag     ;get crouching flag
   bne NonAnimatedActs   ;if set, branch to get offset for graphics table
+  
+  	lda InjuryTimer		;Normally, jumping offset would end up getting loaded here because none of the above conditions meet when the player is injured
+	beq :+
+	lda #METASPRITE_BIG_MARIO_GROW_INTERMEDIATE	;Just load the growing frame as the shrinking frame 
+	rts
+	:
+  
   ldy #$00              ;otherwise load offset for jumping
   jmp NonAnimatedActs   ;go to get offset to graphics table
 
@@ -1419,7 +1426,7 @@ FourFrameExtentSwimHold:
 lda #$03
 sta R0                    ;store upper extent here
 jsr GetCurrentAnimOffset  ;get proper offset to graphics table
-adc #$03
+adc #$03					;Add three to the offset to get the holding frames for the swim animation -Cantersoft
 jmp AnimationControl2
 
 GetCurrentAnimOffset:
