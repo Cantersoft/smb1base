@@ -518,7 +518,12 @@ DoChangeSize:
 PlayerKilled:
   ; ldy #$0e                      ;load offset for player killed
   ; lda PlayerGfxTblOffsets,y     ;get offset to graphics table
-  lda #METASPRITE_SMALL_MARIO_DEATH
+  lda SwimmingFlag
+  bne :+
+  lda #METASPRITE_SMALL_MARIO_DEATH				;Load normal death frame
+  jmp PlayerGfxProcessing
+  :
+  lda #METASPRITE_SMALL_MARIO_SWIMMING_DEATH	;If underwater (seapony), load seapony death frame -Cantersoft
 
 PlayerGfxProcessing:
   sta ObjectMetasprite
@@ -1338,14 +1343,18 @@ ProcessPlayerAction:
   lda SwimmingFlag
   bne ActionSwimming    ;if swimming flag set, branch elsewhere
   ldy #$06              ;load offset for crouching
+  
+  
   lda CrouchingFlag     ;get crouching flag
   bne NonAnimatedActs   ;if set, branch to get offset for graphics table
   
-  	lda InjuryTimer		;Normally, jumping offset would end up getting loaded here because none of the above conditions meet when the player is injured
-	beq :+
-	lda #METASPRITE_BIG_MARIO_GROW_INTERMEDIATE	;Just load the growing frame as the shrinking frame 
-	rts
-	:
+lda InjuryTimer
+beq SkipGrowMetasprite
+lda TimerControl
+beq SkipGrowMetasprite
+lda #METASPRITE_BIG_MARIO_GROW_INTERMEDIATE	;Just load the growing frame as the shrinking frame 
+rts
+SkipGrowMetasprite:
   
   ldy #$00              ;otherwise load offset for jumping
   jmp NonAnimatedActs   ;go to get offset to graphics table

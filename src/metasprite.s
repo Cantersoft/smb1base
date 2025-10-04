@@ -199,9 +199,51 @@ MetaspriteBox "SMALL_FIRE", "SWIMMING_1_HOLD", $00, $02, $18, $1a
 MetaspriteBox "SMALL_FIRE", "SWIMMING_2_HOLD", $00, $02, $2c, $2e
 MetaspriteDuplicate "SMALL_FIRE_SWIMMING_3_HOLD", "SMALL_FIRE_SWIMMING_3_KICK"
 
-MetaspriteBox "SMALL_MARIO", "CLIMBING_1", $18, $1a, $38, $3a
-MetaspriteBox "SMALL_MARIO", "CLIMBING_2", $18, $1c, $38, $3a
+; MetaspriteBox "SMALL_MARIO", "CLIMBING_1", $1a, $1e, $38, $3a
+; MetaspriteBox "SMALL_MARIO", "CLIMBING_2", $1c, $1e, $38, $3a
+;Replace the metaspriteboxes with this complex stuff because I wanted to fit everything in one bank even though I don't have to. ¯\_(ツ)_/¯
+
+.ident( .sprintf("METASPRITE_%d_BANK",  METASPRITES_COUNT) ) = CHR_SMALLMARIO
+MetaspriteData "SMALL_MARIO_CLIMBING_1", Small_Mario_climbing_1_Left, Small_Mario_climbing_1_Right
+.ident( .sprintf("METASPRITE_%d_BANK",  METASPRITES_COUNT) ) = CHR_SMALLMARIO
+MetaspriteData "SMALL_MARIO_CLIMBING_2", Small_Mario_climbing_2_Left, Small_Mario_climbing_2_Right
+
+Y_OFFSET .set 8
+X_OFFSET .set 3
+PALETTE  .set 0
+
+Small_Mario_climbing_1_Right:
+.byte 3 * 4
+.byte MetaspriteVramOffset{$1a}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$1e}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$18}, {SPRITE_BANK_0}, PALETTE, 16 + Y_OFFSET,  7 + X_OFFSET
+
+Small_Mario_climbing_2_Right:
+.byte 3 * 4
+.byte MetaspriteVramOffset{$1c}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$1e}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$18}, {SPRITE_BANK_0}, PALETTE, 16 + Y_OFFSET,  7 + X_OFFSET
+
+X_OFFSET .set -3
+
+Small_Mario_climbing_1_Left:
+.byte 3 * 4
+.byte MetaspriteVramOffset{$1e}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$1a}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$18}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 16 + Y_OFFSET,  2 + X_OFFSET
+
+Small_Mario_climbing_2_Left:
+.byte 3 * 4
+.byte MetaspriteVramOffset{$1e}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$1c}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$18}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 16 + Y_OFFSET,  2 + X_OFFSET
+
+
+
+
+
 MetaspriteBox "SMALL_MARIO", "DEATH",      $34, $36
+MetaspriteBox "SMALL_MARIO", "SWIMMING_DEATH",      $38, $3a
 
 SMALL_MARIO_GROW_STANDING_BANK = CHR_SMALLMARIO
 BIG_MARIO_GROW_INTERMEDIATE_BANK = CHR_SMALLFIRE
