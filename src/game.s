@@ -879,6 +879,8 @@ TerminateGame:
   sta OperMode_Task     ;reset all modes to title screen and
   sta ScreenTimer       ;leave
   sta OperMode
+  lda #0
+  sta PlayerBankOffset		;Since we're in gameover, reset player bank offset so that graphics get reset to Anonfilly's when DrawAllMetasprites tries to figure out which player graphics to use later - Cantersoft
   rts
 
 ContinueGame:
