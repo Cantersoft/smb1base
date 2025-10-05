@@ -200,7 +200,7 @@ MetaspriteBox "SMALL_FIRE", "SWIMMING_2_HOLD", $00, $02, $2c, $2e
 MetaspriteDuplicate "SMALL_FIRE_SWIMMING_3_HOLD", "SMALL_FIRE_SWIMMING_3_KICK"
 
 
-;Flies
+;Flies -Cantersoft
 BIG_FLIES_VRAM_OFFSET = SPRITE_BANK_0
 BIG_FLIES_BANK = CHR_SMALLFIRE
 BIG_FLIES_PALETTE = $00
@@ -209,6 +209,15 @@ BIG_FLIES_Y_OFFSET = -8
 MetaspriteBox "BIG_FLIES", "STANDING_FLIES_1", $14, $16, $28, $2a
 MetaspriteBox "BIG_FLIES", "STANDING_FLIES_2", $14, $16, $2c, $2e
 MetaspriteBox "BIG_FLIES", "STANDING_FLIES_3", $14, $16, $30, $32
+
+BIG_FLIES_C_VRAM_OFFSET = SPRITE_BANK_0
+BIG_FLIES_C_BANK = CHR_SMALLFIRE
+BIG_FLIES_C_PALETTE = $00
+BIG_FLIES_C_Y_OFFSET = 8
+MetaspriteBox "BIG_FLIES_C", "CROUCHING_FLIES_1", $34, $36
+MetaspriteBox "BIG_FLIES_C", "CROUCHING_FLIES_2", $38, $3a
+MetaspriteBox "BIG_FLIES_C", "CROUCHING_FLIES_3", $34, $3a
+MetaspriteBox "BIG_FLIES_C", "CROUCHING_FLIES_4", $38, $36
 
 SMALL_FLIES_VRAM_OFFSET = SPRITE_BANK_0
 SMALL_FLIES_BANK = CHR_SMALLFIRE
@@ -255,12 +264,12 @@ PALETTE  .set 0
 Small_Mario_climbing_1_Right:
 .byte 3 * 4
 .byte MetaspriteVramOffset{$1a}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
-.byte MetaspriteVramOffset{$1e}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$1c}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
 .byte MetaspriteVramOffset{$18}, {SPRITE_BANK_0}, PALETTE, 16 + Y_OFFSET,  7 + X_OFFSET
 
 Small_Mario_climbing_2_Right:
 .byte 3 * 4
-.byte MetaspriteVramOffset{$1c}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$1a}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
 .byte MetaspriteVramOffset{$1e}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
 .byte MetaspriteVramOffset{$18}, {SPRITE_BANK_0}, PALETTE, 16 + Y_OFFSET,  7 + X_OFFSET
 
@@ -268,14 +277,14 @@ X_OFFSET .set -3
 
 Small_Mario_climbing_1_Left:
 .byte 3 * 4
-.byte MetaspriteVramOffset{$1e}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$1c}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
 .byte MetaspriteVramOffset{$1a}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
 .byte MetaspriteVramOffset{$18}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 16 + Y_OFFSET,  2 + X_OFFSET
 
 Small_Mario_climbing_2_Left:
 .byte 3 * 4
 .byte MetaspriteVramOffset{$1e}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
-.byte MetaspriteVramOffset{$1c}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$1a}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
 .byte MetaspriteVramOffset{$18}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 16 + Y_OFFSET,  2 + X_OFFSET
 
 

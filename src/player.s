@@ -634,13 +634,13 @@ ShrinkPlayer:
   tax                          ;to draw the player shrinking
   lda SwimmingFlag
   bne ShrinkPlayerSwimming
-  ldy #$0a                   ;load offset for small player swimming
+  ldy #$0b                   ;load offset for small player swimming
   lda ChangeSizeOffsetAdder,x  ;get what would normally be offset adder
   bne ShrPlF                   ;and branch to use offset if nonzero
     ldy #$02    
 jmp ShrPlF	
   ShrinkPlayerSwimming:
-  ldy #$09                   ;load offset for small player swimming
+  ldy #$0a                   ;load offset for small player swimming
   lda ChangeSizeOffsetAdder,x  ;get what would normally be offset adder
   bne ShrPlF                   ;and branch to use offset if nonzero
     ldy #$01                     ;otherwise load offset for big player swimming
@@ -1364,11 +1364,11 @@ SkipGrowMetasprite:		;If player not in the initial part of the injury when time 
 ProcOnGroundActs:
   ldy #$06                   ;load offset for crouching
   lda CrouchingFlag          ;get crouching flag
-  bne NonAnimatedActs        ;if set, branch to get offset for graphics table
+  bne ChkPlayerNonAnimatedCrouching        ;if set, branch to get offset for graphics table
   ldy #$02                   ;load offset for standing
   lda Player_X_Speed         ;check player's horizontal speed
   ora Left_Right_Buttons     ;and left/right controller bits
-  beq ChkPlayerNonAnimatedActs        ;if no speed or buttons pressed, use standing offset
+  beq ChkPlayerNonAnimatedActsStanding        ;if no speed or buttons pressed, use standing offset
   lda Player_XSpeedAbsolute  ;load walking/running speed
   cmp #$09
   bcc ActionWalkRun          ;if less than a certain amount, branch, too slow to skid
@@ -1386,10 +1386,15 @@ NoSkidS:
 .endif
     iny                        ;otherwise increment to skid offset ($03)
 
-ChkPlayerNonAnimatedActs:
+ChkPlayerNonAnimatedActsStanding:
 	lda CurrentPlayer
 	beq NonAnimatedActs	;If Anonfilly, continue ahead - Cantersoft
 	bne ActionStandingFlies
+	
+ChkPlayerNonAnimatedCrouching:
+	lda CurrentPlayer
+	beq NonAnimatedActs	;If Anonfilly, continue ahead - Cantersoft
+	bne ActionCrouchingFlies	
 	
 
 NonAnimatedActs:
@@ -1437,6 +1442,11 @@ ActionStandingFlies:	  ;-Cantersoft
   ldy #$08               ;load offset for standing with flies
   jsr GetGfxOffsetAdder  ;otherwise get offset for graphics table
   jmp FourFrameExtent   ;then skip ahead to more code
+  
+ActionCrouchingFlies:	  ;-Cantersoft
+  ldy #$08               ;load offset for standing with flies
+  jsr GetGfxOffsetAdder  ;otherwise get offset for graphics table
+  jmp FourFrameExtentSwimHold   ;Swimhold happens to do the same function as what I already need here -Cantersoft
 
 FourFrameExtentSwimHold:  
 ;lda #$03
