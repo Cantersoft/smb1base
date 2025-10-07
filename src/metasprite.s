@@ -123,12 +123,12 @@ BIG_MARIO_SWIMMING_3_KICK_BANK = CHR_MARIOACTION
 BIG_MARIO_SWIMMING_1_HOLD_BANK = CHR_MARIOACTION
 BIG_MARIO_SWIMMING_2_HOLD_BANK = CHR_MARIOACTION
 BIG_MARIO_SWIMMING_3_HOLD_BANK = CHR_MARIOACTION
-MetaspriteBox "BIG_MARIO", "SWIMMING_1_KICK", $00, $02, $20, $22
-MetaspriteBox "BIG_MARIO", "SWIMMING_2_KICK", $06, $08, $24, $28
-MetaspriteBox "BIG_MARIO", "SWIMMING_3_KICK", $06, $08, $26, $28
-MetaspriteBox "BIG_MARIO", "SWIMMING_1_HOLD", $0a, $0c, $2a, $2c
-MetaspriteBox "BIG_MARIO", "SWIMMING_2_HOLD", $0e, $10, $2e, $30
-MetaspriteBox "BIG_MARIO", "SWIMMING_3_HOLD", $12, $14, $32, $34
+MetaspriteBox "BIG_MARIO", "SWIMMING_1_KICK", $0e, $10, $2e, $30
+MetaspriteBox "BIG_MARIO", "SWIMMING_2_KICK", $12, $14, $32, $34
+MetaspriteBox "BIG_MARIO", "SWIMMING_3_KICK", $0a, $0c, $2a, $2c
+MetaspriteBox "BIG_MARIO", "SWIMMING_1_HOLD", $00, $02, $20, $22
+MetaspriteBox "BIG_MARIO", "SWIMMING_2_HOLD", $04, $02, $24, $22
+MetaspriteBox "BIG_MARIO", "SWIMMING_3_HOLD", $06, $08, $26, $28
 
 FIRE_MARIO_OFFSET = METASPRITES_COUNT - METASPRITE_BIG_MARIO_STANDING
 FIRE_MARIO_VRAM_OFFSET = SPRITE_BANK_0
@@ -151,7 +151,7 @@ MetaspriteBox "FIRE_MARIO", "JUMPING",   $00, $02, $10, $12
 
 MetaspriteBox "FIRE_MARIO", "SWIMMING_1_KICK", $00, $02, $20, $22
 MetaspriteBox "FIRE_MARIO", "SWIMMING_2_KICK", $06, $08, $26, $28
-MetaspriteBox "FIRE_MARIO", "SWIMMING_3_KICK", $04, $06, $2a, $22
+MetaspriteBox "FIRE_MARIO", "SWIMMING_3_KICK", $04, $06, $24, $22
 MetaspriteBox "FIRE_MARIO", "SWIMMING_1_HOLD", $0a, $0c, $2a, $2c
 MetaspriteBox "FIRE_MARIO", "SWIMMING_2_HOLD", $0e, $10, $2e, $30
 MetaspriteBox "FIRE_MARIO", "SWIMMING_3_HOLD", $12, $14, $32, $34
@@ -173,12 +173,12 @@ MetaspriteBox "SMALL_MARIO", "WALKING_3",  $0c, $0e
 MetaspriteBox "SMALL_MARIO", "SKIDDING",   $10, $12
 MetaspriteBox "SMALL_MARIO", "JUMPING",    $14, $16
 
-MetaspriteBox "SMALL_MARIO", "SWIMMING_1_KICK", $20, $22
+MetaspriteBox "SMALL_MARIO", "SWIMMING_1_KICK", $24, $26
 MetaspriteBox "SMALL_MARIO", "SWIMMING_2_KICK", $28, $2a
 MetaspriteBox "SMALL_MARIO", "SWIMMING_3_KICK", $30, $32
-MetaspriteBox "SMALL_MARIO", "SWIMMING_1_HOLD", $24, $26
-MetaspriteBox "SMALL_MARIO", "SWIMMING_2_HOLD", $2c, $2e
-MetaspriteDuplicate "SMALL_MARIO_SWIMMING_3_HOLD", "SMALL_MARIO_SWIMMING_3_KICK"
+MetaspriteBox "SMALL_MARIO", "SWIMMING_1_HOLD", $20, $22
+MetaspriteDuplicate "SMALL_MARIO_SWIMMING_2_HOLD", "SMALL_MARIO_SWIMMING_1_KICK"
+MetaspriteBox "SMALL_MARIO", "SWIMMING_3_HOLD", $2c, $2e
 
 SMALL_FIRE_VRAM_OFFSET = SPRITE_BANK_0
 SMALL_FIRE_BANK = CHR_SMALLFIRE
@@ -199,9 +199,100 @@ MetaspriteBox "SMALL_FIRE", "SWIMMING_1_HOLD", $00, $02, $18, $1a
 MetaspriteBox "SMALL_FIRE", "SWIMMING_2_HOLD", $00, $02, $2c, $2e
 MetaspriteDuplicate "SMALL_FIRE_SWIMMING_3_HOLD", "SMALL_FIRE_SWIMMING_3_KICK"
 
-MetaspriteBox "SMALL_MARIO", "CLIMBING_1", $18, $1a, $38, $3a
-MetaspriteBox "SMALL_MARIO", "CLIMBING_2", $18, $1c, $38, $3a
+
+;Flies -Cantersoft
+BIG_FLIES_VRAM_OFFSET = SPRITE_BANK_0
+BIG_FLIES_BANK = CHR_SMALLFIRE
+BIG_FLIES_PALETTE = $00
+BIG_FLIES_Y_OFFSET = -8
+
+MetaspriteBox "BIG_FLIES", "STANDING_FLIES_1", $14, $16, $28, $2a
+MetaspriteBox "BIG_FLIES", "STANDING_FLIES_2", $14, $16, $2c, $2e
+MetaspriteBox "BIG_FLIES", "STANDING_FLIES_3", $14, $16, $30, $32
+
+BIG_FLIES_C_VRAM_OFFSET = SPRITE_BANK_0
+BIG_FLIES_C_BANK = CHR_SMALLFIRE
+BIG_FLIES_C_PALETTE = $00
+BIG_FLIES_C_Y_OFFSET = 8
+MetaspriteBox "BIG_FLIES_C", "CROUCHING_FLIES_1", $34, $36
+MetaspriteBox "BIG_FLIES_C", "CROUCHING_FLIES_2", $38, $3a
+MetaspriteBox "BIG_FLIES_C", "CROUCHING_FLIES_3", $34, $3a
+MetaspriteBox "BIG_FLIES_C", "CROUCHING_FLIES_4", $38, $36
+
+SMALL_FLIES_VRAM_OFFSET = SPRITE_BANK_0
+SMALL_FLIES_BANK = CHR_SMALLFIRE
+SMALL_FLIES_PALETTE = $00
+SMALL_FLIES_Y_OFFSET = 8
+
+MetaspriteBox "SMALL_FLIES", "STANDING_FLIES_1", $08, $0a
+MetaspriteBox "SMALL_FLIES", "STANDING_FLIES_2", $0c, $0e
+MetaspriteBox "SMALL_FLIES", "STANDING_FLIES_3", $10, $12
+
+
+
+
+SMALL_FIRE_STANDING_FLIES_1_BANK = CHR_SMALLFIRE
+MetaspriteBox "SMALL_FIRE", "STANDING_FLIES_1", $08, $0a
+SMALL_FIRE_STANDING_FLIES_2_BANK = CHR_SMALLFIRE
+MetaspriteBox "SMALL_FIRE", "STANDING_FLIES_2", $0c, $0e
+SMALL_FIRE_STANDING_FLIES_3_BANK = CHR_SMALLFIRE
+MetaspriteBox "SMALL_FIRE", "STANDING_FLIES_3", $10, $12
+
+SMALL_FIRE_STANDING_FLIES_4_BANK = CHR_SMALLFIRE
+SMALL_FIRE_STANDING_FLIES_4_Y_OFFSET = 8
+MetaspriteBox "SMALL_FIRE", "STANDING_FLIES_4", $14, $16, $28, $2a
+SMALL_FIRE_STANDING_FLIES_5_BANK = CHR_SMALLFIRE
+SMALL_FIRE_STANDING_FLIES_5_Y_OFFSET = 8
+MetaspriteBox "SMALL_FIRE", "STANDING_FLIES_5", $14, $16, $2c, $2e
+SMALL_FIRE_STANDING_FLIES_6_BANK = CHR_SMALLFIRE
+SMALL_FIRE_STANDING_FLIES_6_Y_OFFSET = 8
+MetaspriteBox "SMALL_FIRE", "STANDING_FLIES_6", $14, $16, $30, $32
+
+; MetaspriteBox "SMALL_MARIO", "CLIMBING_1", $1a, $1e, $38, $3a
+; MetaspriteBox "SMALL_MARIO", "CLIMBING_2", $1c, $1e, $38, $3a
+;Replace the metaspriteboxes with this complex stuff because I wanted to fit everything in one bank even though I don't have to. ¯\_(ツ)_/¯
+
+.ident( .sprintf("METASPRITE_%d_BANK",  METASPRITES_COUNT) ) = CHR_SMALLMARIO
+MetaspriteData "SMALL_MARIO_CLIMBING_1", Small_Mario_climbing_1_Left, Small_Mario_climbing_1_Right
+.ident( .sprintf("METASPRITE_%d_BANK",  METASPRITES_COUNT) ) = CHR_SMALLMARIO
+MetaspriteData "SMALL_MARIO_CLIMBING_2", Small_Mario_climbing_2_Left, Small_Mario_climbing_2_Right
+
+Y_OFFSET .set 8
+X_OFFSET .set 3
+PALETTE  .set 0
+
+Small_Mario_climbing_1_Right:
+.byte 3 * 4
+.byte MetaspriteVramOffset{$1a}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$1c}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$18}, {SPRITE_BANK_0}, PALETTE, 16 + Y_OFFSET,  7 + X_OFFSET
+
+Small_Mario_climbing_2_Right:
+.byte 3 * 4
+.byte MetaspriteVramOffset{$1a}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$1e}, {SPRITE_BANK_0}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$18}, {SPRITE_BANK_0}, PALETTE, 16 + Y_OFFSET,  7 + X_OFFSET
+
+X_OFFSET .set -3
+
+Small_Mario_climbing_1_Left:
+.byte 3 * 4
+.byte MetaspriteVramOffset{$1c}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$1a}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$18}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 16 + Y_OFFSET,  2 + X_OFFSET
+
+Small_Mario_climbing_2_Left:
+.byte 3 * 4
+.byte MetaspriteVramOffset{$1e}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$1a}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$18}, {SPRITE_BANK_0}, OAM_FLIP_H | PALETTE, 16 + Y_OFFSET,  2 + X_OFFSET
+
+
+
+
+
 MetaspriteBox "SMALL_MARIO", "DEATH",      $34, $36
+MetaspriteBox "SMALL_MARIO", "SWIMMING_DEATH",      $38, $3a
 
 SMALL_MARIO_GROW_STANDING_BANK = CHR_SMALLMARIO
 BIG_MARIO_GROW_INTERMEDIATE_BANK = CHR_SMALLFIRE
@@ -225,6 +316,10 @@ MetaspriteDuplicate "SMALL_FIRE_SWIMMING_STILL_1", "FIRE_MARIO_FIREBALL"
 SMALL_FIRE_SWIMMING_STILL_2_BANK = CHR_SMALLFIRE
 MetaspriteBox "SMALL_FIRE", "SWIMMING_STILL_2", $00, $02, $28, $2a
 
+
+
+
+
 ; Update this with the first and last metasprite if more are added before or after
 TOTAL_MARIO_METASPRITES = METASPRITE_SMALL_FIRE_SWIMMING_STILL_2 - METASPRITE_BIG_MARIO_STANDING + 1
 
@@ -246,7 +341,7 @@ MetaspriteBox "POWERUP", "MUSHROOM",   $3c, $3e
 MetaspriteBox "POWERUP", "1UP",        $3c, $3e
 
 FIREBALL_VRAM_OFFSET = SPRITE_BANK_0
-FIREBALL_PALETTE = $02
+FIREBALL_PALETTE = $00
 FIREBALL_Y_OFFSET = -12
 EXPLOSION_VRAM_OFFSET = SPRITE_BANK_1
 EXPLOSION_PALETTE = $00

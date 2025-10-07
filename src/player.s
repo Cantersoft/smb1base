@@ -462,34 +462,47 @@ CntPl:
   
   jsr FindPlayerAction        ;otherwise jump and return
 
-  lda SwimmingFlag
-  beq Exit
+  ; lda SwimmingFlag
+  ; beq Exit
     ; if the player is standing on the ground, don't animate the leg kicking.
-    lda Player_State
-    beq Exit
+    ; lda Player_State
+    ; beq Exit
       ; if the player is swimming, every 8 frames switch metasprite to use the kick animation
-      lda FrameCounter
-      and #%00000100              ;check frame counter for d2 set (8 frames every
-      bne Exit                    ;eighth frame), and branch if set to leave
+      ; lda FrameCounter
+	  ; cmp #%00000100 
+	  ; bne DoNotUpdateSwimFrame
+		; inc PlayerSwimAnimCtrl
+		; lda PlayerSwimAnimCtrl
+		; cmp #SWIMMING_ANIMATION_FRAME_COUNT
+		; bcc :+
+		; lda #$00
+		; sta PlayerSwimAnimCtrl
+		; :	  
+	  ; DoNotUpdateSwimFrame:
+      ; and #%00001000              ;check frame counter for d2 set (8 frames every
+      ; bne Exit                    ;eighth frame), and branch if set to leave
         ; a bit hacky here, but we have two types of offsets. If its one of the glitchy frames, bump the metasprite by one, else
         ; add our animation extent offset
-        lda ObjectMetasprite
-        cmp #METASPRITE_FIRE_MARIO_SWIMMING_STILL_1
-        beq GlitchySprite
-        cmp #METASPRITE_SMALL_FIRE_SWIMMING_STILL_1
-        beq GlitchySprite
-          clc
-          adc #SWIMMING_ANIMATION_FRAME_COUNT
-          sta ObjectMetasprite
-          bne Exit
-    GlitchySprite:
+		
+        ; lda ObjectMetasprite
+        ; cmp #METASPRITE_FIRE_MARIO_SWIMMING_STILL_1
+        ; beq GlitchySprite
+        ; cmp #METASPRITE_SMALL_FIRE_SWIMMING_STILL_1
+        ; beq GlitchySprite
+          ; clc
+          ; adc PlayerSwimAnimCtrl
+		  ; lda #04
+          ; sta ObjectMetasprite
+          ; bne Exit
+    ; GlitchySprite:
       ; Go to the next frame of the glitch animation
-      inc ObjectMetasprite
+      ;inc ObjectMetasprite
 Exit:
   rts                         ;then leave
 
+
 ClearMarioSprite:
-  lda #0
+  lda #0 ;PlayerSwimAnimCtrl;#0
   sta ObjectMetasprite
   rts
 .endproc
@@ -505,7 +518,12 @@ DoChangeSize:
 PlayerKilled:
   ; ldy #$0e                      ;load offset for player killed
   ; lda PlayerGfxTblOffsets,y     ;get offset to graphics table
-  lda #METASPRITE_SMALL_MARIO_DEATH
+  lda SwimmingFlag
+  bne :+
+  lda #METASPRITE_SMALL_MARIO_DEATH				;Load normal death frame
+  jmp PlayerGfxProcessing
+  :
+  lda #METASPRITE_SMALL_MARIO_SWIMMING_DEATH	;If underwater (seapony), load seapony death frame -Cantersoft
 
 PlayerGfxProcessing:
   sta ObjectMetasprite
@@ -524,19 +542,27 @@ PlayerGfxProcessing:
       adc #FIRE_MARIO_OFFSET
       sta ObjectMetasprite
       
-      lda Player_X_Speed
-      ora Left_Right_Buttons        ;check for horizontal speed or left/right button press
-      bne SUpdR                     ;if no speed or button press, branch using set value in Y
+      ; lda Player_X_Speed
+      ; ora Left_Right_Buttons        ;check for horizontal speed or left/right button press
+      ; bne SUpdR                     ;if no speed or button press, branch using set value in Y
         ; Use the glitchy version of the sprite
+
         lda PlayerSize
         bne SmallFireMario
+		lda SwimmingFlag
+		beq ExitSwimFire
+		lda #METASPRITE_BIG_MARIO_SWIMMING_2_KICK
+		jmp SetFrame
+		ExitSwimFire:
           lda #METASPRITE_FIRE_MARIO_SWIMMING_STILL_1
           bne SetFrame
         SmallFireMario:
           lda #METASPRITE_SMALL_FIRE_SWIMMING_STILL_1
+		    
+			  
       SetFrame:
         sta ObjectMetasprite
-SUpdR:
+; SUpdR:
 
 PlayerOffscreenChk:
 
@@ -554,6 +580,7 @@ PlayerGfxTblOffsets:
   .byte METASPRITE_BIG_MARIO_CLIMBING_1
   .byte METASPRITE_BIG_MARIO_CROUCHING
   .byte METASPRITE_FIRE_MARIO_FIREBALL
+  .byte METASPRITE_BIG_FLIES_STANDING_FLIES_1
   ; .byte $80, $88, $b8, $78, $60, $a0, $b0, $b8
   .byte METASPRITE_SMALL_MARIO_JUMPING
   .byte METASPRITE_SMALL_MARIO_SWIMMING_1_KICK
@@ -562,8 +589,11 @@ PlayerGfxTblOffsets:
   .byte METASPRITE_SMALL_MARIO_WALKING_1
   .byte METASPRITE_SMALL_MARIO_CLIMBING_1
   .byte METASPRITE_SMALL_MARIO_DEATH
+  .byte METASPRITE_SMALL_MARIO_SWIMMING_DEATH ;Note: this offset is never used. It could technically be used, but it's only here to realign the offset for the standing flies metasprite (the fireball frame in the BIG_MARIO section is otherwise causing an off by one error) -Cantersoft
+  .byte METASPRITE_SMALL_FLIES_STANDING_FLIES_1
 GrowAnimation = * - PlayerGfxTblOffsets
   .byte METASPRITE_SMALL_MARIO_GROW_STANDING
+
 
 HandleChangeSize:
 ;lda StarInvincibleTimer
@@ -602,14 +632,22 @@ ShrinkPlayer:
   clc
   adc #$0a                     ;this thing apparently uses two of the swimming frames
   tax                          ;to draw the player shrinking
-  ldy #$09                   ;load offset for small player swimming
+  lda SwimmingFlag
+  bne ShrinkPlayerSwimming
+  ldy #$0b                   ;load offset for small player swimming
+  lda ChangeSizeOffsetAdder,x  ;get what would normally be offset adder
+  bne ShrPlF                   ;and branch to use offset if nonzero
+    ldy #$02    
+jmp ShrPlF	
+  ShrinkPlayerSwimming:
+  ldy #$0a                   ;load offset for small player swimming
   lda ChangeSizeOffsetAdder,x  ;get what would normally be offset adder
   bne ShrPlF                   ;and branch to use offset if nonzero
     ldy #$01                     ;otherwise load offset for big player swimming
 ShrPlF:
-	ldy #GrowAnimation
-	jmp GetOffsetFromAnimCtrl
-  ;lda PlayerGfxTblOffsets,y    ;get offset to graphics table based on offset loaded
+	;ldy #GrowAnimation
+	;jmp GetOffsetFromAnimCtrl
+  lda PlayerGfxTblOffsets,y    ;get offset to graphics table based on offset loaded
   rts                          ;and leave
 
 
@@ -1307,19 +1345,30 @@ ProcessPlayerAction:
   lda SwimmingFlag
   bne ActionSwimming    ;if swimming flag set, branch elsewhere
   ldy #$06              ;load offset for crouching
+  
+  
   lda CrouchingFlag     ;get crouching flag
   bne NonAnimatedActs   ;if set, branch to get offset for graphics table
+  
+lda InjuryTimer			;Check if player injured -Cantersoft
+beq SkipGrowMetasprite
+lda TimerControl		;Check if player also in the initial part of the injury when time is frozen -Cantersoft
+beq SkipGrowMetasprite
+lda #METASPRITE_BIG_MARIO_GROW_INTERMEDIATE	;Just load the growing frame as the shrinking frame  -Cantersoft
+rts
+SkipGrowMetasprite:		;If player not in the initial part of the injury when time is frozen, don't load in the grow frame (otherwise the jumping frame becomes the grow frame!) -Cantersoft
+  
   ldy #$00              ;otherwise load offset for jumping
   jmp NonAnimatedActs   ;go to get offset to graphics table
 
 ProcOnGroundActs:
   ldy #$06                   ;load offset for crouching
   lda CrouchingFlag          ;get crouching flag
-  bne NonAnimatedActs        ;if set, branch to get offset for graphics table
+  bne ChkPlayerNonAnimatedCrouching        ;if set, branch to get offset for graphics table
   ldy #$02                   ;load offset for standing
   lda Player_X_Speed         ;check player's horizontal speed
   ora Left_Right_Buttons     ;and left/right controller bits
-  beq NonAnimatedActs        ;if no speed or buttons pressed, use standing offset
+  beq ChkPlayerNonAnimatedActsStanding        ;if no speed or buttons pressed, use standing offset
   lda Player_XSpeedAbsolute  ;load walking/running speed
   cmp #$09
   bcc ActionWalkRun          ;if less than a certain amount, branch, too slow to skid
@@ -1336,6 +1385,17 @@ ProcOnGroundActs:
 NoSkidS:
 .endif
     iny                        ;otherwise increment to skid offset ($03)
+
+ChkPlayerNonAnimatedActsStanding:
+	lda CurrentPlayer
+	beq NonAnimatedActs	;If Anonfilly, continue ahead - Cantersoft
+	bne ActionStandingFlies
+	
+ChkPlayerNonAnimatedCrouching:
+	lda CurrentPlayer
+	beq NonAnimatedActs	;If Anonfilly, continue ahead - Cantersoft
+	bne ActionCrouchingFlies	
+	
 
 NonAnimatedActs:
   jsr GetGfxOffsetAdder      ;do a sub here to get offset adder for graphics table
@@ -1369,11 +1429,39 @@ ActionSwimming:
   ldy #$01               ;load offset for swimming
   jsr GetGfxOffsetAdder
   lda JumpSwimTimer      ;check jump/swim timer
-  ora PlayerAnimCtrl     ;and animation frame control
-  bne ThreeFrameExtent    ;if any one of these set, branch ahead
+  ;ora PlayerAnimCtrl     ;and animation frame control
+  bne FourFrameExtent    ;if any one of these set, branch ahead
   lda A_B_Buttons
   asl                    ;check for A button pressed
-  bcs ThreeFrameExtent    ;branch to same place if A button pressed
+  bcs FourFrameExtent    ;branch to same place if A button pressed
+  jmp FourFrameExtentSwimHold
+  
+ActionStandingFlies:	  ;-Cantersoft
+; lda #METASPRITE_SMALL_MARIO_STANDING_FLIES_1
+; rts
+  ldy #$08               ;load offset for standing with flies
+  jsr GetGfxOffsetAdder  ;otherwise get offset for graphics table
+  jmp FourFrameExtent   ;then skip ahead to more code
+  
+ActionCrouchingFlies:	  ;-Cantersoft
+  ldy #$08               ;load offset for standing with flies
+  jsr GetGfxOffsetAdder  ;otherwise get offset for graphics table
+  jmp FourFrameExtentSwimHold   ;Swimhold happens to do the same function as what I already need here -Cantersoft
+
+FourFrameExtentSwimHold:  
+;lda #$03
+;sta R0
+;lda PlayerAnimCtrl
+;lda #METASPRITE_SMALL_MARIO_SWIMMING_1_HOLD
+;jmp AnimationControl2 
+
+; ldy #$01	
+; jsr GetGfxOffsetAdder
+lda #$03
+sta R0                    ;store upper extent here
+jsr GetCurrentAnimOffset  ;get proper offset to graphics table
+adc #$03					;Add three to the offset to get the holding frames for the swim animation -Cantersoft
+jmp AnimationControl2
 
 GetCurrentAnimOffset:
   lda PlayerAnimCtrl         ;get animation frame control
@@ -1389,6 +1477,7 @@ ThreeFrameExtent:
 AnimationControl:
   sta R0                    ;store upper extent here
   jsr GetCurrentAnimOffset  ;get proper offset to graphics table
+AnimationControl2:  
   pha                       ;save offset to stack
     lda PlayerAnimTimer       ;load animation frame timer
     bne ExAnimC               ;branch if not expired
@@ -1436,7 +1525,7 @@ GetGfxOffsetAdder:
   beq SzOfs       ;if player big, use current offset as-is
   tya             ;for big player
   clc             ;otherwise add eight bytes to offset
-  adc #$08        ;for small player
+  adc #$09        ;for small player -Cantersoft, updated to +9 instead of +8
   tay
 SzOfs:
   rts             ;go back

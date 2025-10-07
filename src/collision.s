@@ -747,8 +747,11 @@ ChkForTopCollision:
 SetCollisionFlag:
       ldx ObjectOffset             ;get enemy object buffer offset
       sta PlatformCollisionFlag,x  ;save either bounding box counter or enemy offset here
+	  lda SwimmingFlag		;If swimming (seapony in this hack), don't switch back to the standing tile on landing!
+	  bne :+
       lda #$00
       sta Player_State             ;set player state to normal then leave
+	  :
       rts
 
 PlatformSideCollisions:
@@ -1050,8 +1053,8 @@ HeadChk:
           bne BumpOrClimb             ;if player collided with bump metatile, branch
           ; Player hit some other kind of block (ie: a coin block or mushroom block or other)
           tya ; restore the metatile ID here
-          ldy AreaType                ;otherwise check area type
-          beq NYSpd                   ;if water level, branch ahead
+          ;ldy AreaType                ;otherwise check area type
+          ;beq NYSpd                   ;if water level, branch ahead
           ldy BlockBounceTimer        ;if block bounce timer not expired,
           bne NYSpd                   ;branch ahead, do not process collision
           jsr PlayerHeadCollision     ;otherwise do a sub to process collision
@@ -1059,7 +1062,7 @@ HeadChk:
 
 BumpOrClimb:
   and #MTILE_CLIMB
-  beq NYSpd              ;branch ahead and do not play sound
+  bne NYSpd              ;branch ahead and do not play sound
     lda #Sfx_Bump
     sta Square1SoundQueue  ;otherwise load bump sound
 NYSpd:
@@ -1809,7 +1812,7 @@ NoJSFnd: rts           ;leave
 
 BlockYPosAdderData:
 ;     Big, Small
-  .byte $04, $12
+  .byte $04, $04	;I guess you have to change the small adder, or blocks get drawn down when bounced.
 
 PlayerHeadCollision:
   pha                      ;store metatile number to stack

@@ -291,7 +291,12 @@ GetPlayerColors:
   ldy #$00
   lda CurrentPlayer        ;check which player is on the screen
   beq ChkFiery
-  ldy #$04                 ;load offset for luigi
+  ldy AreaType
+  bne :+
+  ldy #$0c					;load offset for clean FloorBored (she's normally dirty, but the water makes her clean)
+  jmp ChkFiery
+  :
+  ldy #$04                 ;load offset for FloorB
 ChkFiery:
   lda PlayerStatus         ;check player status
   cmp #$02
@@ -344,7 +349,7 @@ PlayerColors:
       .byte $22, $1A, $2A, $08 ; Anonfilly's colors
       .byte $22, $28, $38, $08 ; FloorBored's colors
       .byte $22, $3A, $30, $1A ; fiery (used by both)
-	  ;.byte $22, $3d, $20, $08 ; FloorBored's colors (clean)
+	  .byte $22, $3d, $20, $08 ; FloorBored's colors (clean)
 
 
 ;-------------------------------------------------------------------------------------
@@ -1113,13 +1118,13 @@ MTILE_CURRENT_INDEX .set $40
   MTileDefine $45, $24, $45, $24, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP ;bridge
   MTileDefine $86, $96, $87, $97, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP ;bullet bill cannon barrel
   MTileDefine $88, $98, $89, $99, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP ;bullet bill cannon top
-  MTileDefine $94, $94, $95, $95, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP ;bullet bill cannon bottom
+  MTileDefine $8E, $9E, $8F, $9F, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP ;bullet bill cannon bottom
   MTileDefine $24, $24, $24, $24, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP ;blank used for jumpspring
   MTileDefine $24, $48, $24, $48, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP ;half brick used for jumpspring
   MTileDefine $8A, $9A, $8B, $9B, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP ;solid block (water level, green rock)
   MTileDefine $24, $48, $24, $48, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP ;half brick (???)
   MTileDefine $74, $84, $75, $85, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP ;water pipe top
-  MTileDefine $74, $84, $75, $85, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP ;water pipe bottom
+  MTileDefine $94, $A4, $95, $A5, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP ;water pipe bottom
   MTileDefine $24, $5F, $24, $6F, MTILE_PALETTE_1 | MTILE_SOLID | MTILE_BUMP | MTILE_CLIMB ;flag ball (residual object)
 
 MTILE_CURRENT_INDEX .set $80

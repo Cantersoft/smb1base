@@ -53,6 +53,7 @@ GetAreaType:
   rol
   rol
   rol                  ;make %0xx00000 into %000000xx
+  ;lda #$00		;-Cantersoft debugging for forcing all areas to have the same type
   sta AreaType         ;save 2 MSB as area type
   tay
 
