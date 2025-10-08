@@ -1007,13 +1007,13 @@ FlagpoleScoreNumTiles:
 .endproc
 
 ;-------------------------------------------------------------------------------------
-
-MoveSixSpritesOffscreen:
-  lda #$f8                  ;set offscreen coordinate if jumping here
+DumpEightSpr:
+  sta Sprite_Data+28,y      ;dump A contents
+  sta Sprite_Data+24,y      ;into fourth row sprites
 
 DumpSixSpr:
-  sta Sprite_Data+20,y      ;dump A contents
-  sta Sprite_Data+16,y      ;into third row sprites
+  sta Sprite_Data+20,y		;into third row sprites
+  sta Sprite_Data+16,y      
 
 DumpFourSpr:
   sta Sprite_Data+12,y      ;into second row sprites
@@ -1028,143 +1028,117 @@ DumpTwoSpr:
 ExitDumpSpr:
   rts
 
+
+
 DrawBubbleOnPlayer:
 	;Unless the timer for this routine is set, exit.
 	lda BubblesVFXTimer
 	beq DrawBubbleOnPlayerExit
-	
+
 	;Allocate space in OAM and prepare the bubble tile for insertion
-	AllocSpr 6
+	AllocSpr 8
 	iny
 	lda #BUBBLE_TILE
-	;sta Sprite_Tilenumber,y
-	jsr DumpSixSpr
+	;set the sprite tile number
+	jsr DumpEightSpr
 		
 	;Use moot/florie palette (goomba palette in vanilla SMB1)
 	iny
 	lda #%00000011             
-    ;sta Sprite_Attributes,y 
-	jsr DumpSixSpr
-	
+	;set the sprite attributes
+	jsr DumpEightSpr
+
 	dey
 	dey
-	
 
-	;Control reset points for animation
-	lda DrawBubbleOnPlayerAnimCtrl
-	cmp #32
-	jeq DrawBubbleOnPlayerInit
-	cmp #00
-	jeq DrawBubbleOnPlayerInit
-
-	ldx DrawBubbleOnPlayerAnimCtrl
-	inx
-	stx DrawBubbleOnPlayerAnimCtrl
-	
 	DrawBubbleOnPlayerAnim:	
-		;Check for every fourth frame
+		;Check for every eighth frame
 		lda FrameCounter
-		and #%00000010        
+		;and #%00001000
+		ora #%11111101
+		eor #$ff
+		beq DrawBubbleOnPlayerMove
 		bne DrawBubbleOnPlayerHold
 		
-		;Update x/y offset coordinates when it is time to move the bubble
-		clc
-		lda Bubble_Y_Offset_Prev
-		adc #01
-		sta Bubble_Y_Offset_Prev
-
-		clc
-		lda Bubble_X_Offset_Prev
-		adc #01
-		sta Bubble_X_Offset_Prev
-		
-		jmp DrawBubbleOnPlayerHold
 	DrawBubbleOnPlayerExit:
 		rts
 
-	;Place the bubble in the same position as it was on the previous frame plus the offset value
-	DrawBubbleOnPlayerHold:
-		;Bubble animation arrangement:
-		;
-		; upper			= 0 = 0x, 2y
-		; lower			= 1 = 0x, -2y
-		; upper right	= 2 = x, y
-		; lower right	= 3 = x, -y
-		; upper left	= 4 = -x y
-		; lower left	= 5 = -x -y
-	
-		;No x movement for upper and lower bubbles (bubbles 0 and 1)
+	DrawBubbleOnPlayerMove:
+		;Increment table position and reset when end of table reached  -Cantersoft
+		ldx BubblesVFXOffsetAdderPos
+		inx	
 		clc
+		cpx #8
+		bcc :+
+		ldx #0
+		:
+		stx BubblesVFXOffsetAdderPos
+		
+		DrawBubbleOnPlayerHold:
+		ldx BubblesVFXOffsetAdderPos	;load again in case jumped here
+		
 		lda Player_Rel_XPos
-		sta Sprite_X_Position,y
+		adc #05
+		sta Bubble_Rel_XPos
+		
+		lda Player_Rel_YPos
+		adc #22
+		sta Bubble_Rel_YPos
+		;BlockBuffer_Big_X_Adder
+		
+		;Calculate positions for bubble sprites -Cantersoft
+		clc
+		lda Bubble_Rel_XPos
+		adc BubblesVFXOffsetAdder, x
 		sta Sprite_X_Position+4,y
-
-		;Positive x movement for bubbles 2 and 3
-		clc
-		lda Player_Rel_XPos
-		adc Bubble_X_Offset_Prev
 		sta Sprite_X_Position+8,y
+
+		clc
+		lda Bubble_Rel_XPos
+		adc BubblesVFXOffsetAdder+8, x
+		sta Sprite_X_Position,y
 		sta Sprite_X_Position+12,y
-		
-		;Negative x movement for bubbles 4 and 5
+
 		clc
-		lda Player_Rel_XPos
-		sbc Bubble_X_Offset_Prev
+		lda Bubble_Rel_XPos
+		sbc BubblesVFXOffsetAdder, x
+		sta Sprite_X_Position+20,y
+		sta Sprite_X_Position+24,y
+
+		clc
+		lda Bubble_Rel_XPos
+		sbc BubblesVFXOffsetAdder+8, x
 		sta Sprite_X_Position+16,y
-		sta Sprite_X_Position+20,y	
+		sta Sprite_X_Position+28,y
 
-		;Double y movement for upper and lower bubbles (bubbles 0 and 1)
 		clc
-		lda Bubble_Y_Offset_Prev	;load the offset first so we can
-		asl 						;multiply by 2
-		sta Bubble_Y_Offset_Prev
-		
-		adc Player_Rel_YPos
+		lda Bubble_Rel_YPos
+		adc BubblesVFXOffsetAdder, x
 		sta Sprite_Y_Position,y
+		sta Sprite_Y_Position+28,y
 
-		lda Player_Rel_YPos
-		
-		sbc Bubble_Y_Offset_Prev
+		clc
+		lda Bubble_Rel_YPos
+		adc BubblesVFXOffsetAdder+8, x
 		sta Sprite_Y_Position+4,y
-		
-		lda Bubble_Y_Offset_Prev	;now fix the offset so it doesn't mess up the other bubbles
-		lsr							;I think this undoes an asl???
-		sta Bubble_Y_Offset_Prev
-		
-		;Positive y movement for bubbles 2 and 4
+		sta Sprite_Y_Position+24,y
+
 		clc
-		lda Player_Rel_YPos
-		adc Bubble_Y_Offset_Prev
-		sta Sprite_Y_Position+8,y
-		sta Sprite_Y_Position+16,y
-		
-		;Negative y movement for bubbles 3 and 5
-		clc
-		lda Player_Rel_YPos
-		sbc Bubble_Y_Offset_Prev	
+		lda Bubble_Rel_YPos
+		sbc BubblesVFXOffsetAdder, x
 		sta Sprite_Y_Position+12,y
-		sta Sprite_Y_Position+20,y
-		
+		sta Sprite_Y_Position+16,y
+
+		clc
+		lda Bubble_Rel_YPos
+		sbc BubblesVFXOffsetAdder+8, x
+		sta Sprite_Y_Position+8,y
+		sta Sprite_Y_Position+20,y	
+
 		rts
 
-	;Reset the bubble to the original position
-	DrawBubbleOnPlayerInit:
-		;clc
-		;lda Player_Rel_XPos
-		;adc #04
-		;sta Sprite_X_Position,y
-		
-		lda #04
-		sta Bubble_X_Offset_Prev
-			
-		;clc
-		;lda Player_Rel_YPos
-		;adc #00
-		;sta Sprite_Y_Position,y
-		
-		lda #00
-		sta Bubble_Y_Offset_Prev
-		
-		lda #01
-		sta DrawBubbleOnPlayerAnimCtrl
-		rts
+		BubblesVFXOffsetAdder:
+		.byte $00, $05, $09, $0c, $0e, $07, $0e, $04
+		.byte $00, $02, $03, $04, $05, $03, $05, $02
+
+;5 r 22 d
