@@ -518,7 +518,7 @@ ChkLuigi:
     ldy #$05
 NameLoop:
       lda LuigiName,y        ;otherwise, replace "MARIO" with "LUIGI"
-      sta VRAM_Buffer1+3+8,y
+      sta VRAM_Buffer1+3+8+1,y
       dey
       bpl NameLoop           ;do this until each letter is replaced
 ExitChkName:
@@ -554,7 +554,7 @@ TopStatusBarLine:
   .byte $23, $c0, $7f, $aa ; attribute table data, clears name table 0 to palette 2
   .byte $23, $c2, $01, $ea ; attribute table data, used for coin icon in status bar
   ;?, posx, len
-  .byte $20, $43, $06, "FILLY "
+  .byte $20, $42, $07, " FILLY "
   .byte $20, $52, $0b, "WORLD  TIME"
   .byte $20, $68, $05, "0  ", $2e, $29 ; score trailing digit and coin display
   .byte $ff ; end of data block
