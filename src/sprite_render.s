@@ -131,6 +131,7 @@ CheckForVerticalFlip:
   bcc WriteMetasprite
     ; if bit 1 is also set, then apply vertical flip too
     ; but if only bit 2 is set, apply the horizontal flag
+	
     lda R2
     lsr
     bcs :+
@@ -138,6 +139,7 @@ CheckForVerticalFlip:
       ora #OAM_FLIP_H
       sta Misc_SprAttrib,x
     :
+
     lda Misc_SprAttrib,x
     ora #OAM_FLIP_V
     sta Misc_SprAttrib,x
@@ -508,8 +510,8 @@ CheckRightSideUpShell:
     ; Shell is upside down in OAM, so flip the buzzy right side up
     ; and then check for animation
     ; Add 2 px down offset
-    lda #MetaspriteOffset{2} | MSPR_VERTICAL_FLIP
-    sta EnemyVerticalFlip,x
+    ;lda #MetaspriteOffset{2} | MSPR_VERTICAL_FLIP
+    ;sta EnemyVerticalFlip,x
     bne WriteMetasprite ; unconditional. we don't animate upside down buzzy
 NormalBuzzyAnimation:
   lda Enemy_State,x
@@ -520,7 +522,17 @@ NormalBuzzyAnimation:
   ora FreezeTimer
   bne WriteMetasprite   ;if either condition true, do not animate goomba
     lda FrameCounter
-    and #%00001000        ;check for every eighth frame
+	pha
+	lda Enemy_Angry
+	beq :+
+	ldy #METASPRITE_BUZZY_BEETLE_ANGRY_WALKING_1
+	pla
+    and #%00000100        ;check for every fourth frame if BuzzyCrab angry	-Cantersoft
+	jmp FasterBuzzyCrapSpriteAnimation
+	:
+	pla
+    and #%00001000        ;check for every eighth frame	
+	FasterBuzzyCrapSpriteAnimation:
     bne WriteMetasprite
       iny
 WriteMetasprite:

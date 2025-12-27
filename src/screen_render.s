@@ -293,7 +293,9 @@ GetPlayerColors:
   beq ChkFiery
   ldy AreaType
   bne :+
-  ldy #$0c					;load offset for clean FloorBored (she's normally dirty, but the water makes her clean)
+  lda #20		           ;Set bubbles timer as a "poof" transition to seapony form
+  sta BubblesVFXTimer
+  ldy #$0c					;load offset for clean FloorBored (she's normally dirty, but the water makes her clean) -Cantersoft
   jmp ChkFiery
   :
   ldy #$04                 ;load offset for FloorB

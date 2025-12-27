@@ -417,12 +417,20 @@ EnemyStomped:
       iny                        ;increment points data offset
 	  cmp #BuzzyBeetle
 	   bne :+
-	   lda Enemy_State,x
-	   cmp #$20					;Check if Angry Beetle
-	   beq HandleStompedShellE
-	   lda #$20					;Set Angry Beetle
-	   sta Enemy_State,x
-	   jmp EnemyStompedPts
+	   lda Enemy_Angry
+	   cmp #$1				;Check if Angry Beetle - Cantersoft
+	   beq BuzzyBeetle2
+	   cmp #$2
+	   beq BuzzyBeetle3
+	   lda #$1					;Set Angry Beetle	   	   
+	   sta Enemy_Angry
+	   jmp BuzzyBeetleHop	     
+BuzzyBeetle2:
+	  jmp EnemyStompedPts
+BuzzyBeetle3:
+	   lda #$0					;Set Angry Beetle	   	   
+	   sta Enemy_Angry
+		jmp HandleStompedShellE
 	   :	  
       cmp #Bloober               ;branch if NOT bloober
       bne ChkForDemoteKoopa
@@ -439,7 +447,8 @@ EnemyStompedPts:
       lda #%00100000
       sta Enemy_State,x          ;set d5 in enemy state
       jsr InitVStf               ;nullify vertical speed, physics-related thing,
-      sta Enemy_X_Speed,x        ;and horizontal speed
+      sta Enemy_X_Speed,x        ;and horizontal speed  
+BuzzyBeetleHop:		  
       lda #$fd                   ;set player's vertical speed, to give bounce
       sta Player_Y_Speed
       rts

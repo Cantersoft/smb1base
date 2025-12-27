@@ -399,6 +399,8 @@ Entrance_GameTimerSetup:
           sty HalfwayPage      
           lda AreaType                ;check area type
           bne ChkStPos                ;if water type, set swimming flag, otherwise do not set
+		  lda #40					  ;Also set bubble timer for a cool transform "poof" effect at the beginning of the level as the pony turns into a seapony
+		  sta BubblesVFXTimer
           iny
 ChkStPos: sty SwimmingFlag
           ldx PlayerEntranceCtrl      ;get starting position loaded from header

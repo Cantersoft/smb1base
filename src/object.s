@@ -1101,17 +1101,6 @@ SetShim: pha
 
 MoveNormalEnemy:
        ldy #$00                   ;init Y to leave horizontal movement as-is 
-	   lda Enemy_State,x
-	   cmp #$20
-	   bne :+
-	   ;ldy #$01
-	   ;jmp AddHS
-	   ;lda #$XSpeedAdderData,y
-	   ;sta Enemy_X_Speed,x 
-	   lda #$40
-	   sta Enemy_X_Speed,x
-	   jmp MoveEnemyHorizontally
-	   :
        lda Enemy_State,x
        and #%01000000             ;check enemy state for d6 set, if set skip
        bne FallE                  ;to move enemy vertically, then horizontally if necessary
@@ -1142,7 +1131,8 @@ FallE: jsr MoveD_EnemyVertically  ;do a sub here to move enemy downwards
 MEHor: jmp MoveEnemyHorizontally  ;jump here to move enemy horizontally for <> $2e and d6 set
 
 SlowM:  ldy #$01                  ;if branched here, increment Y to slow horizontal movement
-SteadM: lda Enemy_X_Speed,x       ;get current horizontal speed
+SteadM: 
+		lda Enemy_X_Speed,x       ;get current horizontal speed
         pha                       ;save to stack
         bpl AddHS                 ;if not moving or moving right, skip, leave Y alone
         iny
@@ -1150,6 +1140,32 @@ SteadM: lda Enemy_X_Speed,x       ;get current horizontal speed
 AddHS:  clc
         adc XSpeedAdderData,y     ;add value here to slow enemy down if necessary
         sta Enemy_X_Speed,x       ;save as horizontal speed temporarily
+
+		lda Enemy_ID,x
+		cmp #BuzzyBeetle
+		bne DoNotIncreaseSpeed
+		
+       lda Enemy_State,x
+       and #%00000111 
+		bne DoNotIncreaseSpeed	;If enemy not in normal state, don't increase speed on stomp
+		
+	   lda Enemy_Angry
+	   cmp #$2
+	   beq Enemy_Angry_2
+	   cmp #$1
+	   bne :+
+Enemy_Angry_2:
+	   lda Enemy_X_Speed,x
+	   asl
+	   sta Enemy_X_Speed,x       ;save as horizontal speed temporarily
+	   lda #2					 ;Enemy is moving fast signal
+	   sta Enemy_Angry
+       ;jsr MoveEnemyHorizontally ;then do a sub to move horizontally
+	   ;rts
+	   :
+	   
+DoNotIncreaseSpeed:	   
+		
         jsr MoveEnemyHorizontally ;then do a sub to move horizontally
         pla
         sta Enemy_X_Speed,x       ;get old horizontal speed from stack and return to
