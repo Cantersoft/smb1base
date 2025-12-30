@@ -493,8 +493,8 @@ Pepe_sitting_Right:
 .byte 4 * 4
 .byte MetaspriteVramOffset{$0e}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 0 + Y_OFFSET,  0 + X_OFFSET
 .byte MetaspriteVramOffset{$0c}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 0 + Y_OFFSET,  8 + X_OFFSET
-.byte MetaspriteVramOffset{$2e}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 16 + Y_OFFSET,  0-3 + X_OFFSET
-.byte MetaspriteVramOffset{$2c}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 16 + Y_OFFSET,  8-3 + X_OFFSET
+.byte MetaspriteVramOffset{$2e}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 16 + Y_OFFSET,  0+5 + X_OFFSET
+.byte MetaspriteVramOffset{$2c}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 16 + Y_OFFSET,  8+5 + X_OFFSET
 
 Pepe_leaping_Left:
 .byte 4 * 4

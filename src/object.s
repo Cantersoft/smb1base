@@ -319,7 +319,7 @@ EnemyMovementSubs:
       .word MoveNormalEnemy
       .word MoveNormalEnemy
       .word MoveNormalEnemy
-      .word MoveNormalEnemy
+      .word MovePepe
       .word ProcHammerBro
       .word MoveNormalEnemy
       .word MoveBloober
@@ -3046,6 +3046,10 @@ MovePodoboo:
 PdbM:
   jmp MoveJ_EnemyVertically  ;branch to impose gravity on podoboo
 
+;-------------------------------------------------------------------------------------
+MovePepe:	
+  jsr MoveJ_EnemyVertically  ;do a sub to impose gravity on green paratroopa
+  jmp MoveEnemyHorizontally  ;jump to move enemy horizontally	
 
 
 ;-------------------------------------------------------------------------------------
@@ -3205,7 +3209,8 @@ InitEnemyRoutines:
   .word InitNormalEnemy
   .word InitNormalEnemy
   .word InitRedKoopa
-  .word NoInitCode
+  .word InitPepe	;Cantersoft  
+  ;.word InitSoybean
   .word InitHammerBro
   .word InitGoomba
   .word InitBloober
@@ -3217,7 +3222,6 @@ InitEnemyRoutines:
   .word InitPiranhaPlant
   .word InitJumpGPTroopa
   .word InitRedPTroopa
-  .word InitPepe
 
   .word InitHorizFlySwimEnemy  ;for objects $10-$1f
   .word InitLakitu
@@ -3228,7 +3232,7 @@ InitEnemyRoutines:
   .word InitEnemyFrenzy
   .word InitEnemyFrenzy
   .word EndFrenzy
-  .word NoInitCode
+  .word NoInitCode  
   .word NoInitCode
   .word InitShortFirebar
   .word InitShortFirebar
@@ -3278,6 +3282,10 @@ SetESpd:
   jmp TallBBox          ;branch to set bounding box control and other data
 
 ;--------------------------------
+InitSoybean:
+  jsr InitNormalEnemy  ;set appropriate horizontal speed
+  jmp SmallBBox        ;set $09 as bounding box control, set other values
+;
 
 InitGoomba:
   jsr InitNormalEnemy  ;set appropriate horizontal speed
@@ -3427,7 +3435,7 @@ KillLakitu:
 
 InitPepe:
   jsr InitNormalEnemy  ;set appropriate horizontal speed
-
+  jmp TallBBox        ;set $09 as bounding box control, set other values
 ;--------------------------------
 
 FlameYPosData:

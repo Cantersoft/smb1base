@@ -89,6 +89,7 @@ DeathMusic            = %00000001
 GreenKoopa            = $00
 BuzzyBeetle           = $02
 RedKoopa              = $03
+Pepe				  = $04
 HammerBro             = $05
 Goomba                = $06
 Bloober               = $07
@@ -102,7 +103,7 @@ RedParatroopa         = $0f
 GreenParatroopaFly    = $10
 Lakitu                = $11
 Spiny                 = $12
-Soybean				  = $04
+Soybean				  = $19 ;not a suitable value
 FlyCheepCheepFrenzy   = $14
 FlyingCheepCheep      = $14
 BowserFlame           = $15
@@ -118,7 +119,7 @@ JumpspringObject      = $32
 BulletBill_CannonVar  = $33
 RetainerObject        = $35
 TallEnemy             = $09
-Pepe				  = $13
+
 ; powerup constants
 PowerMushroom = $00
 FireFlower    = $01

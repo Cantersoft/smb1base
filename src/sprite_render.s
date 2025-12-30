@@ -264,7 +264,8 @@ RunEngine:
   .word ProcessDemotedKoopa
   .word ProcessBuzzyBeetle
   .word ProcessRedKoopa
-  .word Noop
+  ;.word ProcessSoybean
+  .word ProcessPepe  
   .word ProcessHammerBro
   .word ProcessGoomba
   .word ProcessBlooper
@@ -281,7 +282,6 @@ RunEngine:
   .word ProcessSpiny
   .word Noop
   .word ProcessFlyingCheepCheep
-  .word ProcessSoybean
 .endproc
 
 Noop:
@@ -702,7 +702,6 @@ WriteMetasprite:
 
 .proc ProcessSoybean
 ldy #METASPRITE_SOYBEAN_NONE
-WriteMetasprite:
   tya
   sta EnemyMetasprite,x
   rts
@@ -710,7 +709,6 @@ WriteMetasprite:
 
 .proc ProcessPepe
 ldy #METASPRITE_PEPE_SITTING
-WriteMetasprite:
   tya
   sta EnemyMetasprite,x
   rts
