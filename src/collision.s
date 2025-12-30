@@ -417,19 +417,22 @@ EnemyStomped:
       iny                        ;increment points data offset
 	  cmp #BuzzyBeetle
 	   bne :+
-	   lda Enemy_Angry
+	   lda Enemy_Angry,x
 	   cmp #$1				;Check if Angry Beetle - Cantersoft
 	   beq BuzzyBeetle2
 	   cmp #$2
 	   beq BuzzyBeetle3
+	   
+	   lda Enemy_State,x		;If enemy not in normal state, don't modify enemy angry
+	   bne HandleStompedShellE
 	   lda #$1					;Set Angry Beetle	   	   
-	   sta Enemy_Angry
+	   sta Enemy_Angry,x
 	   jmp BuzzyBeetleHop	     
 BuzzyBeetle2:
-	  jmp EnemyStompedPts
+	  jmp HandleStompedShellE
 BuzzyBeetle3:
 	   lda #$0					;Set Angry Beetle	   	   
-	   sta Enemy_Angry
+	   sta Enemy_Angry,x
 		jmp HandleStompedShellE
 	   :	  
       cmp #Bloober               ;branch if NOT bloober

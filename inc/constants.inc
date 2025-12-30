@@ -102,7 +102,7 @@ RedParatroopa         = $0f
 GreenParatroopaFly    = $10
 Lakitu                = $11
 Spiny                 = $12
-Soybean				  = $05
+Soybean				  = $04
 FlyCheepCheepFrenzy   = $14
 FlyingCheepCheep      = $14
 BowserFlame           = $15
@@ -118,6 +118,7 @@ JumpspringObject      = $32
 BulletBill_CannonVar  = $33
 RetainerObject        = $35
 TallEnemy             = $09
+Pepe				  = $13
 ; powerup constants
 PowerMushroom = $00
 FireFlower    = $01

@@ -1147,9 +1147,9 @@ AddHS:  clc
 		
        lda Enemy_State,x
        and #%00000111 
-		bne DoNotIncreaseSpeed	;If enemy not in normal state, don't increase speed on stomp
+		bne DoNotIncreaseSpeed	;If enemy not in normal state, don't increase speed on stomp -Cantersoft
 		
-	   lda Enemy_Angry
+	   lda Enemy_Angry,x
 	   cmp #$2
 	   beq Enemy_Angry_2
 	   cmp #$1
@@ -1159,7 +1159,7 @@ Enemy_Angry_2:
 	   asl
 	   sta Enemy_X_Speed,x       ;save as horizontal speed temporarily
 	   lda #2					 ;Enemy is moving fast signal
-	   sta Enemy_Angry
+	   sta Enemy_Angry,x
        ;jsr MoveEnemyHorizontally ;then do a sub to move horizontally
 	   ;rts
 	   :
@@ -3217,6 +3217,7 @@ InitEnemyRoutines:
   .word InitPiranhaPlant
   .word InitJumpGPTroopa
   .word InitRedPTroopa
+  .word InitPepe
 
   .word InitHorizFlySwimEnemy  ;for objects $10-$1f
   .word InitLakitu
@@ -3421,6 +3422,11 @@ SetupLakitu:
 
 KillLakitu:
   jmp EraseEnemyObject
+
+;--------------------------------
+
+InitPepe:
+  jsr InitNormalEnemy  ;set appropriate horizontal speed
 
 ;--------------------------------
 

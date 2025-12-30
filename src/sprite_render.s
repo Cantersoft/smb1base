@@ -523,7 +523,7 @@ NormalBuzzyAnimation:
   bne WriteMetasprite   ;if either condition true, do not animate goomba
     lda FrameCounter
 	pha
-	lda Enemy_Angry
+	lda Enemy_Angry,x
 	beq :+
 	ldy #METASPRITE_BUZZY_BEETLE_ANGRY_WALKING_1
 	pla
@@ -702,6 +702,14 @@ WriteMetasprite:
 
 .proc ProcessSoybean
 ldy #METASPRITE_SOYBEAN_NONE
+WriteMetasprite:
+  tya
+  sta EnemyMetasprite,x
+  rts
+.endproc
+
+.proc ProcessPepe
+ldy #METASPRITE_PEPE_SITTING
 WriteMetasprite:
   tya
   sta EnemyMetasprite,x

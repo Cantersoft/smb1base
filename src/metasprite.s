@@ -477,6 +477,42 @@ Koopa_flying_2:
 .byte MetaspriteVramOffset{$38}, {SPRITE_BANK_2}, PALETTE, 0 + Y_OFFSET,  8 + X_OFFSET
 
 
+
+;Pepe -Cantersoft
+MetaspriteData "PEPE_SITTING", Pepe_sitting_Left, Pepe_sitting_Right
+MetaspriteData "PEPE_LEAPING", Pepe_leaping_Left, Pepe_leaping_Right
+
+Pepe_sitting_Left:
+.byte 4 * 4
+.byte MetaspriteVramOffset{$0c}, {SPRITE_BANK_3}, 2, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$0e}, {SPRITE_BANK_3}, 2, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$2c}, {SPRITE_BANK_3}, 2, 16 + Y_OFFSET,  0-3 + X_OFFSET
+.byte MetaspriteVramOffset{$2e}, {SPRITE_BANK_3}, 2, 16 + Y_OFFSET,  8-3 + X_OFFSET
+
+Pepe_sitting_Right:
+.byte 4 * 4
+.byte MetaspriteVramOffset{$0e}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$0c}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$2e}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 16 + Y_OFFSET,  0-3 + X_OFFSET
+.byte MetaspriteVramOffset{$2c}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 16 + Y_OFFSET,  8-3 + X_OFFSET
+
+Pepe_leaping_Left:
+.byte 4 * 4
+.byte MetaspriteVramOffset{$10}, {SPRITE_BANK_3}, 2, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$12}, {SPRITE_BANK_3}, 2, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$30}, {SPRITE_BANK_3}, 2, 16 + Y_OFFSET,  0-3 + X_OFFSET
+.byte MetaspriteVramOffset{$32}, {SPRITE_BANK_3}, 2, 16 + Y_OFFSET,  8-3 + X_OFFSET
+
+Pepe_leaping_Right:
+.byte 4 * 4
+.byte MetaspriteVramOffset{$12}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 0 + Y_OFFSET,  0 + X_OFFSET
+.byte MetaspriteVramOffset{$10}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 0 + Y_OFFSET,  8 + X_OFFSET
+.byte MetaspriteVramOffset{$32}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 16 + Y_OFFSET,  0-3 + X_OFFSET
+.byte MetaspriteVramOffset{$30}, {SPRITE_BANK_3}, OAM_FLIP_H | 2, 16 + Y_OFFSET,  8-3 + X_OFFSET
+
+
+
+
 PIRANHA_VRAM_OFFSET = SPRITE_BANK_3
 PIRANHA_PALETTE = $01
 PIRANHA_Y_OFFSET = -17
@@ -553,6 +589,7 @@ MetaspriteBox "HAMMER", "FRAME_2", $00, $02 ;Sideways hammer
 HAMMER_BRO_VRAM_OFFSET = SPRITE_BANK_2
 HAMMER_BRO_PALETTE = $01
 HAMMER_BRO_Y_OFFSET = 0
+HAMMER_BRO_DEAD_Y_OFFSET = 1
 MetaspriteBox "HAMMER_BRO", "WALK_1", $0c, $0e
 MetaspriteBox "HAMMER_BRO", "WALK_2", $10, $12
 MetaspriteBox "HAMMER_BRO", "THROW_1", $14, $16
