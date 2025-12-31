@@ -319,7 +319,7 @@ EnemyMovementSubs:
       .word MoveNormalEnemy
       .word MoveNormalEnemy
       .word MoveNormalEnemy
-      .word MovePepe
+      .word MoveJumpingEnemy
       .word ProcHammerBro
       .word MoveNormalEnemy
       .word MoveBloober
@@ -1229,7 +1229,7 @@ ChkLS:   lda Enemy_State,x          ;if lakitu's enemy state not set at all,
          sta EnemyFrenzyBuffer      ;initialize frenzy buffer
          lda #$10
          bne SetLSpd                ;load horizontal speed and do unconditional branch
-Fr12S:   lda #Soybean
+Fr12S:   lda #Goomba
          sta EnemyFrenzyBuffer      ;set spiny identifier in frenzy buffer
          ldy #$02
 LdLDa:   lda LakituDiffAdj,y        ;load values
@@ -3210,12 +3210,11 @@ InitEnemyRoutines:
   .word InitNormalEnemy
   .word InitRedKoopa
   .word InitPepe	;Cantersoft  
-  ;.word InitSoybean
   .word InitHammerBro
   .word InitGoomba
   .word InitBloober
   .word InitBulletBill
-  .word NoInitCode
+  .word InitSoybean
   .word InitCheepCheep
   .word InitCheepCheep
   .word InitPodoboo
@@ -3434,8 +3433,17 @@ KillLakitu:
 ;--------------------------------
 
 InitPepe:
-  jsr InitNormalEnemy  ;set appropriate horizontal speed
-  jmp TallBBox        ;set $09 as bounding box control, set other values
+  ; jsr InitNormalEnemy  ;set appropriate horizontal speed
+  ; jmp TallBBox        ;set $09 as bounding box control, set other values
+  lda #$02                  ;set for movement to the left
+  sta Enemy_MovingDir,x
+  lda #$f8                  ;set horizontal speed
+  sta Enemy_X_Speed,x
+TallBBox3:
+  lda #$03                  ;set specific value for bounding box control
+SetBBox3:
+  sta Enemy_BoundBoxCtrl,x  ;set bounding box control then leave
+  rts  
 ;--------------------------------
 
 FlameYPosData:

@@ -234,6 +234,15 @@ JumpingCoinTiles:
     lda FrameCounter           ;get frame counter
     lsr                        ;divide by 2 to change colors every two frames
     and #%00000011             ;mask out all but d1 and d0 (previously d2 and d1)
+	; pha
+	; ldy #$0	
+	; beq :+
+	; lda Enemy_SprAttrib,x
+	; ora #OAM_FLIP_V
+	; :
+	; tya
+	; sta Enemy_SprAttrib,x
+	; pla
     sta R2
     lda Enemy_SprAttrib,x      ;add background priority bit if any set
     and #%11100000
@@ -264,13 +273,12 @@ RunEngine:
   .word ProcessDemotedKoopa
   .word ProcessBuzzyBeetle
   .word ProcessRedKoopa
-  ;.word ProcessSoybean
-  .word ProcessPepe  
+  .word ProcessPepe
   .word ProcessHammerBro
   .word ProcessGoomba
   .word ProcessBlooper
   .word ProcessBulletBill
-  .word Noop
+  .word ProcessSoybean
   .word ProcessSwimmingCheepCheep
   .word ProcessSwimmingCheepCheep
   .word ProcessPodoboo

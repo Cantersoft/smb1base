@@ -1561,6 +1561,8 @@ CNwCDir: tya
 
 LandEnemyInitState:
       jsr EnemyLanding       ;land enemy properly
+	  
+	  ; Something might need to be modded here to allow other objects to spawn from lakitu -Cantersoft
       lda Enemy_State,x
       and #%10000000         ;if d7 of enemy state is set, branch
       bne NMovShellFallBit
